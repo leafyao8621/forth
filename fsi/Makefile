@@ -1,0 +1,23 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -pedantic
+SRC = $(wildcard src/interpreter/*.c) $(wildcard src/parser/*.c)
+OBJ = $(SRC:.c=.o)
+LIB = lib/libfsi.so
+BIN = fsi
+
+%.o: %.c
+	$(CC) $(CFLAGS) -g -c $< -o $@ -Iinclude
+
+$(LIB): $(OBJ)
+	$(CC) $(OBJ) -o $(LIB) -lcontainers -shared
+
+$(BIN): $(LIB)
+	$(CC) -g src/main.c -o $(BIN) -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
+
+.PHONY: clean valgrind
+clean:
+	@rm $(OBJ)
+	@rm $(LIB)
+	@rm $(BIN)
+valgrind: $(BIN)
+	@valgrind -s --leak-check=full ./$(BIN)
