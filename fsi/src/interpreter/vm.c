@@ -1,0 +1,52 @@
+#include <fsi/interpreter/vm.h>
+
+ForthVMErr ForthVM_initialize(ForthVM *vm) {
+    if (!vm) {
+        return FORTHVM_ERR_NULL_PTR;
+    }
+    int ret = DArrayChar_initialize(&vm->words, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayOffset_initialize(&vm->offset, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayChar_initialize(&vm->compiled, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayChar_initialize(&vm->interpreted, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    vm->ip = 0;
+    ret = DArrayOffset_initialize(&vm->operation_stack, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayOffset_initialize(&vm->control_stack, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayOffset_initialize(&vm->return_stack, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayChar_initialize(&vm->memory, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    return FORTHVM_ERR_OK;
+}
+
+void ForthVM_finalize(ForthVM *vm) {
+    DArrayChar_finalize(&vm->words);
+    DArrayOffset_finalize(&vm->offset);
+    DArrayChar_finalize(&vm->compiled);
+    DArrayChar_finalize(&vm->interpreted);
+    DArrayOffset_finalize(&vm->operation_stack);
+    DArrayOffset_finalize(&vm->control_stack);
+    DArrayOffset_finalize(&vm->return_stack);
+    DArrayChar_finalize(&vm->memory);
+}
