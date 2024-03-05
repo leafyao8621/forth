@@ -2,12 +2,7 @@
 #define INTERPRETER_VM_H_
 
 #include <fsi/util/containers.h>
-
-typedef enum ForthVMErr {
-    FORTHVM_ERR_OK,
-    FORTHVM_ERR_NULL_PTR,
-    FORTHVM_ERR_OUT_OF_MEMORY
-} ForthVMErr;
+#include <fsi/util/errcode.h>
 
 #define OFFSET_COMPILED 0x8000000000000000
 

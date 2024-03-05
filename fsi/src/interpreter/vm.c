@@ -50,3 +50,10 @@ void ForthVM_finalize(ForthVM *vm) {
     DArrayOffset_finalize(&vm->return_stack);
     DArrayChar_finalize(&vm->memory);
 }
+
+ForthVMErr ForthVM_load(ForthVM *vm, char *str) {
+    if (!vm || !str) {
+        return FORTHVM_ERR_NULL_PTR;
+    }
+    return FORTHVM_ERR_OK;
+}
