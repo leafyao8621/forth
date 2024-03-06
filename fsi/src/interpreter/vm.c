@@ -13,6 +13,35 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
+    char *keywords[2] =
+        {
+            ".\"",
+            "cr"
+        };
+    char **iter_keywords = keywords;
+    size_t offset = 0;
+    char chr = 0;
+    for (size_t i = 0; i < 2; ++i, ++iter_keywords) {
+        ret =
+            DArrayChar_push_back_batch(
+                &vm->words, *iter_keywords, strlen(*iter_keywords));
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        ret = DArrayChar_push_back(&vm->words, &chr);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        offset = i | OFFSET_BUILTIN;
+        ret = DArrayOffset_push_back(&vm->offset, &offset);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+    }
+    ret = DArrayChar_initialize(&vm->literal, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
     ret = DArrayChar_initialize(&vm->compiled, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
@@ -44,6 +73,7 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
 void ForthVM_finalize(ForthVM *vm) {
     DArrayChar_finalize(&vm->words);
     DArrayOffset_finalize(&vm->offset);
+    DArrayChar_finalize(&vm->literal);
     DArrayChar_finalize(&vm->compiled);
     DArrayChar_finalize(&vm->interpreted);
     DArrayOffset_finalize(&vm->operation_stack);

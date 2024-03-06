@@ -10,6 +10,7 @@ int main(void) {
     GETERR;
     err = fsi_load_file(&vm, "script/a.fs");
     GETERR;
+    fsi_log(&vm);
     fsi_finalize(&vm);
     return 0;
 }

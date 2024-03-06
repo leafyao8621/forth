@@ -30,3 +30,7 @@ ForthVMErr fsi_load_file(ForthVM *vm, char *fn) {
     DArrayChar_finalize(&buf);
     return err;
 }
+
+void fsi_log(ForthVM *vm) {
+    ForthVM_log(vm);
+}
