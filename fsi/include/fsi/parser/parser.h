@@ -12,6 +12,6 @@ typedef struct ForthParser {
 
 ForthVMErr ForthParser_initialize(ForthParser *parser);
 void ForthParser_finalize(ForthParser *parser);
-ForthVMErr ForthParser_parse(ForthParser *parser, char *str);
+ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm);
 
 #endif

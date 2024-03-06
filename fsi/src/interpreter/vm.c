@@ -1,4 +1,5 @@
 #include <fsi/interpreter/vm.h>
+#include <fsi/parser/parser.h>
 
 ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (!vm) {
@@ -55,5 +56,13 @@ ForthVMErr ForthVM_load(ForthVM *vm, char *str) {
     if (!vm || !str) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    return FORTHVM_ERR_OK;
+    ForthParser parser;
+    ForthVMErr err = ForthParser_initialize(&parser);
+    if (err) {
+        ForthParser_finalize(&parser);
+        return err;
+    }
+    err = ForthParser_parse(&parser, str, vm);
+    ForthParser_finalize(&parser);
+    return err;
 }

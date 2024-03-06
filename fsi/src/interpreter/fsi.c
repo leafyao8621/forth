@@ -20,11 +20,12 @@ ForthVMErr fsi_load_file(ForthVM *vm, char *fn) {
     ret = read_text(fn, &buf);
     switch (ret) {
     case 2:
+        DArrayChar_finalize(&buf);
         return FORTHVM_ERR_OUT_OF_MEMORY;
     case 1:
+        DArrayChar_finalize(&buf);
         return FORTHVM_ERR_FILE_IO;
     }
-    puts(buf.data);
     ForthVMErr err = ForthVM_load(vm, buf.data);
     DArrayChar_finalize(&buf);
     return err;
