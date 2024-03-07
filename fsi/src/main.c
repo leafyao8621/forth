@@ -11,6 +11,8 @@ int main(void) {
     err = fsi_load_file(&vm, "script/a.fs");
     GETERR;
     fsi_log(&vm);
+    err = fsi_execute(&vm);
+    GETERR;
     fsi_finalize(&vm);
     return 0;
 }

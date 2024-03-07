@@ -45,8 +45,8 @@ void ForthVM_log(ForthVM *vm) {
     for (size_t i = 0; i < vm->interpreted.size; ++i, ++iter_interpreted) {
         printf("0x%016lx: ", i);
         switch (*iter_interpreted) {
-        case OPCODE_NOP:
-            puts("NOP");
+        case OPCODE_TERMINATE:
+            puts("TERMINATE");
             break;
         case OPCODE_PRINT_STRING:
             printf(".\" 0x%016lx\n", *(size_t*)(iter_interpreted + 1));

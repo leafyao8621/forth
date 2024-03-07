@@ -8,9 +8,11 @@
 #define OFFSET_MEMORY 0x4000000000000000
 #define OFFSET_OFFSET 0x3fffffffffffffff
 
-#define OPCODE_NOP 0
+#define OPCODE_TERMINATE 0
 #define OPCODE_PRINT_STRING 1
 #define OPCODE_CARRIAGE_RETURN 2
+
+#define IP_COMPILED 0x8000000000000000
 
 typedef struct ForthVM {
     String words;

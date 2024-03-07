@@ -34,3 +34,7 @@ ForthVMErr fsi_load_file(ForthVM *vm, char *fn) {
 void fsi_log(ForthVM *vm) {
     ForthVM_log(vm);
 }
+
+ForthVMErr fsi_execute(ForthVM *vm) {
+    return ForthVM_execute(vm);
+}

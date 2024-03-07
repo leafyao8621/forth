@@ -86,13 +86,23 @@ ForthVMErr ForthVM_load(ForthVM *vm, char *str) {
     if (!vm || !str) {
         return FORTHVM_ERR_NULL_PTR;
     }
+    vm->ip = 0;
     ForthParser parser;
     ForthVMErr err = ForthParser_initialize(&parser);
     if (err) {
         ForthParser_finalize(&parser);
         return err;
     }
+    DArrayChar_clear(&vm->interpreted);
     err = ForthParser_parse(&parser, str, vm);
     ForthParser_finalize(&parser);
-    return err;
+    if (err) {
+        return err;
+    }
+    char chr = OPCODE_TERMINATE;
+    int ret = DArrayChar_push_back(&vm->interpreted, &chr);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    return FORTHVM_ERR_OK;
 }
