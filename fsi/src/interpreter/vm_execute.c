@@ -3,11 +3,13 @@
 #include <fsi/interpreter/vm.h>
 #include <fsi/util/interpreter_handlers.h>
 
-static ForthInterpreterHandler interpreter_handler[3] =
+static ForthInterpreterHandler interpreter_handler[5] =
     {
         NULL,
         interpreter_handle_print_string,
-        interpreter_handle_carriage_return
+        interpreter_handle_carriage_return,
+        interpreter_handle_push,
+        interpreter_handle_print_int
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {

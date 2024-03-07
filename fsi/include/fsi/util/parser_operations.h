@@ -7,5 +7,6 @@ int get_token(ForthParser *parser);
 void next_token(ForthParser *parser);
 int get_handler_offset(ForthParser *parser, ForthVM *vm, size_t *offset);
 int get_literal(ForthParser *parser);
+int get_int(ForthParser *parser, size_t *out);
 
 #endif

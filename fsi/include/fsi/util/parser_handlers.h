@@ -9,5 +9,6 @@ typedef ForthVMErr (*ForthParserHandler)(ForthParser*, ForthVM*);
 
 ForthVMErr parser_handle_print_string(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_carriage_return(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_print_int(ForthParser *parser, ForthVM *vm);
 
 #endif

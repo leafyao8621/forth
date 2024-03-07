@@ -7,6 +7,7 @@ typedef struct ForthParser {
     char *str;
     char *iter;
     bool compile;
+    char base;
     String token_buf;
 } ForthParser;
 

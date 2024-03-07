@@ -56,6 +56,16 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_CARRIAGE_RETURN:
             puts("cr");
             break;
+        case OPCODE_PUSH:
+            printf("PUSH 0x%016lx\n", *(size_t*)(iter_interpreted + 1));
+            iter_interpreted += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_PRINT_INT:
+            puts(".");
+            break;
+        default:
+            puts("UNKNOWN");
         }
     }
 }
