@@ -16,7 +16,8 @@ ForthVMErr parser_handle_print_string(ForthParser *parser, ForthVM *vm) {
     }
     char opcode = OPCODE_PRINT_STRING;
     size_t literal_offset = vm->literal.size;
-    if (!parser->compile) {
+    switch (parser->state) {
+    case FORTHPARSER_STATE_INTERPRET:
         ret = DArrayChar_push_back(&vm->interpreted, &opcode);
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
@@ -27,6 +28,22 @@ ForthVMErr parser_handle_print_string(ForthParser *parser, ForthVM *vm) {
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
+        break;
+    case FORTHPARSER_STATE_COMPILE:
+        ret = DArrayChar_push_back(&vm->compiled, &opcode);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        ret =
+            DArrayChar_push_back_batch(
+                &vm->interpreted, (char*)&literal_offset, sizeof(size_t));
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        break;
+    case FORTHPARSER_STATE_DEFINE:
+        vm->offset.data[0] = vm->compiled.size;
+        break;
     }
     ret =
         DArrayChar_push_back_batch(

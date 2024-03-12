@@ -59,7 +59,10 @@ int get_literal(ForthParser *parser) {
 int get_handler_offset(ForthParser *parser, ForthVM *vm, size_t *offset) {
     const char *iter = vm->words.data;
     size_t *iter_offset = vm->offset.data;
-    for (*offset = 0; *offset < 3; ++(*offset), ++iter, ++iter_offset) {
+    for (
+        *offset = 0;
+        *offset < vm->offset.size;
+        ++(*offset), ++iter, ++iter_offset) {
         if (!strcmp(iter, (const char*)parser->token_buf.data)) {
             return (*iter_offset & OFFSET_BUILTIN) == 0;
         }

@@ -13,16 +13,18 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    char *keywords[3] =
+    char *keywords[5] =
         {
             ".\"",
             "cr",
-            "."
+            ".",
+            ":",
+            ";"
         };
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
-    for (size_t i = 0; i < 3; ++i, ++iter_keywords) {
+    for (size_t i = 0; i < 5; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
                 &vm->words, *iter_keywords, strlen(*iter_keywords));
@@ -38,6 +40,15 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
+    }
+    ret = DArrayChar_push_back_batch(&vm->words, "base", 5);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    size_t cell = OFFSET_MEMORY;
+    ret = DArrayOffset_push_back(&vm->offset, &cell);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
     }
     ret = DArrayChar_initialize(&vm->literal, 1);
     if (ret) {
@@ -64,7 +75,12 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayChar_initialize(&vm->memory, 1);
+    ret = DArrayChar_initialize(&vm->memory, sizeof(size_t));
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    cell = 10;
+    ret = DArrayChar_push_back_batch(&vm->memory, (char*)&cell, sizeof(size_t));
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }

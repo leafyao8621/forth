@@ -9,9 +9,10 @@ typedef enum ForthVMErr {
     FORTHVM_ERR_QUOTE,
     FORTHVM_ERR_INVALID_DECIMAL,
     FORTHVM_ERR_INVALID_BASE,
-    FORTHVM_ERR_STACK_UNDERFLOW
+    FORTHVM_ERR_STACK_UNDERFLOW,
+    FORTHVM_ERR_NOT_IN_COMPILATION_MODE
 } ForthVMErr;
 
-extern const char *fsi_errcode_lookup[8];
+extern const char *fsi_errcode_lookup[9];
 
 #endif

@@ -3,10 +3,14 @@
 
 #include <fsi/interpreter/vm.h>
 
+#define FORTHPARSER_STATE_INTERPRET 0
+#define FORTHPARSER_STATE_COMPILE 1
+#define FORTHPARSER_STATE_DEFINE 2
+
 typedef struct ForthParser {
     char *str;
     char *iter;
-    bool compile;
+    char state;
     char base;
     String token_buf;
 } ForthParser;
