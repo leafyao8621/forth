@@ -40,6 +40,42 @@ void ForthVM_log(ForthVM *vm) {
         putchar(10);
         for (; *iter_literal; ++i, ++iter_literal);
     }
+    puts("Compiled:");
+    char *iter_compiled = vm->compiled.data;
+    for (size_t i = 0; i < vm->compiled.size; ++i, ++iter_compiled) {
+        printf("0x%016lx: ", i);
+        switch (*iter_compiled) {
+        case OPCODE_TERMINATE:
+            puts("TERMINATE");
+            break;
+        case OPCODE_PRINT_STRING:
+            printf(".\" 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_CARRIAGE_RETURN:
+            puts("cr");
+            break;
+        case OPCODE_PUSH:
+            printf("PUSH 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_PRINT_INT:
+            puts(".");
+            break;
+        case OPCODE_RETURN:
+            puts("RETURN");
+            break;
+        case OPCODE_CALL:
+            printf("CALL 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        default:
+            puts("UNKNOWN");
+        }
+    }
     puts("Interpreted:");
     char *iter_interpreted = vm->interpreted.data;
     for (size_t i = 0; i < vm->interpreted.size; ++i, ++iter_interpreted) {
@@ -63,6 +99,11 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_PRINT_INT:
             puts(".");
+            break;
+        case OPCODE_CALL:
+            printf("CALL 0x%016lx\n", *(size_t*)(iter_interpreted + 1));
+            iter_interpreted += sizeof(size_t);
+            i += sizeof(size_t);
             break;
         default:
             puts("UNKNOWN");

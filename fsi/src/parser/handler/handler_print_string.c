@@ -36,7 +36,7 @@ ForthVMErr parser_handle_print_string(ForthParser *parser, ForthVM *vm) {
         }
         ret =
             DArrayChar_push_back_batch(
-                &vm->interpreted, (char*)&literal_offset, sizeof(size_t));
+                &vm->compiled, (char*)&literal_offset, sizeof(size_t));
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }

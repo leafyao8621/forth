@@ -11,7 +11,12 @@ ForthVMErr interpreter_handle_print_string(ForthVM *vm) {
             "%s",
             vm->literal.data +
             *(size_t*)(vm->interpreted.data + vm->ip + 1));
-        vm->ip += sizeof(size_t);
+    } else {
+        printf(
+            "%s",
+            vm->literal.data +
+            *(size_t*)(vm->compiled.data + (vm->ip & ~IP_COMPILED) + 1));
     }
+    vm->ip += sizeof(size_t);
     return FORTHVM_ERR_OK;
 }
