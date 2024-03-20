@@ -1,2 +1,3 @@
-: hello ." Hello world" cr ;
-hello
+: f 1+ 1 + 2 - 3 * 4 / 1- ;
+
+10 f . cr

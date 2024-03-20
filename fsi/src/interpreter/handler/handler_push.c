@@ -17,7 +17,7 @@ ForthVMErr interpreter_handle_push(ForthVM *vm) {
         }
     } else {
         size_t value =
-            *(size_t*)(vm->interpreted.data + (vm->ip & ~IP_COMPILED) + 1);
+            *(size_t*)(vm->compiled.data + (vm->ip & ~IP_COMPILED) + 1);
         vm->ip += sizeof(size_t);
         ret = DArrayOffset_push_back(&vm->operation_stack, &value);
         if (ret) {

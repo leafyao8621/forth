@@ -13,18 +13,24 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    char *keywords[5] =
+    char *keywords[11] =
         {
             ".\"",
             "cr",
             ".",
             ":",
-            ";"
+            ";",
+            "+",
+            "-",
+            "*",
+            "/",
+            "1+",
+            "1-"
         };
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
-    for (size_t i = 0; i < 5; ++i, ++iter_keywords) {
+    for (size_t i = 0; i < 11; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
                 &vm->words, *iter_keywords, strlen(*iter_keywords));

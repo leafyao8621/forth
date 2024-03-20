@@ -3,7 +3,7 @@
 #include <fsi/interpreter/vm.h>
 #include <fsi/util/interpreter_handlers.h>
 
-static ForthInterpreterHandler interpreter_handler[7] =
+static ForthInterpreterHandler interpreter_handler[13] =
     {
         NULL,
         interpreter_handle_print_string,
@@ -11,20 +11,26 @@ static ForthInterpreterHandler interpreter_handler[7] =
         interpreter_handle_push,
         interpreter_handle_print_int,
         interpreter_handle_call,
-        interpreter_handle_return
+        interpreter_handle_return,
+        interpreter_handle_add,
+        interpreter_handle_subtract,
+        interpreter_handle_multiply,
+        interpreter_handle_divide,
+        interpreter_handle_increment,
+        interpreter_handle_decrement
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {
     char opcode = 0;
     ForthVMErr err = FORTHVM_ERR_OK;
-    for (
-        ;
-        (vm->interpreted.data[vm->ip] != OPCODE_TERMINATE);
-        ++vm->ip) {
+    for (;; ++vm->ip) {
         opcode =
             !(vm->ip & IP_COMPILED) ?
             vm->interpreted.data[vm->ip] :
             vm->compiled.data[vm->ip & ~IP_COMPILED];
+        if (opcode == OPCODE_TERMINATE) {
+            break;
+        }
         err = interpreter_handler[(size_t)opcode](vm);
         if (err) {
             return err;

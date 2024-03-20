@@ -11,6 +11,6 @@ ForthVMErr interpreter_handle_return(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_RETURN_STACK_EMPTY;
     }
-    vm->ip = vm->return_stack.data[vm->return_stack.size] - 1;
+    vm->ip = vm->return_stack.data[vm->return_stack.size] + 8;
     return FORTHVM_ERR_OK;
 }

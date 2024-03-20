@@ -23,13 +23,19 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     if (!parser || !str || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    static ForthParserHandler parser_handlers[5] =
+    static ForthParserHandler parser_handlers[11] =
         {
             parser_handle_print_string,
             parser_handle_carriage_return,
             parser_handle_print_int,
             parser_handle_start_compilation,
-            parser_handle_end_compilation
+            parser_handle_end_compilation,
+            parser_handle_add,
+            parser_handle_subtract,
+            parser_handle_multiply,
+            parser_handle_divide,
+            parser_handle_increment,
+            parser_handle_decrement
         };
     parser->str = str;
     parser->iter = str;

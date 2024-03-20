@@ -72,6 +72,24 @@ void ForthVM_log(ForthVM *vm) {
             iter_compiled += sizeof(size_t);
             i += sizeof(size_t);
             break;
+        case OPCODE_ADD:
+            puts("+");
+            break;
+        case OPCODE_SUBTRACT:
+            puts("-");
+            break;
+        case OPCODE_MULTIPLY:
+            puts("*");
+            break;
+        case OPCODE_DIVIDE:
+            puts("/");
+            break;
+        case OPCODE_INCREMENT:
+            puts("1+");
+            break;
+        case OPCODE_DECREMENT:
+            puts("1-");
+            break;
         default:
             puts("UNKNOWN");
         }
@@ -104,6 +122,24 @@ void ForthVM_log(ForthVM *vm) {
             printf("CALL 0x%016lx\n", *(size_t*)(iter_interpreted + 1));
             iter_interpreted += sizeof(size_t);
             i += sizeof(size_t);
+            break;
+        case OPCODE_ADD:
+            puts("+");
+            break;
+        case OPCODE_SUBTRACT:
+            puts("-");
+            break;
+        case OPCODE_MULTIPLY:
+            puts("*");
+            break;
+        case OPCODE_DIVIDE:
+            puts("/");
+            break;
+        case OPCODE_INCREMENT:
+            puts("1+");
+            break;
+        case OPCODE_DECREMENT:
+            puts("1-");
             break;
         default:
             puts("UNKNOWN");

@@ -12,5 +12,11 @@ ForthVMErr interpreter_handle_push(ForthVM *vm);
 ForthVMErr interpreter_handle_print_int(ForthVM *vm);
 ForthVMErr interpreter_handle_call(ForthVM *vm);
 ForthVMErr interpreter_handle_return(ForthVM *vm);
+ForthVMErr interpreter_handle_add(ForthVM *vm);
+ForthVMErr interpreter_handle_subtract(ForthVM *vm);
+ForthVMErr interpreter_handle_multiply(ForthVM *vm);
+ForthVMErr interpreter_handle_divide(ForthVM *vm);
+ForthVMErr interpreter_handle_increment(ForthVM *vm);
+ForthVMErr interpreter_handle_decrement(ForthVM *vm);
 
 #endif
