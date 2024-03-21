@@ -82,15 +82,11 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayOffset_initialize(&vm->return_statck, 1);
-    if (ret) {
-        return FORTHVM_ERR_OUT_OF_MEMORY;
-    }
     ret = DArrayOffset_initialize(&vm->control_stack, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayOffset_initialize(&vm->call_stack, 1);
+    ret = DArrayOffset_initialize(&vm->return_stack, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
@@ -114,9 +110,8 @@ void ForthVM_finalize(ForthVM *vm) {
     DArrayChar_finalize(&vm->compiled);
     DArrayChar_finalize(&vm->interpreted);
     DArrayOffset_finalize(&vm->data_stack);
-    DArrayOffset_finalize(&vm->return_statck);
     DArrayOffset_finalize(&vm->control_stack);
-    DArrayOffset_finalize(&vm->call_stack);
+    DArrayOffset_finalize(&vm->return_stack);
     DArrayChar_finalize(&vm->memory);
 }
 

@@ -53,7 +53,6 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
         }
         printf("token: %s\n", parser->token_buf.data);
         ret = get_handler_offset(parser, vm, &handler_offset);
-        printf("ret %d\n", ret);
         if (!ret) {
             parser_handlers[handler_offset](parser, vm);
         } else if (ret == 1) {

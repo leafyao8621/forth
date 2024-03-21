@@ -34,9 +34,8 @@ typedef struct ForthVM {
     String interpreted;
     size_t ip;
     DArrayOffset data_stack;
-    DArrayOffset return_statck;
+    DArrayOffset return_stack;
     DArrayOffset control_stack;
-    DArrayOffset call_stack;
     String memory;
 } ForthVM;
 
