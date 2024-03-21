@@ -12,11 +12,21 @@ ForthVMErr ForthParser_initialize(ForthParser *parser) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
+    ret = DArrayOffset_initialize(&parser->control_offset, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayChar_initialize(&parser->control_type, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
     return FORTHVM_ERR_OK;
 }
 
 void ForthParser_finalize(ForthParser *parser) {
     DArrayChar_finalize(&parser->token_buf);
+    DArrayOffset_finalize(&parser->control_offset);
+    DArrayChar_finalize(&parser->control_type);
 }
 
 ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
