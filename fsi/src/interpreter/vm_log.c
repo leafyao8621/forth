@@ -6,15 +6,19 @@ void ForthVM_log(ForthVM *vm) {
     puts("Words:");
     char *iter_words = vm->words.data;
     size_t *iter_offset = vm->offset.data;
-    for (size_t i = 0; i < vm->offset.size; ++i, ++iter_words, ++iter_offset) {
+    char *iter_offset_flags = vm->offset_flags.data;
+    for (
+        size_t i = 0;
+        i < vm->offset.size;
+        ++i, ++iter_words, ++iter_offset, ++iter_offset_flags) {
         printf("0x%016lx:\n", i);
         puts(iter_words);
         for (; *iter_words; ++iter_words);
-        printf("0x%016lx", *iter_offset & OFFSET_OFFSET);
-        if (*iter_offset & OFFSET_BUILTIN) {
+        printf("0x%016lx", *iter_offset);
+        if (*iter_offset_flags & OFFSET_BUILTIN) {
             printf(" %s", "BUILTIN");
         }
-        if (*iter_offset & OFFSET_MEMORY) {
+        if (*iter_offset_flags & OFFSET_MEMORY) {
             printf(" %s", "MEMORY");
         }
         putchar(10);

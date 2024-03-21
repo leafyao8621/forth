@@ -10,13 +10,16 @@ ForthVMErr parser_handle_end_compilation(ForthParser *parser, ForthVM *vm) {
     case FORTHPARSER_STATE_INTERPRET:
         return FORTHVM_ERR_NOT_IN_COMPILATION_MODE;
     case FORTHPARSER_STATE_DEFINE:
+        parser->offset = 4;
         vm->offset.data[4] = vm->compiled.size;
+        vm->offset_flags.data[4] = OFFSET_PENDING;
         break;
     case FORTHPARSER_STATE_COMPILE:
         ret = DArrayChar_push_back(&vm->compiled, &opcode);
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
+        vm->offset_flags.data[parser->offset] = 0;
         parser->state = FORTHPARSER_STATE_INTERPRET;
         break;
     }

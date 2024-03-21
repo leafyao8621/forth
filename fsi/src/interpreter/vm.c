@@ -13,6 +13,10 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
+    ret = DArrayChar_initialize(&vm->offset_flags, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
     char *keywords[11] =
         {
             ".\"",
@@ -30,6 +34,7 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
+    char flags = OFFSET_BUILTIN;
     for (size_t i = 0; i < 11; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
@@ -41,8 +46,12 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
-        offset = i | OFFSET_BUILTIN;
+        offset = i;
         ret = DArrayOffset_push_back(&vm->offset, &offset);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        ret = DArrayChar_push_back(&vm->offset_flags, &flags);
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
@@ -69,7 +78,11 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
     vm->ip = 0;
-    ret = DArrayOffset_initialize(&vm->operation_stack, 1);
+    ret = DArrayOffset_initialize(&vm->data_stack, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayOffset_initialize(&vm->return_statck, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
@@ -77,7 +90,7 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayOffset_initialize(&vm->return_stack, 1);
+    ret = DArrayOffset_initialize(&vm->call_stack, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
@@ -96,12 +109,14 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
 void ForthVM_finalize(ForthVM *vm) {
     DArrayChar_finalize(&vm->words);
     DArrayOffset_finalize(&vm->offset);
+    DArrayChar_finalize(&vm->offset_flags);
     DArrayChar_finalize(&vm->literal);
     DArrayChar_finalize(&vm->compiled);
     DArrayChar_finalize(&vm->interpreted);
-    DArrayOffset_finalize(&vm->operation_stack);
+    DArrayOffset_finalize(&vm->data_stack);
+    DArrayOffset_finalize(&vm->return_statck);
     DArrayOffset_finalize(&vm->control_stack);
-    DArrayOffset_finalize(&vm->return_stack);
+    DArrayOffset_finalize(&vm->call_stack);
     DArrayChar_finalize(&vm->memory);
 }
 

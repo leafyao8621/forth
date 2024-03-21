@@ -12,6 +12,7 @@ typedef struct ForthParser {
     char *iter;
     char state;
     char base;
+    size_t offset;
     String token_buf;
 } ForthParser;
 

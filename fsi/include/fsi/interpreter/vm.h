@@ -4,9 +4,10 @@
 #include <fsi/util/containers.h>
 #include <fsi/util/errcode.h>
 
-#define OFFSET_BUILTIN 0x8000000000000000
-#define OFFSET_MEMORY 0x4000000000000000
-#define OFFSET_OFFSET 0x3fffffffffffffff
+#define OFFSET_BUILTIN 0x0000000000000001
+#define OFFSET_MEMORY 0x0000000000000002
+#define OFFSET_PENDING 0x0000000000000004
+#define OFFSET_DOES 0x0000000000000008
 
 #define OPCODE_TERMINATE 0
 #define OPCODE_PRINT_STRING 1
@@ -27,13 +28,15 @@
 typedef struct ForthVM {
     String words;
     DArrayOffset offset;
+    String offset_flags;
     String literal;
     String compiled;
     String interpreted;
     size_t ip;
-    DArrayOffset operation_stack;
+    DArrayOffset data_stack;
+    DArrayOffset return_statck;
     DArrayOffset control_stack;
-    DArrayOffset return_stack;
+    DArrayOffset call_stack;
     String memory;
 } ForthVM;
 

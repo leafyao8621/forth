@@ -8,8 +8,15 @@ int main(void) {
     ForthVMErr err;
     err = fsi_initialize(&vm);
     GETERR;
+    if (err) {
+        return 0;
+    }
     err = fsi_load_file(&vm, "script/a.fs");
     GETERR;
+    if (err) {
+        fsi_finalize(&vm);
+        return 0;
+    }
     fsi_log(&vm);
     err = fsi_execute(&vm);
     GETERR;

@@ -11,7 +11,7 @@ ForthVMErr interpreter_handle_call(ForthVM *vm) {
         !(vm->ip & IP_COMPILED) ?
         *(size_t*)(vm->interpreted.data + vm->ip + 1) :
         *(size_t*)(vm->compiled.data + (vm->ip & ~IP_COMPILED) + 1);
-    ret = DArrayOffset_push_back(&vm->return_stack, &vm->ip);
+    ret = DArrayOffset_push_back(&vm->call_stack, &vm->ip);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }

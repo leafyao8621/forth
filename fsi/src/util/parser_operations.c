@@ -56,15 +56,18 @@ int get_literal(ForthParser *parser) {
     return 0;
 }
 
-int get_handler_offset(ForthParser *parser, ForthVM *vm, size_t *offset) {
+int get_handler_offset(
+    ForthParser *parser,
+    ForthVM *vm,
+    size_t *offset) {
     const char *iter = vm->words.data;
-    size_t *iter_offset = vm->offset.data;
+    const char *iter_flags = vm->offset_flags.data;
     for (
         *offset = 0;
         *offset < vm->offset.size;
-        ++(*offset), ++iter, ++iter_offset) {
+        ++(*offset), ++iter, ++iter_flags) {
         if (!strcmp(iter, (const char*)parser->token_buf.data)) {
-            return (*iter_offset & OFFSET_BUILTIN) == 0;
+            return (*iter_flags & OFFSET_BUILTIN) == 0;
         }
         for (; *iter; ++iter);
     }

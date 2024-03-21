@@ -41,6 +41,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     parser->iter = str;
     parser->state = FORTHPARSER_STATE_INTERPRET;
     parser->base = 10;
+    parser->offset = 0;
     int ret = 0;
     size_t handler_offset = 0;
     size_t int_value = 0;
@@ -52,15 +53,21 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
         }
         printf("token: %s\n", parser->token_buf.data);
         ret = get_handler_offset(parser, vm, &handler_offset);
+        printf("ret %d\n", ret);
         if (!ret) {
             parser_handlers[handler_offset](parser, vm);
         } else if (ret == 1) {
             char opcode = 0;
             size_t offset = 0;
+            char flags = 0;
             switch (parser->state) {
             case FORTHPARSER_STATE_INTERPRET:
-                offset = vm->offset.data[handler_offset];
-                if (!(offset & OFFSET_MEMORY)) {
+                flags = vm->offset_flags.data[handler_offset];
+                if (!(flags & OFFSET_MEMORY)) {
+                    if (flags & OFFSET_PENDING) {
+                        return FORTHVM_ERR_PENDING_DEFINITION;
+                    }
+                    offset = vm->offset.data[handler_offset];
                     opcode = OPCODE_CALL;
                     ret = DArrayChar_push_back(&vm->interpreted, &opcode);
                     if (ret) {
@@ -78,8 +85,12 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 }
                 break;
             case FORTHPARSER_STATE_COMPILE:
-                offset = vm->offset.data[handler_offset];
-                if (!(offset & OFFSET_MEMORY)) {
+                flags = vm->offset_flags.data[handler_offset];
+                if (!(flags & OFFSET_MEMORY)) {
+                    if (flags & OFFSET_PENDING) {
+                        return FORTHVM_ERR_PENDING_DEFINITION;
+                    }
+                    offset = vm->offset.data[handler_offset];
                     opcode = OPCODE_CALL;
                     ret = DArrayChar_push_back(&vm->compiled, &opcode);
                     if (ret) {
@@ -97,11 +108,15 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 }
                 break;
             case FORTHPARSER_STATE_DEFINE:
+                parser->offset = handler_offset;
                 vm->offset.data[handler_offset] = vm->compiled.size;
+                vm->offset_flags.data[handler_offset] = OFFSET_PENDING;
+                parser->state = FORTHPARSER_STATE_COMPILE;
                 break;
             }
         } else {
             size_t offset = 0;
+            char flags = 0;
             switch (parser->state) {
             case FORTHPARSER_STATE_INTERPRET:
             case FORTHPARSER_STATE_COMPILE:
@@ -121,7 +136,9 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                     }
                     ret =
                         DArrayChar_push_back_batch(
-                            &vm->interpreted, (char*)&int_value, sizeof(size_t));
+                            &vm->interpreted,
+                            (char*)&int_value,
+                            sizeof(size_t));
                     if (ret) {
                         return FORTHVM_ERR_OUT_OF_MEMORY;
                     }
@@ -150,8 +167,14 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 if (ret) {
                     return FORTHVM_ERR_OUT_OF_MEMORY;
                 }
+                parser->offset = vm->offset.size;
                 offset = vm->compiled.size;
                 ret = DArrayOffset_push_back(&vm->offset, &offset);
+                if (ret) {
+                    return FORTHVM_ERR_OUT_OF_MEMORY;
+                }
+                flags = OFFSET_PENDING;
+                ret = DArrayChar_push_back(&vm->offset_flags, &flags);
                 if (ret) {
                     return FORTHVM_ERR_OUT_OF_MEMORY;
                 }

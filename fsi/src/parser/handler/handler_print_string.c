@@ -42,7 +42,9 @@ ForthVMErr parser_handle_print_string(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
+        parser->offset = 0;
         vm->offset.data[0] = vm->compiled.size;
+        vm->offset_flags.data[0] = OFFSET_PENDING;
         break;
     }
     ret =
