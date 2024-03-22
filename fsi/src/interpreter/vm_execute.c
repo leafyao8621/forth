@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <fsi/interpreter/vm.h>
 #include <fsi/util/interpreter_handlers.h>
 
