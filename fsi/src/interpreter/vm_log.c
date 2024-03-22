@@ -68,6 +68,9 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_PRINT_INT:
             puts(".");
             break;
+        case OPCODE_PRINT_INT_UNSIGNED:
+            puts("u.");
+            break;
         case OPCODE_RETURN:
             puts("RETURN");
             break;
@@ -93,6 +96,36 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_DECREMENT:
             puts("1-");
+            break;
+        case OPCODE_GT:
+            puts(">");
+            break;
+        case OPCODE_UGT:
+            puts("u>");
+            break;
+        case OPCODE_GEQ:
+            puts(">=");
+            break;
+        case OPCODE_UGEQ:
+            puts("u>=");
+            break;
+        case OPCODE_LT:
+            puts("<");
+            break;
+        case OPCODE_ULT:
+            puts("u<");
+            break;
+        case OPCODE_LEQ:
+            puts("<=");
+            break;
+        case OPCODE_ULEQ:
+            puts("u<=");
+            break;
+        case OPCODE_EQ:
+            puts("=");
+            break;
+        case OPCODE_NEQ:
+            puts("<>");
             break;
         default:
             puts("UNKNOWN");
@@ -122,6 +155,9 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_PRINT_INT:
             puts(".");
             break;
+        case OPCODE_PRINT_INT_UNSIGNED:
+            puts("u.");
+            break;
         case OPCODE_CALL:
             printf("CALL 0x%016lx\n", *(size_t*)(iter_interpreted + 1));
             iter_interpreted += sizeof(size_t);
@@ -144,6 +180,36 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_DECREMENT:
             puts("1-");
+            break;
+        case OPCODE_GT:
+            puts(">");
+            break;
+        case OPCODE_UGT:
+            puts("u>");
+            break;
+        case OPCODE_GEQ:
+            puts(">=");
+            break;
+        case OPCODE_UGEQ:
+            puts("u>=");
+            break;
+        case OPCODE_LT:
+            puts("<");
+            break;
+        case OPCODE_ULT:
+            puts("u<");
+            break;
+        case OPCODE_LEQ:
+            puts("<=");
+            break;
+        case OPCODE_ULEQ:
+            puts("u<=");
+            break;
+        case OPCODE_EQ:
+            puts("=");
+            break;
+        case OPCODE_NEQ:
+            puts("<>");
             break;
         default:
             puts("UNKNOWN");

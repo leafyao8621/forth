@@ -20,9 +20,10 @@ ForthVMErr parser_handle_increment(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 9;
-        vm->offset.data[9] = vm->compiled.size;
-        vm->offset_flags.data[9] = OFFSET_PENDING;
+        parser->offset = 10;
+        vm->offset.data[10] = vm->compiled.size;
+        vm->offset_flags.data[10] = OFFSET_PENDING;
+        parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }
     return FORTHVM_ERR_OK;

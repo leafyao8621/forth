@@ -17,11 +17,12 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    char *keywords[11] =
+    char *keywords[22] =
         {
             ".\"",
             "cr",
             ".",
+            "u.",
             ":",
             ";",
             "+",
@@ -29,13 +30,23 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
             "*",
             "/",
             "1+",
-            "1-"
+            "1-",
+            ">",
+            "u>",
+            ">=",
+            "u>=",
+            "<",
+            "u<",
+            "<=",
+            "u<=",
+            "=",
+            "<>"
         };
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
     char flags = OFFSET_BUILTIN;
-    for (size_t i = 0; i < 11; ++i, ++iter_keywords) {
+    for (size_t i = 0; i < 22; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
                 &vm->words, *iter_keywords, strlen(*iter_keywords));
@@ -60,8 +71,13 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    size_t cell = OFFSET_MEMORY;
+    size_t cell = 0;
     ret = DArrayOffset_push_back(&vm->offset, &cell);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    flags = OFFSET_MEMORY;
+    ret = DArrayChar_push_back(&vm->offset_flags, &flags);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }

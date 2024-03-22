@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <fsi/util/interpreter_handlers.h>
 
 ForthVMErr interpreter_handle_return(ForthVM *vm) {

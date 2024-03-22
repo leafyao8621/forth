@@ -10,9 +10,10 @@ ForthVMErr parser_handle_end_compilation(ForthParser *parser, ForthVM *vm) {
     case FORTHPARSER_STATE_INTERPRET:
         return FORTHVM_ERR_NOT_IN_COMPILATION_MODE;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 4;
-        vm->offset.data[4] = vm->compiled.size;
-        vm->offset_flags.data[4] = OFFSET_PENDING;
+        parser->offset = 5;
+        vm->offset.data[5] = vm->compiled.size;
+        vm->offset_flags.data[5] = OFFSET_PENDING;
+        parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     case FORTHPARSER_STATE_COMPILE:
         ret = DArrayChar_push_back(&vm->compiled, &opcode);

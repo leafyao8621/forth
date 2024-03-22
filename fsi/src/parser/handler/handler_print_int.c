@@ -23,6 +23,7 @@ ForthVMErr parser_handle_print_int(ForthParser *parser, ForthVM *vm) {
         parser->offset = 2;
         vm->offset.data[2] = vm->compiled.size;
         vm->offset_flags.data[2] = OFFSET_PENDING;
+        parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }
     return FORTHVM_ERR_OK;

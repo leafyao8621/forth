@@ -3,13 +3,14 @@
 #include <fsi/interpreter/vm.h>
 #include <fsi/util/interpreter_handlers.h>
 
-static ForthInterpreterHandler interpreter_handler[13] =
+static ForthInterpreterHandler interpreter_handler[24] =
     {
         NULL,
         interpreter_handle_print_string,
         interpreter_handle_carriage_return,
         interpreter_handle_push,
         interpreter_handle_print_int,
+        interpreter_handle_print_int_unsigned,
         interpreter_handle_call,
         interpreter_handle_return,
         interpreter_handle_add,
@@ -17,7 +18,17 @@ static ForthInterpreterHandler interpreter_handler[13] =
         interpreter_handle_multiply,
         interpreter_handle_divide,
         interpreter_handle_increment,
-        interpreter_handle_decrement
+        interpreter_handle_decrement,
+        interpreter_handle_gt,
+        interpreter_handle_ugt,
+        interpreter_handle_geq,
+        interpreter_handle_ugeq,
+        interpreter_handle_lt,
+        interpreter_handle_ult,
+        interpreter_handle_leq,
+        interpreter_handle_uleq,
+        interpreter_handle_eq,
+        interpreter_handle_neq
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {
