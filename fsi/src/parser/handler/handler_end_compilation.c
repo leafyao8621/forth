@@ -16,6 +16,9 @@ ForthVMErr parser_handle_end_compilation(ForthParser *parser, ForthVM *vm) {
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     case FORTHPARSER_STATE_COMPILE:
+        if (parser->conditional_type.size || parser->loop_type.size) {
+            return FORTHVM_ERR_NOT_BALANCED;
+        }
         ret = DArrayChar_push_back(&vm->compiled, &opcode);
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
