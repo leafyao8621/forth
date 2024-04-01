@@ -29,4 +29,7 @@ ForthVMErr interpreter_handle_leq(ForthVM *vm);
 ForthVMErr interpreter_handle_uleq(ForthVM *vm);
 ForthVMErr interpreter_handle_eq(ForthVM *vm);
 ForthVMErr interpreter_handle_neq(ForthVM *vm);
+ForthVMErr interpreter_handle_jmp(ForthVM *vm);
+ForthVMErr interpreter_handle_jzd(ForthVM *vm);
+
 #endif

@@ -1,6 +1,6 @@
 #include <fsi/util/errcode.h>
 
-const char *fsi_errcode_lookup[11] =
+const char *fsi_errcode_lookup[12] =
     {
         "FORTHVM_ERR_OK",
         "FORTHVM_ERR_NULL_PTR",
@@ -12,5 +12,6 @@ const char *fsi_errcode_lookup[11] =
         "FORTHVM_ERR_STACK_UNDERFLOW",
         "FORTHVM_ERR_NOT_IN_COMPILATION_MODE",
         "FORTHVM_ERR_RETURN_STACK_EMPTY",
-        "FORTHVM_ERR_PENDING_DEFINITION"
+        "FORTHVM_ERR_PENDING_DEFINITION",
+        "FORTHVM_ERR_NOT_BALANCED"
     };

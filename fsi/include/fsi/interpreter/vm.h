@@ -33,6 +33,8 @@
 #define OPCODE_ULEQ 21
 #define OPCODE_EQ 22
 #define OPCODE_NEQ 23
+#define OPCODE_JMP 24
+#define OPCODE_JZD 25
 
 #define IP_COMPILED 0x8000000000000000
 

@@ -18,8 +18,8 @@ int main(void) {
         return 0;
     }
     fsi_log(&vm);
-    err = fsi_execute(&vm);
-    GETERR;
+    // err = fsi_execute(&vm);
+    // GETERR;
     fsi_finalize(&vm);
     return 0;
 }

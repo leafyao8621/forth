@@ -127,6 +127,16 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_NEQ:
             puts("<>");
             break;
+        case OPCODE_JMP:
+            printf("JMP 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_JZD:
+            printf("JZD 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
         default:
             puts("UNKNOWN");
         }

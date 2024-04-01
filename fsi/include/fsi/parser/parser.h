@@ -7,10 +7,10 @@
 #define FORTHPARSER_STATE_COMPILE 1
 #define FORTHPARSER_STATE_DEFINE 2
 
-#define FORTHPARSER_CONTROL_TYPE_IF 0
-#define FORTHPARSER_CONTROL_TYPE_ELSE 1
-#define FORTHPARSER_CONTROL_TYPE_DO 2
-#define FORTHPARSER_CONTROL_TYPE_WHILE 3
+#define FORTHPARSER_CONDITIONAL_TYPE_IF 0
+#define FORTHPARSER_CONDITIONAL_TYPE_ELSE 1
+#define FORTHPARSER_LOOP_TYPE_DO 0
+#define FORTHPARSER_LOOP_TYPE_WHILE 1
 
 typedef struct ForthParser {
     char *str;
@@ -19,8 +19,10 @@ typedef struct ForthParser {
     char base;
     size_t offset;
     String token_buf;
-    DArrayOffset control_offset;
-    String control_type;
+    DArrayOffset conditional_offset;
+    String conditional_type;
+    DArrayOffset loop_offset;
+    String loop_type;
 } ForthParser;
 
 ForthVMErr ForthParser_initialize(ForthParser *parser);

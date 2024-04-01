@@ -12,11 +12,19 @@ ForthVMErr ForthParser_initialize(ForthParser *parser) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayOffset_initialize(&parser->control_offset, 1);
+    ret = DArrayOffset_initialize(&parser->conditional_offset, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    ret = DArrayChar_initialize(&parser->control_type, 1);
+    ret = DArrayChar_initialize(&parser->conditional_type, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayOffset_initialize(&parser->loop_offset, 1);
+    if (ret) {
+        return FORTHVM_ERR_OUT_OF_MEMORY;
+    }
+    ret = DArrayChar_initialize(&parser->loop_type, 1);
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
@@ -25,15 +33,17 @@ ForthVMErr ForthParser_initialize(ForthParser *parser) {
 
 void ForthParser_finalize(ForthParser *parser) {
     DArrayChar_finalize(&parser->token_buf);
-    DArrayOffset_finalize(&parser->control_offset);
-    DArrayChar_finalize(&parser->control_type);
+    DArrayOffset_finalize(&parser->conditional_offset);
+    DArrayChar_finalize(&parser->conditional_type);
+    DArrayOffset_finalize(&parser->loop_offset);
+    DArrayChar_finalize(&parser->loop_type);
 }
 
 ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     if (!parser || !str || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    static ForthParserHandler parser_handlers[22] =
+    static ForthParserHandler parser_handlers[25] =
         {
             parser_handle_print_string,
             parser_handle_carriage_return,
@@ -56,7 +66,10 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_leq,
             parser_handle_uleq,
             parser_handle_eq,
-            parser_handle_neq
+            parser_handle_neq,
+            parser_handle_if,
+            parser_handle_else,
+            parser_handle_then
         };
     parser->str = str;
     parser->iter = str;
