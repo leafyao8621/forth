@@ -100,7 +100,8 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                     if (flags & OFFSET_PENDING) {
                         return FORTHVM_ERR_PENDING_DEFINITION;
                     }
-                    offset = vm->offset.data[handler_offset];
+                    offset =
+                        (vm->offset.data[handler_offset] - 1) & ~IP_COMPILED;
                     opcode = OPCODE_CALL;
                     ret = DArrayChar_push_back(&vm->interpreted, &opcode);
                     if (ret) {
@@ -123,7 +124,8 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                     if (flags & OFFSET_PENDING) {
                         return FORTHVM_ERR_PENDING_DEFINITION;
                     }
-                    offset = vm->offset.data[handler_offset];
+                    offset =
+                        (vm->offset.data[handler_offset] - 1) & ~IP_COMPILED;
                     opcode = OPCODE_CALL;
                     ret = DArrayChar_push_back(&vm->compiled, &opcode);
                     if (ret) {

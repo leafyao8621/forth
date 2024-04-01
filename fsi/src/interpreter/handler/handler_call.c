@@ -15,6 +15,6 @@ ForthVMErr interpreter_handle_call(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    vm->ip = (value | IP_COMPILED) - 1;
+    vm->ip = (value | IP_COMPILED);
     return FORTHVM_ERR_OK;
 }

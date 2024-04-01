@@ -27,14 +27,16 @@ static ForthInterpreterHandler interpreter_handler[26] =
         interpreter_handle_uleq,
         interpreter_handle_eq,
         interpreter_handle_neq,
-        NULL,
-        NULL
+        interpreter_handle_jmp,
+        interpreter_handle_jzd
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {
     char opcode = 0;
     ForthVMErr err = FORTHVM_ERR_OK;
-    for (;; ++vm->ip) {
+    for (
+        ;;
+        vm->ip = (vm->ip & IP_COMPILED) | ((vm->ip & ~IP_COMPILED) + 1)) {
         opcode =
             !(vm->ip & IP_COMPILED) ?
             vm->interpreted.data[vm->ip] :

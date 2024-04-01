@@ -2,19 +2,7 @@
     90 >= if
         0
     else
-        80 >= if
-            1
-        else
-            70 >= if
-                2
-            else
-                60 >= if
-                    3
-                else
-                    4
-                then
-            then
-        then
+        1
     then
 ;
 
