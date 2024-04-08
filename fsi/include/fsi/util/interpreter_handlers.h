@@ -14,11 +14,11 @@ ForthVMErr interpreter_handle_print_int_unsigned(ForthVM *vm);
 ForthVMErr interpreter_handle_call(ForthVM *vm);
 ForthVMErr interpreter_handle_return(ForthVM *vm);
 ForthVMErr interpreter_handle_add(ForthVM *vm);
-ForthVMErr interpreter_handle_subtract(ForthVM *vm);
-ForthVMErr interpreter_handle_multiply(ForthVM *vm);
-ForthVMErr interpreter_handle_divide(ForthVM *vm);
-ForthVMErr interpreter_handle_increment(ForthVM *vm);
-ForthVMErr interpreter_handle_decrement(ForthVM *vm);
+ForthVMErr interpreter_handle_sub(ForthVM *vm);
+ForthVMErr interpreter_handle_mul(ForthVM *vm);
+ForthVMErr interpreter_handle_div(ForthVM *vm);
+ForthVMErr interpreter_handle_inc(ForthVM *vm);
+ForthVMErr interpreter_handle_dec(ForthVM *vm);
 ForthVMErr interpreter_handle_gt(ForthVM *vm);
 ForthVMErr interpreter_handle_ugt(ForthVM *vm);
 ForthVMErr interpreter_handle_geq(ForthVM *vm);
@@ -34,5 +34,11 @@ ForthVMErr interpreter_handle_jzd(ForthVM *vm);
 ForthVMErr interpreter_handle_dup(ForthVM *vm);
 ForthVMErr interpreter_handle_swap(ForthVM *vm);
 ForthVMErr interpreter_handle_drop(ForthVM *vm);
+ForthVMErr interpreter_handle_mod(ForthVM *vm);
+ForthVMErr interpreter_handle_2pushr(ForthVM *vm);
+ForthVMErr interpreter_handle_2popr(ForthVM *vm);
+ForthVMErr interpreter_handle_incr(ForthVM *vm);
+ForthVMErr interpreter_handle_jgtr(ForthVM *vm);
+ForthVMErr interpreter_handle_peekr(ForthVM *vm);
 
 #endif

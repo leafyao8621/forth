@@ -146,6 +146,26 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_DROP:
             puts("DROP");
             break;
+        case OPCODE_MOD:
+            puts("MOD");
+            break;
+        case OPCODE_2PUSHR:
+            puts("2PUSHR");
+            break;
+        case OPCODE_2POPR:
+            puts("2POPR");
+            break;
+        case OPCODE_INCR:
+            puts("INCR");
+            break;
+        case OPCODE_JGTR:
+            printf("JGTR 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_PEEKR:
+            puts("PEEKR");
+            break;
         default:
             puts("UNKNOWN");
         }
@@ -238,6 +258,26 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_DROP:
             puts("DROP");
+            break;
+        case OPCODE_MOD:
+            puts("MOD");
+            break;
+        case OPCODE_2PUSHR:
+            puts("2PUSHR");
+            break;
+        case OPCODE_2POPR:
+            puts("2POPR");
+            break;
+        case OPCODE_INCR:
+            puts("INCR");
+            break;
+        case OPCODE_JGTR:
+            printf("JGTR 0x%016lx\n", *(size_t*)(iter_compiled + 1));
+            iter_compiled += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_PEEKR:
+            puts("PEEKR");
             break;
         default:
             puts("UNKNOWN");

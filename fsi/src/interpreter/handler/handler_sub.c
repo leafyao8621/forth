@@ -2,7 +2,7 @@
 
 #include <fsi/util/interpreter_handlers.h>
 
-ForthVMErr interpreter_handle_subtract(ForthVM *vm) {
+ForthVMErr interpreter_handle_sub(ForthVM *vm) {
     if (!vm) {
         return FORTHVM_ERR_NULL_PTR;
     }

@@ -1,32 +1,27 @@
 : cond
     dup 90 >= if
-        ." A" cr
+        ." A "
     else
         dup 80 >= if
-            ." B" cr
+            ." B "
         else
             dup 70 >= if
-                ." C" cr
+                ." C "
             else
                 dup 60 >= if
-                    ." D" cr
+                    ." D "
                 else
-                    ." F" cr
+                    ." F "
                 then
             then
         then
     then
 ;
 
-95 cond . cr
-90 cond . cr
-85 cond . cr
-80 cond . cr
-75 cond . cr
-70 cond . cr
-65 cond . cr
-60 cond . cr
-55 cond . cr
+: main
+    1 do
+        i cond . cr
+    loop
+;
 
-2 3 swap . .
-5 6 drop . cr
+100 main
