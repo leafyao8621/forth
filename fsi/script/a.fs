@@ -1,27 +1,23 @@
 : cond
-    dup 90 >= if
-        ." A "
-    else
-        dup 80 >= if
-            ." B "
-        else
-            dup 70 >= if
-                ." C "
-            else
-                dup 60 >= if
-                    ." D "
-                else
-                    ." F "
-                then
-            then
-        then
+    0 swap
+    dup 3 mod 0 = if
+        ." Fizz"
+        swap 1+ swap
     then
+    dup 5 mod 0 = if
+        ." Buzz"
+        swap 1+ swap
+    then
+    swap 0 = if
+        .
+    then
+    cr
 ;
 
 : main
     1 do
-        i cond . cr
+        i cond
     loop
 ;
 
-100 main
+16 main
