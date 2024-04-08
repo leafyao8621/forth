@@ -1,10 +1,10 @@
 #include <fsi/util/parser_handlers.h>
 
-ForthVMErr parser_handle_subtract(ForthParser *parser, ForthVM *vm) {
+ForthVMErr parser_handle_drop(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    char opcode = OPCODE_SUB;
+    char opcode = OPCODE_DROP;
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
@@ -20,9 +20,9 @@ ForthVMErr parser_handle_subtract(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 7;
-        vm->offset.data[7] = vm->compiled.size;
-        vm->offset_flags.data[7] = OFFSET_PENDING;
+        parser->offset = 27;
+        vm->offset.data[27] = vm->compiled.size;
+        vm->offset_flags.data[27] = OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }

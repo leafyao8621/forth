@@ -4,7 +4,7 @@ ForthVMErr parser_handle_increment(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    char opcode = OPCODE_INCREMENT;
+    char opcode = OPCODE_INC;
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:

@@ -4,7 +4,7 @@ ForthVMErr parser_handle_multiply(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    char opcode = OPCODE_MULTIPLY;
+    char opcode = OPCODE_MUL;
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:

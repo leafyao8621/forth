@@ -32,5 +32,8 @@ ForthVMErr parser_handle_neq(ForthParser *parser ,ForthVM *vm);
 ForthVMErr parser_handle_if(ForthParser *parser ,ForthVM *vm);
 ForthVMErr parser_handle_else(ForthParser *parser ,ForthVM *vm);
 ForthVMErr parser_handle_then(ForthParser *parser ,ForthVM *vm);
+ForthVMErr parser_handle_dup(ForthParser *parser ,ForthVM *vm);
+ForthVMErr parser_handle_swap(ForthParser *parser ,ForthVM *vm);
+ForthVMErr parser_handle_drop(ForthParser *parser ,ForthVM *vm);
 
 #endif

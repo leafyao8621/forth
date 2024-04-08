@@ -82,19 +82,19 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_ADD:
             puts("+");
             break;
-        case OPCODE_SUBTRACT:
+        case OPCODE_SUB:
             puts("-");
             break;
-        case OPCODE_MULTIPLY:
+        case OPCODE_MUL:
             puts("*");
             break;
-        case OPCODE_DIVIDE:
+        case OPCODE_DIV:
             puts("/");
             break;
-        case OPCODE_INCREMENT:
+        case OPCODE_INC:
             puts("1+");
             break;
-        case OPCODE_DECREMENT:
+        case OPCODE_DEC:
             puts("1-");
             break;
         case OPCODE_GT:
@@ -137,6 +137,15 @@ void ForthVM_log(ForthVM *vm) {
             iter_compiled += sizeof(size_t);
             i += sizeof(size_t);
             break;
+        case OPCODE_DUP:
+            puts("DUP");
+            break;
+        case OPCODE_SWAP:
+            puts("SWAP");
+            break;
+        case OPCODE_DROP:
+            puts("DROP");
+            break;
         default:
             puts("UNKNOWN");
         }
@@ -176,19 +185,19 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_ADD:
             puts("+");
             break;
-        case OPCODE_SUBTRACT:
+        case OPCODE_SUB:
             puts("-");
             break;
-        case OPCODE_MULTIPLY:
+        case OPCODE_MUL:
             puts("*");
             break;
-        case OPCODE_DIVIDE:
+        case OPCODE_DIV:
             puts("/");
             break;
-        case OPCODE_INCREMENT:
+        case OPCODE_INC:
             puts("1+");
             break;
-        case OPCODE_DECREMENT:
+        case OPCODE_DEC:
             puts("1-");
             break;
         case OPCODE_GT:
@@ -220,6 +229,15 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_NEQ:
             puts("<>");
+            break;
+        case OPCODE_DUP:
+            puts("DUP");
+            break;
+        case OPCODE_SWAP:
+            puts("SWAP");
+            break;
+        case OPCODE_DROP:
+            puts("DROP");
             break;
         default:
             puts("UNKNOWN");

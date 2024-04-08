@@ -1,7 +1,7 @@
 #include <fsi/interpreter/vm.h>
 #include <fsi/util/interpreter_handlers.h>
 
-static ForthInterpreterHandler interpreter_handler[26] =
+static ForthInterpreterHandler interpreter_handler[29] =
     {
         NULL,
         interpreter_handle_print_string,
@@ -28,7 +28,10 @@ static ForthInterpreterHandler interpreter_handler[26] =
         interpreter_handle_eq,
         interpreter_handle_neq,
         interpreter_handle_jmp,
-        interpreter_handle_jzd
+        interpreter_handle_jzd,
+        interpreter_handle_dup,
+        interpreter_handle_swap,
+        interpreter_handle_drop
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {

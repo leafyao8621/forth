@@ -1,8 +1,20 @@
 : cond
-    90 >= if
-        0
+    dup 90 >= if
+        ." A" cr
     else
-        1
+        dup 80 >= if
+            ." B" cr
+        else
+            dup 70 >= if
+                ." C" cr
+            else
+                dup 60 >= if
+                    ." D" cr
+                else
+                    ." F" cr
+                then
+            then
+        then
     then
 ;
 
@@ -15,3 +27,6 @@
 65 cond . cr
 60 cond . cr
 55 cond . cr
+
+2 3 swap . .
+5 6 drop . cr

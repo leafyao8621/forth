@@ -4,7 +4,7 @@ ForthVMErr parser_handle_decrement(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    char opcode = OPCODE_DECREMENT;
+    char opcode = OPCODE_DEC;
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
