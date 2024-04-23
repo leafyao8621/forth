@@ -1,23 +1,20 @@
-: cond
-    0 swap
-    dup 3 mod 0 = if
-        ." Fizz"
-        swap 1+ swap
-    then
-    dup 5 mod 0 = if
-        ." Buzz"
-        swap 1+ swap
-    then
-    swap 0 = if
-        .
-    then
-    cr
-;
-
 : main
-    1 do
-        i cond
-    loop
+    1
+    begin
+        dup 10 <
+    while
+        dup .
+        1
+        begin
+            dup 5 <
+        while
+            dup .
+            1+
+        repeat
+        cr
+        drop
+        1+
+    repeat
 ;
 
-16 main
+main

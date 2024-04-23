@@ -6,10 +6,10 @@ LIB = lib/libfsi.so
 BIN = fsi
 
 %.o: %.c
-	$(CC) $(CFLAGS) -g -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
-	$(CC) $(OBJ) -o $(LIB) -lcontainers -shared
+	$(CC) -fPIC $(OBJ) -o $(LIB) -lcontainers -shared
 
 $(BIN): $(LIB)
 	$(CC) -g src/main.c -o $(BIN) -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
@@ -20,4 +20,4 @@ clean:
 	@rm $(LIB)
 	@rm $(BIN)
 valgrind: $(BIN)
-	@valgrind -s --leak-check=full ./$(BIN)
+	@valgrind -s --leak-check=full ./$(BIN) script/a.fs

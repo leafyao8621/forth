@@ -8,11 +8,7 @@ ForthVMErr parser_handle_i(ForthParser *parser, ForthVM *vm) {
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
-        ret = DArrayChar_push_back(&vm->interpreted, &opcode);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        break;
+        return FORTHVM_ERR_NOT_IN_COMPILATION_MODE;
     case FORTHPARSER_STATE_COMPILE:
         ret = DArrayChar_push_back(&vm->compiled, &opcode);
         if (ret) {
