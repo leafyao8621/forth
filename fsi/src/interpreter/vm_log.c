@@ -289,6 +289,14 @@ void ForthVM_log(ForthVM *vm) {
             iter_interpreted += sizeof(size_t);
             i += sizeof(size_t);
             break;
+        case OPCODE_DW:
+            printf("DW 0x%016lx\n", *(size_t*)(iter_interpreted + 1));
+            iter_interpreted += sizeof(size_t);
+            i += sizeof(size_t);
+            break;
+        case OPCODE_ALLOTC:
+            puts("ALLOTC");
+            break;
         default:
             puts("UNKNOWN");
         }
