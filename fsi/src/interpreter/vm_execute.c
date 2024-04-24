@@ -37,12 +37,17 @@ static ForthInterpreterHandler interpreter_handler[] =
         interpreter_handle_2popr,
         interpreter_handle_incr,
         interpreter_handle_jgtr,
-        interpreter_handle_peekr
+        interpreter_handle_peekr,
+        interpreter_handle_pushw
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {
     char opcode = 0;
     ForthVMErr err = FORTHVM_ERR_OK;
+    if (!vm->interpreted.size) {
+        return FORTHVM_ERR_OK;
+    }
+    vm->ip = 0;
     for (
         ;;
         vm->ip = (vm->ip & IP_COMPILED) | ((vm->ip & ~IP_COMPILED) + 1)) {
@@ -58,5 +63,6 @@ ForthVMErr ForthVM_execute(ForthVM *vm) {
             return err;
         }
     }
+    DArrayChar_clear(&vm->interpreted);
     return FORTHVM_ERR_OK;
 }

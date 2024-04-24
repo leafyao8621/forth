@@ -40,5 +40,6 @@ ForthVMErr interpreter_handle_2popr(ForthVM *vm);
 ForthVMErr interpreter_handle_incr(ForthVM *vm);
 ForthVMErr interpreter_handle_jgtr(ForthVM *vm);
 ForthVMErr interpreter_handle_peekr(ForthVM *vm);
+ForthVMErr interpreter_handle_pushw(ForthVM *vm);
 
 #endif

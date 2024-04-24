@@ -1,20 +1,8 @@
-: main
-    1
-    begin
-        dup 10 <
-    while
-        dup .
-        1
-        begin
-            dup 5 <
-        while
-            dup .
-            1+
-        repeat
-        cr
-        drop
-        1+
-    repeat
-;
+variable a
+variable b
 
+: main a . cr b . cr ;
+
+a . cr
+b . cr
 main
