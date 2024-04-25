@@ -47,5 +47,7 @@ ForthVMErr interpreter_handle_ld(ForthVM *vm);
 ForthVMErr interpreter_handle_st(ForthVM *vm);
 ForthVMErr interpreter_handle_allot(ForthVM *vm);
 ForthVMErr interpreter_handle_msz(ForthVM *vm);
+ForthVMErr interpreter_handle_ldc(ForthVM *vm);
+ForthVMErr interpreter_handle_stc(ForthVM *vm);
 
 #endif

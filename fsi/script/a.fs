@@ -22,3 +22,22 @@ a @ . cr
 b @ . cr
 100 a 1 cells + !
 b @ . cr
+
+: setup
+    a
+    1 cells 0 do
+        dup i swap c!
+        1+
+    loop
+;
+
+: retrieve
+    a
+    1 cells 0 do
+        dup c@ . cr
+        1+
+    loop
+;
+
+setup
+retrieve
