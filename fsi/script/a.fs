@@ -72,9 +72,3 @@ a c@ . cr
 a c@ . cr
 -1 allot
 a c@ . cr
-
-variable a 111 swap ! a @ . cr
-create a 1 cells allot 111 swap ! a @ . cr
-
-variable c 1111 swap ! c @ . cr
-create c 1 cells allot 1111 swap ! c @ . cr
