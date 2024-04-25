@@ -65,3 +65,12 @@ create a -1 c, -2 c, -3 c, -4 c,
 ;
 
 retrieve
+
+-1 allot
+a c@ . cr
+-1 allot
+a c@ . cr
+-1 allot
+a c@ . cr
+-1 allot
+a c@ . cr

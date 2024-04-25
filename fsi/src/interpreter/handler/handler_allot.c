@@ -10,11 +10,18 @@ ForthVMErr interpreter_handle_allot(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_STACK_UNDERFLOW;
     }
-    size_t size = vm->data_stack.data[vm->data_stack.size];
-    ret =
-        DArrayChar_expand(&vm->memory, size, true);
-    if (ret) {
-        return FORTHVM_ERR_OUT_OF_MEMORY;
+    long size = vm->data_stack.data[vm->data_stack.size];
+    if (size > 0) {
+        ret =
+            DArrayChar_expand(&vm->memory, size, true);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+    } else {
+        ret = DArrayChar_pop_back_batch(&vm->memory, -size);
+        if (ret) {
+            return FORTHVM_ERR_MEMORY_UNDERFLOW;
+        }
     }
     return FORTHVM_ERR_OK;
 }
