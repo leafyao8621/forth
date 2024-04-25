@@ -5,17 +5,21 @@ ForthVMErr parser_handle_store(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    ForthVMErr err = FORTHVM_ERR_OK;
+    char opcode = OPCODE_ST;
+    int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
-        err = ForthVM_execute(vm);
-        if (err) {
-            return err;
+        ret = DArrayChar_push_back(&vm->interpreted, &opcode);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
         }
-        parser->state = FORTHPARSER_STATE_VARIABLE;
         break;
     case FORTHPARSER_STATE_COMPILE:
-        return FORTHVM_ERR_NOT_IN_INTERPRETATION_MODE;
+        ret = DArrayChar_push_back(&vm->compiled, &opcode);
+        if (ret) {
+            return FORTHVM_ERR_OUT_OF_MEMORY;
+        }
+        break;
     case FORTHPARSER_STATE_DEFINE:
         parser->offset = 36;
         vm->offset.data[36] = vm->compiled.size;

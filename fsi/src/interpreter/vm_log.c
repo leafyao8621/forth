@@ -171,6 +171,12 @@ void ForthVM_log(ForthVM *vm) {
             iter_compiled += sizeof(size_t);
             i += sizeof(size_t);
             break;
+        case OPCODE_LD:
+            puts("LD");
+            break;
+        case OPCODE_ST:
+            puts("ST");
+            break;
         default:
             puts("UNKNOWN");
         }
@@ -296,6 +302,12 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_ALLOTC:
             puts("ALLOTC");
+            break;
+        case OPCODE_LD:
+            puts("LD");
+            break;
+        case OPCODE_ST:
+            puts("ST");
             break;
         default:
             puts("UNKNOWN");

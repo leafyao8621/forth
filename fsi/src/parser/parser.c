@@ -81,8 +81,8 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_while,
             parser_handle_repeat,
             parser_handle_variable,
-            parser_handle_store,
-            parser_handle_load
+            parser_handle_load,
+            parser_handle_store
         };
     parser->str = str;
     parser->iter = str;

@@ -1,8 +1,18 @@
 variable a
 variable b
 
-: main a . cr b . cr ;
+: main
+    b !
+    a !
+;
 
-a . cr b . cr
-main
+12345 -1 main
+a @ . cr
+b @ . cr
 
+: inc dup @ 1+ swap ! ;
+
+a inc
+a @ . cr
+b inc
+b @ . cr

@@ -43,5 +43,7 @@ ForthVMErr interpreter_handle_peekr(ForthVM *vm);
 ForthVMErr interpreter_handle_pushw(ForthVM *vm);
 ForthVMErr interpreter_handle_dw(ForthVM *vm);
 ForthVMErr interpreter_handle_allotc(ForthVM *vm);
+ForthVMErr interpreter_handle_ld(ForthVM *vm);
+ForthVMErr interpreter_handle_st(ForthVM *vm);
 
 #endif
