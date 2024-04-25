@@ -43,7 +43,10 @@ ForthVMErr parser_handle_begin(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_while(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_repeat(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_variable(ForthParser *parser, ForthVM *vm);
-ForthVMErr parser_handle_store(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_load(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_store(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_create(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_allot(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_cells(ForthParser *parser, ForthVM *vm);
 
 #endif

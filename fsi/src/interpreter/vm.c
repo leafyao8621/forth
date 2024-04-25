@@ -17,7 +17,7 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
     if (ret) {
         return FORTHVM_ERR_OUT_OF_MEMORY;
     }
-    char *keywords[38] =
+    char *keywords[45] =
         {
             ".\"",
             "cr",
@@ -57,12 +57,19 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
             "variable",
             "@",
             "!",
+            "create",
+            "allot",
+            "cells",
+            "c@",
+            "c!",
+            ",",
+            "c,"
         };
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
     char flags = OFFSET_BUILTIN;
-    for (size_t i = 0; i < 38; ++i, ++iter_keywords) {
+    for (size_t i = 0; i < 45; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
                 &vm->words, *iter_keywords, strlen(*iter_keywords));

@@ -42,7 +42,9 @@ static ForthInterpreterHandler interpreter_handler[] =
         interpreter_handle_dw,
         interpreter_handle_allotc,
         interpreter_handle_ld,
-        interpreter_handle_st
+        interpreter_handle_st,
+        interpreter_handle_allot,
+        interpreter_handle_msz
     };
 
 ForthVMErr ForthVM_execute(ForthVM *vm) {

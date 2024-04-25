@@ -21,9 +21,9 @@ ForthVMErr parser_handle_store(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 36;
-        vm->offset.data[36] = vm->compiled.size;
-        vm->offset_flags.data[36] = OFFSET_PENDING;
+        parser->offset = 37;
+        vm->offset.data[37] = vm->compiled.size;
+        vm->offset_flags.data[37] = OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }

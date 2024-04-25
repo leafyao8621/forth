@@ -51,6 +51,7 @@
 #define OPCODE_LD 38
 #define OPCODE_ST 39
 #define OPCODE_ALLOT 40
+#define OPCODE_MSZ 41
 
 #define IP_COMPILED 0x8000000000000000
 

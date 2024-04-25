@@ -43,7 +43,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     if (!parser || !str || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    static ForthParserHandler parser_handlers[38] =
+    static ForthParserHandler parser_handlers[45] =
         {
             parser_handle_print_string,
             parser_handle_carriage_return,
@@ -82,7 +82,14 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_repeat,
             parser_handle_variable,
             parser_handle_load,
-            parser_handle_store
+            parser_handle_store,
+            parser_handle_create,
+            parser_handle_allot,
+            parser_handle_cells,
+            NULL,
+            NULL,
+            NULL,
+            NULL
         };
     parser->str = str;
     parser->iter = str;
@@ -196,6 +203,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 parser->state = FORTHPARSER_STATE_COMPILE;
                 break;
             case FORTHPARSER_STATE_VARIABLE:
+            case FORTHPARSER_STATE_CREATE:
                 vm->offset_flags.data[handler_offset] = OFFSET_MEMORY;
                 opcode = OPCODE_DW;
                 ret = DArrayChar_push_back(&vm->interpreted, &opcode);
@@ -210,11 +218,14 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 if (ret) {
                     return FORTHVM_ERR_OUT_OF_MEMORY;
                 }
-                opcode = OPCODE_ALLOTC;
-                ret = DArrayChar_push_back(&vm->interpreted, &opcode);
-                if (ret) {
-                    return FORTHVM_ERR_OUT_OF_MEMORY;
+                if (parser->state == FORTHPARSER_STATE_VARIABLE) {
+                    opcode = OPCODE_ALLOTC;
+                    ret = DArrayChar_push_back(&vm->interpreted, &opcode);
+                    if (ret) {
+                        return FORTHVM_ERR_OUT_OF_MEMORY;
+                    }
                 }
+                parser->state = FORTHPARSER_STATE_INTERPRET;
                 break;
             }
         } else {
@@ -285,6 +296,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 parser->state = FORTHPARSER_STATE_COMPILE;
                 break;
             case FORTHPARSER_STATE_VARIABLE:
+            case FORTHPARSER_STATE_CREATE:
                 ret =
                     DArrayChar_push_back_batch(
                         &vm->words,
@@ -316,10 +328,12 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 if (ret) {
                     return FORTHVM_ERR_OUT_OF_MEMORY;
                 }
-                opcode = OPCODE_ALLOTC;
-                ret = DArrayChar_push_back(&vm->interpreted, &opcode);
-                if (ret) {
-                    return FORTHVM_ERR_OUT_OF_MEMORY;
+                if (parser->state == FORTHPARSER_STATE_VARIABLE) {
+                    opcode = OPCODE_ALLOTC;
+                    ret = DArrayChar_push_back(&vm->interpreted, &opcode);
+                    if (ret) {
+                        return FORTHVM_ERR_OUT_OF_MEMORY;
+                    }
                 }
                 parser->state = FORTHPARSER_STATE_INTERPRET;
                 break;
