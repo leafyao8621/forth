@@ -41,3 +41,27 @@ b @ . cr
 
 setup
 retrieve
+
+create a -1 , -2 , -3 , -4 ,
+
+: retrieve
+    a
+    4 0 do
+        dup @ . cr
+        1 cells +
+    loop
+;
+
+retrieve
+
+create a -1 c, -2 c, -3 c, -4 c,
+
+: retrieve
+    a
+    4 0 do
+        dup c@ . cr
+        1+
+    loop
+;
+
+retrieve

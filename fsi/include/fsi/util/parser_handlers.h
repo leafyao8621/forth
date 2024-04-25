@@ -50,5 +50,7 @@ ForthVMErr parser_handle_allot(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_cells(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_loadc(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_storec(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_pushm(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_pushmc(ForthParser *parser, ForthVM *vm);
 
 #endif

@@ -180,11 +180,20 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_ALLOT:
             puts("ALLOT");
             break;
+        case OPCODE_MSZ:
+            puts("cells");
+            break;
         case OPCODE_LDC:
             puts("c@");
             break;
         case OPCODE_STC:
             puts("c!");
+            break;
+        case OPCODE_PUSHM:
+            puts(",");
+            break;
+        case OPCODE_PUSHMC:
+            puts("c,");
             break;
         default:
             puts("UNKNOWN");
@@ -321,11 +330,20 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_ALLOT:
             puts("ALLOT");
             break;
+        case OPCODE_MSZ:
+            puts("cells");
+            break;
         case OPCODE_LDC:
             puts("c@");
             break;
         case OPCODE_STC:
             puts("c!");
+            break;
+        case OPCODE_PUSHM:
+            puts(",");
+            break;
+        case OPCODE_PUSHMC:
+            puts("c,");
             break;
         default:
             puts("UNKNOWN");

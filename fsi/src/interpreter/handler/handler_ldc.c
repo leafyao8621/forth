@@ -13,6 +13,7 @@ ForthVMErr interpreter_handle_ldc(ForthVM *vm) {
     if (offset >= vm->memory.size) {
         return FORTHVM_ERR_ILLEGAL_ACCESS;
     }
-    vm->data_stack.data[vm->data_stack.size - 1] = vm->memory.data[offset];
+    vm->data_stack.data[vm->data_stack.size - 1] =
+        (uint8_t)vm->memory.data[offset];
     return FORTHVM_ERR_OK;
 }

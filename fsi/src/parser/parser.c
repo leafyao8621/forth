@@ -43,7 +43,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     if (!parser || !str || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    static ForthParserHandler parser_handlers[46] =
+    static ForthParserHandler parser_handlers[] =
         {
             parser_handle_print_string,
             parser_handle_carriage_return,
@@ -88,8 +88,8 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_cells,
             parser_handle_loadc,
             parser_handle_storec,
-            NULL,
-            NULL,
+            parser_handle_pushm,
+            parser_handle_pushmc,
             NULL
         };
     parser->str = str;
