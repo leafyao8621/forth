@@ -4,5 +4,6 @@
         dup i lshift . cr
         dup i rshift . cr
     loop
+    drop
 ;
 main
