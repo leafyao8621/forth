@@ -15,6 +15,7 @@
         emit 1+
     repeat
     cr
+    drop
 ;
 
 create str 65 c, 66 c, 67 c, 68 c, 0 c,
