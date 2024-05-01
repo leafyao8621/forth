@@ -198,6 +198,9 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_EMIT:
             puts("emit");
             break;
+        case OPCODE_2DUP:
+            puts("2dup");
+            break;
         case OPCODE_AND:
             puts("and");
             break;
@@ -359,6 +362,9 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_EMIT:
             puts("emit");
+            break;
+        case OPCODE_2DUP:
+            puts("2dup");
             break;
         case OPCODE_AND:
             puts("and");

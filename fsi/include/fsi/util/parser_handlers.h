@@ -53,6 +53,7 @@ ForthVMErr parser_handle_storec(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_pushm(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_pushmc(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_emit(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_2dup(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_and(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_or(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_xor(ForthParser *parser, ForthVM *vm);

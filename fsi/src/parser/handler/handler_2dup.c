@@ -1,10 +1,10 @@
 #include <fsi/util/parser_handlers.h>
 
-ForthVMErr parser_handle_or(ForthParser *parser, ForthVM *vm) {
+ForthVMErr parser_handle_2dup(ForthParser *parser, ForthVM *vm) {
     if (!parser || !vm) {
         return FORTHVM_ERR_NULL_PTR;
     }
-    char opcode = OPCODE_OR;
+    char opcode = OPCODE_2DUP;
     int ret = 0;
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
@@ -20,9 +20,9 @@ ForthVMErr parser_handle_or(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 48;
-        vm->offset.data[48] = vm->compiled.size;
-        vm->offset_flags.data[48] = OFFSET_PENDING;
+        parser->offset = 46;
+        vm->offset.data[46] = vm->compiled.size;
+        vm->offset_flags.data[46] = OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }

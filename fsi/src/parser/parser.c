@@ -91,7 +91,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_pushm,
             parser_handle_pushmc,
             parser_handle_emit,
-            NULL,
+            parser_handle_2dup,
             parser_handle_and,
             parser_handle_or,
             parser_handle_xor

@@ -52,6 +52,7 @@ ForthVMErr interpreter_handle_stc(ForthVM *vm);
 ForthVMErr interpreter_handle_pushm(ForthVM *vm);
 ForthVMErr interpreter_handle_pushmc(ForthVM *vm);
 ForthVMErr interpreter_handle_emit(ForthVM *vm);
+ForthVMErr interpreter_handle_2dup(ForthVM *vm);
 ForthVMErr interpreter_handle_and(ForthVM *vm);
 ForthVMErr interpreter_handle_or(ForthVM *vm);
 ForthVMErr interpreter_handle_xor(ForthVM *vm);
