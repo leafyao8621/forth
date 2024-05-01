@@ -210,6 +210,9 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_XOR:
             puts("xor");
             break;
+        case OPCODE_INV:
+            puts("invert");
+            break;
         default:
             puts("UNKNOWN");
         }
@@ -374,6 +377,9 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_XOR:
             puts("xor");
+            break;
+        case OPCODE_INV:
+            puts("invert");
             break;
         default:
             puts("UNKNOWN");

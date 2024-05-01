@@ -1,1 +1,1 @@
-0 1 2 2dup . . . . . cr
+1 invert . cr
