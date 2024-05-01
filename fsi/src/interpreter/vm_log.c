@@ -138,16 +138,16 @@ void ForthVM_log(ForthVM *vm) {
             i += sizeof(size_t);
             break;
         case OPCODE_DUP:
-            puts("DUP");
+            puts("dup");
             break;
         case OPCODE_SWAP:
-            puts("SWAP");
+            puts("swap");
             break;
         case OPCODE_DROP:
-            puts("DROP");
+            puts("drop");
             break;
         case OPCODE_MOD:
-            puts("MOD");
+            puts("mod");
             break;
         case OPCODE_2PUSHR:
             puts("2PUSHR");
@@ -178,7 +178,7 @@ void ForthVM_log(ForthVM *vm) {
             puts("!");
             break;
         case OPCODE_ALLOT:
-            puts("ALLOT");
+            puts("allot");
             break;
         case OPCODE_MSZ:
             puts("cells");
@@ -194,6 +194,18 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_PUSHMC:
             puts("c,");
+            break;
+        case OPCODE_EMIT:
+            puts("emit");
+            break;
+        case OPCODE_AND:
+            puts("and");
+            break;
+        case OPCODE_OR:
+            puts("or");
+            break;
+        case OPCODE_XOR:
+            puts("xor");
             break;
         default:
             puts("UNKNOWN");
@@ -280,16 +292,16 @@ void ForthVM_log(ForthVM *vm) {
             puts("<>");
             break;
         case OPCODE_DUP:
-            puts("DUP");
+            puts("dup");
             break;
         case OPCODE_SWAP:
-            puts("SWAP");
+            puts("swap");
             break;
         case OPCODE_DROP:
-            puts("DROP");
+            puts("drop");
             break;
         case OPCODE_MOD:
-            puts("MOD");
+            puts("mod");
             break;
         case OPCODE_2PUSHR:
             puts("2PUSHR");
@@ -328,7 +340,7 @@ void ForthVM_log(ForthVM *vm) {
             puts("!");
             break;
         case OPCODE_ALLOT:
-            puts("ALLOT");
+            puts("allot");
             break;
         case OPCODE_MSZ:
             puts("cells");
@@ -344,6 +356,18 @@ void ForthVM_log(ForthVM *vm) {
             break;
         case OPCODE_PUSHMC:
             puts("c,");
+            break;
+        case OPCODE_EMIT:
+            puts("emit");
+            break;
+        case OPCODE_AND:
+            puts("and");
+            break;
+        case OPCODE_OR:
+            puts("or");
+            break;
+        case OPCODE_XOR:
+            puts("xor");
             break;
         default:
             puts("UNKNOWN");
