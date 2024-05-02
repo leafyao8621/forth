@@ -60,5 +60,7 @@ ForthVMErr parser_handle_xor(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_invert(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_lshift(ForthParser *parser, ForthVM *vm);
 ForthVMErr parser_handle_rshift(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_true(ForthParser *parser, ForthVM *vm);
+ForthVMErr parser_handle_false(ForthParser *parser, ForthVM *vm);
 
 #endif

@@ -20,9 +20,9 @@ ForthVMErr parser_handle_lshift(ForthParser *parser, ForthVM *vm) {
         }
         break;
     case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 52;
-        vm->offset.data[52] = vm->compiled.size;
-        vm->offset_flags.data[52] = OFFSET_PENDING;
+        parser->offset = 51;
+        vm->offset.data[51] = vm->compiled.size;
+        vm->offset_flags.data[51] = OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
     }

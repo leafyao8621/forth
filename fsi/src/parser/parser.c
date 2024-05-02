@@ -97,7 +97,9 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_xor,
             parser_handle_invert,
             parser_handle_lshift,
-            parser_handle_rshift
+            parser_handle_rshift,
+            parser_handle_true,
+            parser_handle_false
         };
     parser->str = str;
     parser->iter = str;

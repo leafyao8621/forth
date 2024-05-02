@@ -1,9 +1,3 @@
-: main
-    -1
-    8 cells 0 do
-        dup i lshift . cr
-        dup i rshift . cr
-    loop
-    drop
-;
-main
+true . cr false . cr
+true 1 xor . cr
+false 1 xor . cr
