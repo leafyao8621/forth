@@ -216,6 +216,9 @@ void ForthVM_log(ForthVM *vm) {
         case OPCODE_NEG:
             puts("negate");
             break;
+        case OPCODE_PREVR:
+            puts("PREVR");
+            break;
         default:
             puts("UNKNOWN");
         }

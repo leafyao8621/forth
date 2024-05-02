@@ -74,13 +74,14 @@ ForthVMErr ForthVM_initialize(ForthVM *vm) {
             "rshift",
             "true",
             "false",
-            "negate"
+            "negate",
+            "j"
         };
     char **iter_keywords = keywords;
     size_t offset = 0;
     char chr = 0;
     char flags = OFFSET_BUILTIN;
-    for (size_t i = 0; i < 56; ++i, ++iter_keywords) {
+    for (size_t i = 0; i < 57; ++i, ++iter_keywords) {
         ret =
             DArrayChar_push_back_batch(
                 &vm->words, *iter_keywords, strlen(*iter_keywords));

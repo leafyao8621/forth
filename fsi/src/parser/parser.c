@@ -100,7 +100,8 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             parser_handle_rshift,
             parser_handle_true,
             parser_handle_false,
-            parser_handle_negate
+            parser_handle_negate,
+            parser_handle_j
         };
     parser->str = str;
     parser->iter = str;

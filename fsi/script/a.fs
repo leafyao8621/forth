@@ -1,5 +1,9 @@
-true . cr false . cr
-true invert . cr
-false invert . cr
-true negate . cr
-false negate . cr
+: main
+    10 0 do
+        10 0 do
+            j . 32 emit i . cr
+        loop
+    loop
+;
+
+main
