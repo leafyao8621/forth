@@ -65,6 +65,7 @@
 #define OPCODE_INV 51
 #define OPCODE_LSL 52
 #define OPCODE_LSR 53
+#define OPCODE_NEG 54
 
 #define IP_COMPILED 0x8000000000000000
 

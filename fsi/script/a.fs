@@ -1,3 +1,5 @@
 true . cr false . cr
-true 1 xor . cr
-false 1 xor . cr
+true invert . cr
+false invert . cr
+true negate . cr
+false negate . cr

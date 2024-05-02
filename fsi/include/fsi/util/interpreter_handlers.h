@@ -59,5 +59,6 @@ ForthVMErr interpreter_handle_xor(ForthVM *vm);
 ForthVMErr interpreter_handle_inv(ForthVM *vm);
 ForthVMErr interpreter_handle_lsl(ForthVM *vm);
 ForthVMErr interpreter_handle_lsr(ForthVM *vm);
+ForthVMErr interpreter_handle_neg(ForthVM *vm);
 
 #endif
