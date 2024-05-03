@@ -23,7 +23,7 @@ ForthVMErr parser_handle_end_compilation(ForthParser *parser, ForthVM *vm) {
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
-        vm->offset_flags.data[parser->offset] = 0;
+        vm->offset_flags.data[parser->offset] &= ~OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_INTERPRET;
         break;
     }

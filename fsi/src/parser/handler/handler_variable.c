@@ -7,10 +7,10 @@ ForthVMErr parser_handle_variable(ForthParser *parser, ForthVM *vm) {
     }
     switch (parser->state) {
     case FORTHPARSER_STATE_INTERPRET:
+    case FORTHPARSER_STATE_COMPILE:
+        parser->prev_state = parser->state;
         parser->state = FORTHPARSER_STATE_VARIABLE;
         break;
-    case FORTHPARSER_STATE_COMPILE:
-        return FORTHVM_ERR_NOT_IN_INTERPRETATION_MODE;
     case FORTHPARSER_STATE_DEFINE:
         parser->offset = 35;
         vm->offset.data[35] = vm->compiled.size;
