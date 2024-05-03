@@ -310,6 +310,9 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                 break;
             case FORTHPARSER_STATE_VARIABLE:
             case FORTHPARSER_STATE_CREATE:
+                if (parser->prev_state == FORTHPARSER_STATE_COMPILE) {
+                    return FORTHVM_ERR_INVALID_TOKEN;
+                }
                 ret =
                     DArrayChar_push_back_batch(
                         &vm->words,
