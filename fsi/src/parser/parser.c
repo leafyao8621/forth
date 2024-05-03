@@ -106,6 +106,7 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
     parser->str = str;
     parser->iter = str;
     parser->state = FORTHPARSER_STATE_INTERPRET;
+    parser->prev_state = FORTHPARSER_STATE_INTERPRET;
     parser->base = 10;
     parser->offset = 0;
     int ret = 0;
