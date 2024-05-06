@@ -119,7 +119,6 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
         if (ret) {
             return FORTHVM_ERR_OUT_OF_MEMORY;
         }
-        printf("token: %s\n", parser->token_buf.data);
         ret = get_handler_offset(parser, vm, &handler_offset);
         if (!ret) {
             err = parser_handlers[handler_offset](parser, vm);

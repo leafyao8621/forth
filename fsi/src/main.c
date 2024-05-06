@@ -21,7 +21,7 @@ int main(int argc, const char **argv) {
         fsi_finalize(&vm);
         return 0;
     }
-    fsi_log(&vm);
+    // fsi_log(&vm);
     err = fsi_execute(&vm);
     GETERR;
     fsi_finalize(&vm);

@@ -17,9 +17,10 @@ typedef enum ForthVMErr {
     FORTHVM_ERR_NOT_IN_INTERPRETATION_MODE,
     FORTHVM_ERR_ILLEGAL_ACCESS,
     FORTHVM_ERR_MEMORY_UNDERFLOW,
-    FORTHVM_ERR_INVALID_TOKEN
+    FORTHVM_ERR_INVALID_TOKEN,
+    FORTHVM_ERR_INVALID_OPCODE
 } ForthVMErr;
 
-extern const char *fsi_errcode_lookup[16];
+extern const char *fsi_errcode_lookup[17];
 
 #endif
