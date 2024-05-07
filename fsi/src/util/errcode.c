@@ -1,6 +1,6 @@
 #include <fsi/util/errcode.h>
 
-const char *fsi_errcode_lookup[17] =
+const char *fsi_errcode_lookup[18] =
     {
         "FORTHVM_ERR_OK",
         "FORTHVM_ERR_NULL_PTR",
@@ -18,5 +18,6 @@ const char *fsi_errcode_lookup[17] =
         "FORTHVM_ERR_ILLEGAL_ACCESS",
         "FORTHVM_ERR_MEMORY_UNDERFLOW",
         "FORTHVM_ERR_INVALID_TOKEN",
-        "FORTHVM_ERR_INVALID_OPCODE"
+        "FORTHVM_ERR_INVALID_OPCODE",
+        "FORTHVM_ERR_UNDEFINED_BEHAVIOR"
     };

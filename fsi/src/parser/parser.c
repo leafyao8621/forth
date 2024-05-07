@@ -152,6 +152,14 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                     if (ret) {
                         return FORTHVM_ERR_OUT_OF_MEMORY;
                     }
+                    if (flags & OFFSET_CREATE) {
+                        parser->state = FORTHPARSER_STATE_CREATE;
+                        parser->prev_state = FORTHPARSER_STATE_INTERPRET;
+                    }
+                    if (flags & OFFSET_VARIABLE) {
+                        parser->state = FORTHPARSER_STATE_VARIABLE;
+                        parser->prev_state = FORTHPARSER_STATE_INTERPRET;
+                    }
                 } else {
                     opcode = OPCODE_PUSHW;
                     ret = DArrayChar_push_back(&vm->interpreted, &opcode);
@@ -190,6 +198,14 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
                         );
                     if (ret) {
                         return FORTHVM_ERR_OUT_OF_MEMORY;
+                    }
+                    if (flags & OFFSET_CREATE) {
+                        parser->state = FORTHPARSER_STATE_CREATE;
+                        parser->prev_state = FORTHPARSER_STATE_COMPILE;
+                    }
+                    if (flags & OFFSET_VARIABLE) {
+                        parser->state = FORTHPARSER_STATE_VARIABLE;
+                        parser->prev_state = FORTHPARSER_STATE_COMPILE;
                     }
                 } else {
                     opcode = OPCODE_PUSHW;
@@ -310,7 +326,25 @@ ForthVMErr ForthParser_parse(ForthParser *parser, char *str, ForthVM *vm) {
             case FORTHPARSER_STATE_VARIABLE:
             case FORTHPARSER_STATE_CREATE:
                 if (parser->prev_state == FORTHPARSER_STATE_COMPILE) {
-                    return FORTHVM_ERR_INVALID_TOKEN;
+                    ret = get_int(parser, &int_value);
+                    switch (ret) {
+                    case 1:
+                        return FORTHVM_ERR_INVALID_BASE;
+                    case 2:
+                        return FORTHVM_ERR_INVALID_DECIMAL;
+                    }
+                    char chr = OPCODE_PUSH;
+                    ret = DArrayChar_push_back(&vm->compiled, &chr);
+                    if (ret) {
+                        return FORTHVM_ERR_OUT_OF_MEMORY;
+                    }
+                    ret =
+                        DArrayChar_push_back_batch(
+                            &vm->compiled, (char*)&int_value, sizeof(size_t));
+                    if (ret) {
+                        return FORTHVM_ERR_OUT_OF_MEMORY;
+                    }
+                    break;
                 }
                 ret =
                     DArrayChar_push_back_batch(

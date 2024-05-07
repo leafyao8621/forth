@@ -17,6 +17,9 @@ ForthVMErr parser_handle_create(ForthParser *parser, ForthVM *vm) {
         vm->offset_flags.data[38] = OFFSET_PENDING;
         parser->state = FORTHPARSER_STATE_COMPILE;
         break;
+    case FORTHPARSER_STATE_CREATE:
+    case FORTHPARSER_STATE_VARIABLE:
+        return FORTHVM_ERR_UNDEFINED_BEHAVIOR;
     }
     return FORTHVM_ERR_OK;
 }
