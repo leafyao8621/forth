@@ -1,5 +1,6 @@
-: abc 1- ;
-: xxx create abc 1 allot ;
-3 xxx abc . cr
-102 abc c!
-abc c@ . cr
+: abc create 1 allot ;
+: xxx abc + ;
+3 4 xxx foo . cr
+foo . cr
+102 foo c!
+foo c@ . cr

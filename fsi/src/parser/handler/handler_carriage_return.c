@@ -51,6 +51,23 @@ ForthVMErr parser_handle_carriage_return(ForthParser *parser, ForthVM *vm) {
                     return FORTHVM_ERR_OUT_OF_MEMORY;
                 }
             }
+            if (parser->deferred) {
+                opcode = OPCODE_CALL;
+                ret = DArrayChar_push_back(&vm->interpreted, &opcode);
+                if (ret) {
+                    return FORTHVM_ERR_OUT_OF_MEMORY;
+                }
+                ret =
+                    DArrayChar_push_back_batch(
+                        &vm->interpreted,
+                        (char*)&parser->deferred_offset,
+                        sizeof(size_t)
+                    );
+                if (ret) {
+                    return FORTHVM_ERR_OUT_OF_MEMORY;
+                }
+                parser->deferred = false;
+            }
             break;
         case FORTHPARSER_STATE_COMPILE:
             vm->offset_flags.data[parser->offset] |=
