@@ -1,9 +1,9 @@
 : abc variable ;
-: xxx abc drop ;
+: xxx abc dup ;
 
 10 20 xxx foo . cr
 foo . cr
-create drop 1 allot
-drop . cr
-abc drop
-drop . cr
+create dup 1 allot
+dup . cr
+abc dup
+dup . cr
