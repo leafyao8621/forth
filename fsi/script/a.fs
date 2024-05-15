@@ -1,9 +1,9 @@
-: abc create 1 allot ;
-: xxx 0 abc do i . cr loop ;
+: abc variable ;
+: xxx abc drop ;
 
-10 xxx foo
+10 20 xxx foo . cr
 foo . cr
-create do 1 allot
-do . cr
-abc do
-do . cr
+create drop 1 allot
+drop . cr
+abc drop
+drop . cr
