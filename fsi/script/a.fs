@@ -1,6 +1,9 @@
 : abc create 1 allot ;
-: xxx abc / ;
-8 4 xxx foo . cr
+: xxx 0 abc do i . cr loop ;
+
+10 xxx foo
 foo . cr
-102 foo c!
-foo c@ . cr
+create do 1 allot
+do . cr
+abc do
+do . cr
