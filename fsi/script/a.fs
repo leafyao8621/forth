@@ -1,9 +1,8 @@
 : abc variable ;
-: xxx abc dup ;
+: xxx if ." nz" abc else drop ." z" then ;
 
-10 20 xxx foo . cr
-foo . cr
-create dup 1 allot
-dup . cr
-abc dup
-dup . cr
+10 xxx foo cr
+variable else
+else . cr
+create else 1 allot
+else . cr
