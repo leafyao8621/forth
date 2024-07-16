@@ -1,0 +1,5 @@
+*.o
+*.so
+fsi
+!include/fsi
+.vscode
