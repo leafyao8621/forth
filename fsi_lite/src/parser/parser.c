@@ -1,9 +1,13 @@
 #include "parser.h"
+#include "../util/status.h"
 
-int parser_parse(FILE *fin) {
+int parser_parse(bool line, FILE *fin) {
     int in = 0;
-    for (in = fgetc(fin); in != -1; in = fgetc(fin)) {
+    for (in = fgetc(fin); in != -1 && !(line && in == '\n'); in = fgetc(fin)) {
         printf("%02x\n", in);
     }
-    return 0;
+    if (line && (in == -1)) {
+        return PARSER_STATUS_END_REPL;
+    }
+    return PARSER_STATUS_OK;
 }

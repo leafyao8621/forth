@@ -4,16 +4,25 @@
 #include <stdint.h>
 
 extern uint8_t *vm_lookup;
+extern uint8_t *vm_lookup_cur;
 extern uint8_t *vm_lookup_end;
 extern uint8_t *vm_lookup_addr;
+extern uint8_t *vm_lookup_addr_cur;
 extern uint8_t *vm_lookup_addr_end;
 extern uint8_t *vm_lookup_meta;
+extern uint8_t *vm_lookup_meta_cur;
 extern uint8_t *vm_lookup_meta_end;
+extern uint8_t *vm_literal;
+extern uint8_t *vm_literal_cur;
+extern uint8_t *vm_literal_end;
 extern uint8_t *vm_compiled;
+extern uint8_t *vm_compiled_cur;
 extern uint8_t *vm_compiled_end;
 extern uint8_t *vm_interpreted;
+extern uint8_t *vm_interpreted_cur;
 extern uint8_t *vm_interpreted_end;
 extern uint8_t *vm_memory;
+extern uint8_t *vm_memory_cur;
 extern uint8_t *vm_memory_end;
 
 void vm_initialize();
