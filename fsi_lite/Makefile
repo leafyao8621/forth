@@ -13,7 +13,6 @@ $(BIN): $(OBJ)
 .PHONY: clean valgrind
 clean:
 	@rm $(OBJ)
-	@rm $(LIB)
 	@rm $(BIN)
 valgrind: $(BIN)
 	@valgrind -s --leak-check=full --show-leak-kinds=all ./$(BIN) script/a.fs
