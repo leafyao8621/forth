@@ -3,7 +3,9 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdint.h>
 
+void parser_initialize(void);
 int parser_parse(bool line, FILE *fin);
 
 #endif

@@ -4,6 +4,7 @@
 
 int main(int argc, char **argv) {
     int ret = 0;
+    parser_initialize();
     vm_initialize();
     if (argc > 1) {
         FILE *fin = fopen(argv[1], "r");
