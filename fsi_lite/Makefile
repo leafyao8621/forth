@@ -15,4 +15,4 @@ clean:
 	@rm $(OBJ)
 	@rm $(BIN)
 valgrind: $(BIN)
-	@valgrind -s --leak-check=full --show-leak-kinds=all ./$(BIN) script/a.fs
+	@valgrind -s --leak-check=full --show-leak-kinds=all ./$(BIN) -d script/a.fs

@@ -1,6 +1,11 @@
+#include <string.h>
+
+#include "../parser/parser.h"
+#include "../vm/vm.h"
+
 #include "parser_util.h"
 
-int parse_token(char *buf, char *buf_end, bool line, FILE *fin) {
+bool parse_token(char *buf, char *buf_end, bool line, FILE *fin) {
     int in = 0;
     for (
         in = fgetc(fin);
@@ -14,25 +19,27 @@ int parse_token(char *buf, char *buf_end, bool line, FILE *fin) {
         *buf = in;
     }
     if (buf == buf_end) {
-        return 1;
+        return false;
     }
     *buf = 0;
     if (line) {
         switch (in) {
         case -1:
-            return 2;
+            parser_status = PARSER_STATUS_REPL_END;
+            break;
         case '\n':
-            return 3;
+            parser_status = PARSER_STATUS_END;
+            break;
         }
     } else {
         if (in == -1) {
-            return 3;
+            parser_status = PARSER_STATUS_END;
         }
     }
-    return 0;
+    return true;
 }
 
-int next_token(bool line, FILE *fin) {
+void next_token(bool line, FILE *fin) {
     int in = 0;
     for (
         in = fgetc(fin);
@@ -42,15 +49,31 @@ int next_token(bool line, FILE *fin) {
     if (line) {
         switch (in) {
         case -1:
-            return 1;
+            parser_status = PARSER_STATUS_REPL_END;
+            return;
         case '\n':
-            return 2;
+            parser_status = PARSER_STATUS_END;
+            return;
         }
     } else {
         if (in == -1) {
-            return 2;
+            parser_status = PARSER_STATUS_END;
+            return;
         }
     }
     ungetc(in, fin);
-    return 0;
+}
+
+bool lookup_token(char *buf, uint8_t *meta, uintptr_t *addr) {
+    uint8_t *iter = vm_lookup;
+    for (; iter < vm_lookup_cur; ++iter) {
+        if (!strcmp(buf, (const char*)(iter + sizeof(uintptr_t) + 1))) {
+            *meta = *iter;
+            *addr = *(uintptr_t*)(iter + 1);
+            return true;
+        }
+        iter += sizeof(uintptr_t) + 1;
+        for (; *iter && iter < vm_lookup_cur; ++iter);
+    }
+    return false;
 }
