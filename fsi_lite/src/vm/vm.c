@@ -1,5 +1,10 @@
 #include <stdio.h>
+
 #include "vm.h"
+#include "handler/handler.h"
+#include "../util/status.h"
+
+#define BUILTIN_SIZE 3
 
 static uint8_t mem[65536];
 
@@ -25,9 +30,13 @@ uint8_t *vm_memory;
 uint8_t *vm_memory_cur;
 uint8_t *vm_memory_end;
 
+uint8_t *vm_ip;
+uint8_t vm_state;
+
 void vm_initialize() {
-    static const char *builtin[2] = {
+    static const char *builtin[BUILTIN_SIZE] = {
         ".",
+        "emit",
         "cr"
     };
     const char **iter_builtin = builtin;
@@ -54,7 +63,7 @@ void vm_initialize() {
     vm_memory = vm_compiled_end;
     vm_memory_cur = vm_memory;
     vm_memory_end = mem + 65536;
-    for (; i < 2; ++i, ++iter_builtin) {
+    for (; i < BUILTIN_SIZE; ++i, ++iter_builtin) {
         *(vm_lookup_cur++) = VM_LOOKUP_META_BUILTIN;
         *(size_t*)(vm_lookup_cur) = i;
         vm_lookup_cur += sizeof(size_t);
@@ -95,14 +104,14 @@ void vm_log(void) {
             printf("%s", "RET");
             break;
         case VM_INSTRUCTION_PUSHD:
-            printf("%s %016lX", "PUSHD", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
-        case VM_INSTRUCTION_PCHR:
-            printf("%s", "PCHR");
+        case VM_INSTRUCTION_EMIT:
+            printf("%s", "EMIT");
             break;
         }
         putchar(10);
@@ -111,4 +120,48 @@ void vm_log(void) {
 
 void vm_reset(void) {
     vm_interpreted_cur = vm_interpreted;
+    vm_ip = vm_interpreted;
+}
+
+int vm_run(bool debug) {
+    int ret = VM_STATUS_OK;
+    vm_state = VM_STATE_RUNNING;
+    for (; vm_state != VM_STATE_HALTED; ++vm_ip) {
+        if (debug) {
+            printf("Running 0x%016lX ", (uintptr_t)vm_ip);
+            switch (*vm_ip) {
+            case VM_INSTRUCTION_HALT:
+                printf("%s", "HALT");
+                break;
+            case VM_INSTRUCTION_RET:
+                printf("%s", "RET");
+                break;
+            case VM_INSTRUCTION_PUSHD:
+                printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_PINT:
+                printf("%s", "PINT");
+                break;
+            case VM_INSTRUCTION_EMIT:
+                printf("%s", "EMIT");
+                break;
+            }
+            putchar(10);
+        }
+        switch (*vm_ip) {
+        case VM_INSTRUCTION_HALT:
+            vm_state = VM_STATE_HALTED;
+            break;
+        case VM_INSTRUCTION_PUSHD:
+            ret = vm_handler_pushd();
+            break;
+        case VM_INSTRUCTION_PINT:
+            ret = vm_handler_pint();
+            break;
+        case VM_INSTRUCTION_EMIT:
+            ret = vm_handler_emit();
+            break;
+        }
+    }
+    return ret;
 }

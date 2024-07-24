@@ -77,3 +77,24 @@ bool lookup_token(char *buf, uint8_t *meta, uintptr_t *addr) {
     }
     return false;
 }
+
+bool parser_int10(char *buf, uintptr_t *out) {
+    char *iter = buf;
+    bool neg = false;
+    *out = 0;
+    for (; *iter; ++iter) {
+        if (!neg && iter == buf && *iter == '-') {
+            neg = true;
+            continue;
+        }
+        if (*iter < '0' || *iter > '9') {
+            return false;
+        }
+        *out *= 10;
+        *out += *iter - '0';
+    }
+    if (neg) {
+        *out = -*out;
+    }
+    return true;
+}
