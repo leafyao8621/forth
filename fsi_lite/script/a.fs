@@ -1,3 +1,4 @@
 : p10 10 . cr ;
 : p20 20 . cr ;
-: main p10 p20 ;
+: emit p10 p20 ;
+: main emit emit ;

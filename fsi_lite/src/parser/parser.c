@@ -32,64 +32,78 @@ int parser_parse(bool line, FILE *fin) {
         ret = lookup_token(buf, &meta, &addr);
         if (ret) {
             if (*meta == VM_LOOKUP_META_BUILTIN) {
-                switch (*addr) {
-                case PARSER_HANDLER_DOT:
-                    ret_int = parser_handler_dot();
-                    break;
-                case PARSER_HANDLER_EMIT:
-                    ret_int = parser_handler_emit();
-                    break;
-                case PARSER_HANDLER_CR:
-                    ret_int = parser_handler_cr();
-                    break;
-                case PARSER_HANDLER_COLON:
-                    ret_int = parser_handler_colon();
-                    break;
-                case PARSER_HANDLER_SEMI_COLON:
-                    ret_int = parser_handler_semi_colon();
-                    break;
+                if (parser_state & PARSER_STATE_NAME) {
+                    *meta ^= VM_LOOKUP_META_BUILTIN;
+                    *meta |= VM_LOOKUP_META_CALL;
+                    *addr = (uintptr_t)vm_compiled_cur;
+                    parser_state ^= PARSER_STATE_NAME;
+                } else {
+                    switch (*addr) {
+                    case PARSER_HANDLER_DOT:
+                        ret_int = parser_handler_dot();
+                        break;
+                    case PARSER_HANDLER_EMIT:
+                        ret_int = parser_handler_emit();
+                        break;
+                    case PARSER_HANDLER_CR:
+                        ret_int = parser_handler_cr();
+                        break;
+                    case PARSER_HANDLER_COLON:
+                        ret_int = parser_handler_colon();
+                        break;
+                    case PARSER_HANDLER_SEMI_COLON:
+                        ret_int = parser_handler_semi_colon();
+                        break;
+                    }
                 }
             } else {
-                if (*meta & VM_LOOKUP_META_CALL) {
-                    if (parser_state & PARSER_STATE_INTERPRET) {
-                        if (vm_interpreted_cur == vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                if (parser_state & PARSER_STATE_NAME) {
+                    *addr = (uintptr_t)vm_compiled_cur;
+                    parser_state ^= PARSER_STATE_NAME;
+                } else {
+                    if (*meta & VM_LOOKUP_META_CALL) {
+                        if (parser_state & PARSER_STATE_INTERPRET) {
+                            if (vm_interpreted_cur == vm_interpreted_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            }
+                            *(vm_interpreted_cur++) = VM_INSTRUCTION_CALL;
+                            if (
+                                vm_interpreted_cur + sizeof(uintptr_t) >=
+                                vm_interpreted_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            }
+                            *(uint8_t**)vm_interpreted_cur =
+                                (uint8_t*)(*addr - 1);
+                            vm_interpreted_cur += sizeof(uintptr_t);
+                            if (vm_interpreted_cur == vm_interpreted_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            }
                         }
-                        *(vm_interpreted_cur++) = VM_INSTRUCTION_CALL;
-                        if (
-                            vm_interpreted_cur + sizeof(uintptr_t) >=
-                            vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_INTERPRETED_OVERFLOW;
-                        }
-                        *(uint8_t**)vm_interpreted_cur = (uint8_t*)(*addr - 1);
-                        vm_interpreted_cur += sizeof(uintptr_t);
-                        if (vm_interpreted_cur == vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_INTERPRETED_OVERFLOW;
-                        }
-                    }
-                    if (parser_state & PARSER_STATE_COMPILE) {
-                        if (vm_compiled_cur == vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_COMPILED_OVERFLOW;
-                        }
-                        *(vm_compiled_cur++) = VM_INSTRUCTION_CALL;
-                        if (
-                            vm_compiled_cur + sizeof(uintptr_t) >=
-                            vm_compiled_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_COMPILED_OVERFLOW;
-                        }
-                       *(uint8_t**)vm_compiled_cur = (uint8_t*)(*addr - 1);
-                        vm_compiled_cur += sizeof(uintptr_t);
-                        if (vm_compiled_cur == vm_compiled_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_COMPILED_OVERFLOW;
+                        if (parser_state & PARSER_STATE_COMPILE) {
+                            if (vm_compiled_cur == vm_interpreted_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                            }
+                            *(vm_compiled_cur++) = VM_INSTRUCTION_CALL;
+                            if (
+                                vm_compiled_cur + sizeof(uintptr_t) >=
+                                vm_compiled_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                            }
+                        *(uint8_t**)vm_compiled_cur = (uint8_t*)(*addr - 1);
+                            vm_compiled_cur += sizeof(uintptr_t);
+                            if (vm_compiled_cur == vm_compiled_end) {
+                                parser_status = PARSER_STATUS_END;
+                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                            }
                         }
                     }
                 }
+
             }
         } else {
             if (parser_state & PARSER_STATE_NAME) {
