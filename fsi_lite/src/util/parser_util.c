@@ -64,12 +64,12 @@ void next_token(bool line, FILE *fin) {
     ungetc(in, fin);
 }
 
-bool lookup_token(char *buf, uint8_t *meta, uintptr_t *addr) {
+bool lookup_token(char *buf, uint8_t **meta, uintptr_t **addr) {
     uint8_t *iter = vm_lookup;
     for (; iter < vm_lookup_cur; ++iter) {
         if (!strcmp(buf, (const char*)(iter + sizeof(uintptr_t) + 1))) {
-            *meta = *iter;
-            *addr = *(uintptr_t*)(iter + 1);
+            *meta = iter;
+            *addr = (uintptr_t*)(iter + 1);
             return true;
         }
         iter += sizeof(uintptr_t) + 1;

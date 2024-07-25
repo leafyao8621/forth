@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 3
+#define BUILTIN_SIZE 5
 
 static uint8_t mem[65536];
 
@@ -37,7 +37,9 @@ void vm_initialize() {
     static const char *builtin[BUILTIN_SIZE] = {
         ".",
         "emit",
-        "cr"
+        "cr",
+        ":",
+        ";"
     };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
@@ -51,10 +53,10 @@ void vm_initialize() {
     vm_interpreted = vm_literal_end;
     vm_interpreted_cur = vm_interpreted;
     vm_interpreted_end = vm_interpreted + 2000;
-    vm_data_stack = vm_literal_end;
+    vm_data_stack = vm_interpreted_end;
     vm_data_stack_cur = vm_data_stack;
     vm_data_stack_end = vm_data_stack + 2000;
-    vm_control_stack = vm_literal_end;
+    vm_control_stack = vm_data_stack_end;
     vm_control_stack_cur = vm_control_stack;
     vm_control_stack_end = vm_control_stack + 2000;
     vm_compiled = vm_control_stack_end;
@@ -81,15 +83,43 @@ void vm_log(void) {
     puts("Lookup:");
     for (iter = vm_lookup; iter < vm_lookup_cur; ++iter) {
         printf("0x%016lX ", (uintptr_t)iter);
-        switch (*iter) {
-        case VM_LOOKUP_META_BUILTIN:
+        if (*iter & VM_LOOKUP_META_BUILTIN) {
             printf("%s ", "BUILTIN");
-            break;
+        }
+        if (*iter & VM_LOOKUP_META_CALL) {
+            printf("%s ", "CALL");
         }
         printf("%016lX ", *(size_t*)(++iter));
         iter += sizeof(size_t);
         for (; *iter; ++iter) {
             putchar(*iter);
+        }
+        putchar(10);
+    }
+    puts("Compiled:");
+    for (iter = vm_compiled; iter < vm_compiled_cur; ++iter) {
+        printf("0x%016lX ", (uintptr_t)iter);
+        switch (*iter) {
+        case VM_INSTRUCTION_HALT:
+            printf("%s", "HALT");
+            break;
+        case VM_INSTRUCTION_RET:
+            printf("%s", "RET");
+            break;
+        case VM_INSTRUCTION_PUSHD:
+            printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_PINT:
+            printf("%s", "PINT");
+            break;
+        case VM_INSTRUCTION_EMIT:
+            printf("%s", "EMIT");
+            break;
+        case VM_INSTRUCTION_CALL:
+            printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         }
         putchar(10);
     }
@@ -110,8 +140,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
-        case VM_INSTRUCTION_EMIT:
-            printf("%s", "EMIT");
+        case VM_INSTRUCTION_CALL:
+            printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
             break;
         }
         putchar(10);
@@ -145,12 +176,18 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_EMIT:
                 printf("%s", "EMIT");
                 break;
+            case VM_INSTRUCTION_CALL:
+                printf("%s 0x%016lX", "CALL", *(uintptr_t*)(vm_ip + 1));
+                break;
             }
             putchar(10);
         }
         switch (*vm_ip) {
         case VM_INSTRUCTION_HALT:
             vm_state = VM_STATE_HALTED;
+            break;
+        case VM_INSTRUCTION_RET:
+            ret = vm_handler_ret();
             break;
         case VM_INSTRUCTION_PUSHD:
             ret = vm_handler_pushd();
@@ -160,6 +197,9 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_EMIT:
             ret = vm_handler_emit();
+            break;
+        case VM_INSTRUCTION_CALL:
+            ret = vm_handler_call();
             break;
         }
     }
