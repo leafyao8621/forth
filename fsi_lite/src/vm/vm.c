@@ -159,7 +159,7 @@ int vm_run(bool debug) {
     vm_state = VM_STATE_RUNNING;
     for (; vm_state != VM_STATE_HALTED; ++vm_ip) {
         if (debug) {
-            printf("Running 0x%016lX ", (uintptr_t)vm_ip);
+            printf("Executing 0x%016lX ", (uintptr_t)vm_ip);
             switch (*vm_ip) {
             case VM_INSTRUCTION_HALT:
                 printf("%s", "HALT");
