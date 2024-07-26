@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
         }
         if (ret) {
             fprintf(stderr, "Error parsing\n%s\n", parser_status_lookup[ret]);
+            for (ret = fgetc(stdin); ret != '\n'; ret = fgetc(stdin));
             continue;
         }
         if (debug) {

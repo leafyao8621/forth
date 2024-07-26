@@ -10,6 +10,8 @@ static char *buf_end;
 uint8_t parser_state;
 uint8_t parser_status;
 
+uint8_t *parser_pending;
+
 void parser_initialize(void) {
     buf_end = buf + 100;
     parser_state = PARSER_STATE_INTERPRET;
@@ -58,47 +60,60 @@ int parser_parse(bool line, FILE *fin) {
                 }
             } else {
                 if (parser_state & PARSER_STATE_NAME) {
+                    parser_pending = meta;
                     *addr = (uintptr_t)vm_compiled_cur;
                     parser_state ^= PARSER_STATE_NAME;
                 } else {
+                    if (meta == parser_pending) {
+                        parser_status = PARSER_STATUS_END;
+                        parser_pending = 0;
+                        ret_int = PARSER_STATUS_PENDING_DEFINITION;
+                        break;
+                    }
                     if (*meta & VM_LOOKUP_META_CALL) {
                         if (parser_state & PARSER_STATE_INTERPRET) {
                             if (vm_interpreted_cur == vm_interpreted_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
                             }
                             *(vm_interpreted_cur++) = VM_INSTRUCTION_CALL;
                             if (
                                 vm_interpreted_cur + sizeof(uintptr_t) >=
                                 vm_interpreted_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
                             }
                             *(uint8_t**)vm_interpreted_cur =
                                 (uint8_t*)(*addr - 1);
                             vm_interpreted_cur += sizeof(uintptr_t);
                             if (vm_interpreted_cur == vm_interpreted_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
                             }
                         }
                         if (parser_state & PARSER_STATE_COMPILE) {
                             if (vm_compiled_cur == vm_interpreted_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
                             }
                             *(vm_compiled_cur++) = VM_INSTRUCTION_CALL;
                             if (
                                 vm_compiled_cur + sizeof(uintptr_t) >=
                                 vm_compiled_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
                             }
                         *(uint8_t**)vm_compiled_cur = (uint8_t*)(*addr - 1);
                             vm_compiled_cur += sizeof(uintptr_t);
                             if (vm_compiled_cur == vm_compiled_end) {
                                 parser_status = PARSER_STATUS_END;
-                                return PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
                             }
                         }
                     }
@@ -108,22 +123,27 @@ int parser_parse(bool line, FILE *fin) {
         } else {
             if (parser_state & PARSER_STATE_NAME) {
                 if (vm_lookup_cur == vm_lookup_end) {
-                    return PARSER_STATUS_LOOKUP_OVERFLOW;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
                 }
+                parser_pending = vm_lookup_cur;
                 *(vm_lookup_cur++) = VM_LOOKUP_META_CALL;
                 if (vm_lookup_cur + sizeof(uintptr_t) >= vm_lookup_end) {
-                    return PARSER_STATUS_LOOKUP_OVERFLOW;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
                 }
                 *(uintptr_t*)vm_lookup_cur = (uintptr_t)vm_compiled_cur;
                 vm_lookup_cur += sizeof(uintptr_t);
                 for (iter = buf; *iter; ++iter) {
                     if (vm_lookup_cur == vm_lookup_end) {
-                        return PARSER_STATUS_LOOKUP_OVERFLOW;
+                        ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                        break;
                     }
                     *(vm_lookup_cur++) = *iter;
                 }
                 if (vm_lookup_cur == vm_lookup_end) {
-                    return PARSER_STATUS_LOOKUP_OVERFLOW;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
                 }
                 *(vm_lookup_cur++) = 0;
                 parser_state ^= PARSER_STATE_NAME;
@@ -143,10 +163,15 @@ int parser_parse(bool line, FILE *fin) {
                     }
                     break;
                 default:
-                    return PARSER_STATUS_INVALID_BASE;
+                    ret_int = PARSER_STATUS_INVALID_BASE;
+                    break;
+                }
+                if (ret_int) {
+                    break;
                 }
                 if (!ret) {
-                    return PARSER_STATUS_INVALID_BASE10;
+                    ret_int = PARSER_STATUS_INVALID_BASE10;
+                    break;
                 }
             }
         }

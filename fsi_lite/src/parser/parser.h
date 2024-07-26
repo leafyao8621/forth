@@ -16,6 +16,8 @@
 extern uint8_t parser_state;
 extern uint8_t parser_status;
 
+extern uint8_t *parser_pending;
+
 void parser_initialize(void);
 int parser_parse(bool line, FILE *fin);
 

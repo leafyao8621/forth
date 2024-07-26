@@ -1,6 +1,6 @@
 #include "status.h"
 
-const char *parser_status_lookup[10] =
+const char *parser_status_lookup[11] =
     {
         "PARSER_STATUS_OK",
         "PARSER_STATUS_END_REPL",
@@ -11,7 +11,8 @@ const char *parser_status_lookup[10] =
         "PARSER_STATUS_INVALID_BASE10",
         "PARSER_STATUS_NESTED_COMPILATION_MODE",
         "PARSER_STATUS_NOT_IN_COMPILATION_MODE",
-        "PARSER_STATUS_LOOKUP_OVERFLOW"
+        "PARSER_STATUS_LOOKUP_OVERFLOW",
+        "PARSER_STATUS_PENDING_DEFINITION"
     };
 
 const char *vm_status_lookup[6] =

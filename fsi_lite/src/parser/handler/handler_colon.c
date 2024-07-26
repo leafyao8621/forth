@@ -4,7 +4,7 @@
 
 int parser_handler_colon(void) {
     if (parser_state & PARSER_STATE_COMPILE) {
-        return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
+        return PARSER_STATUS_NESTED_COMPILATION_MODE;
     }
     parser_state ^= PARSER_STATE_INTERPRET;
     parser_state |= PARSER_STATE_COMPILE;
