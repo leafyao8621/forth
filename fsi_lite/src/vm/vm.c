@@ -128,6 +128,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_JMP:
+            printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         }
         putchar(10);
     }
@@ -154,6 +158,10 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_JZ:
             printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_JMP:
+            printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         }
@@ -194,6 +202,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_JZ:
                 printf("%s 0x%016lX", "JZ", *(uintptr_t*)(vm_ip + 1));
                 break;
+            case VM_INSTRUCTION_JMP:
+                printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm_ip + 1));
+                break;
             }
             putchar(10);
         }
@@ -215,6 +226,12 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_CALL:
             ret = vm_handler_call();
+            break;
+        case VM_INSTRUCTION_JZ:
+            ret = vm_handler_jz();
+            break;
+        case VM_INSTRUCTION_JMP:
+            ret = vm_handler_jmp();
             break;
         }
     }

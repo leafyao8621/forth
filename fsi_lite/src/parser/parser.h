@@ -14,8 +14,9 @@
 #define PARSER_STATUS_REPL_END 2
 
 #define PARSER_CONTROL_IF 0
-#define PARSER_CONTROL_DO 1
-#define PARSER_CONTROL_WHILE 2
+#define PARSER_CONTROL_ELSE 1
+#define PARSER_CONTROL_DO 2
+#define PARSER_CONTROL_WHILE 3
 
 extern uint8_t parser_state;
 extern uint8_t parser_status;

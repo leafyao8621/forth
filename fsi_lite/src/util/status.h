@@ -13,6 +13,8 @@
 #define PARSER_STATUS_LOOKUP_OVERFLOW 9
 #define PARSER_STATUS_PENDING_DEFINITION 10
 #define PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW 11
+#define PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW 12
+#define PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH 13
 
 #define VM_STATUS_OK 0
 #define VM_STATUS_DATA_STACK_OVERFLOW 1
@@ -21,7 +23,7 @@
 #define VM_STATUS_CONTROL_STACK_OVERFLOW 4
 #define VM_STATUS_CONTROL_STACK_UNDERFLOW 5
 
-extern const char *parser_status_lookup[12];
+extern const char *parser_status_lookup[14];
 extern const char *vm_status_lookup[6];
 
 #endif

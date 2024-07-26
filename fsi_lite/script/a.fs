@@ -1,4 +1,2 @@
-: p10 10 . cr ;
-: p20 20 . cr ;
-: emit p10 p20 ;
-: main emit emit ;
+: test if 65 emit else 66 emit then ;
+: main 10 test cr 0 test cr ;
