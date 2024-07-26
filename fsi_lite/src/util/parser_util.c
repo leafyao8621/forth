@@ -29,6 +29,7 @@ bool parse_token(char *buf, char *buf_end, bool line, FILE *fin) {
             break;
         case '\n':
             parser_status = PARSER_STATUS_END;
+            parser_eos = true;
             break;
         }
     } else {
@@ -53,6 +54,7 @@ void next_token(bool line, FILE *fin) {
             return;
         case '\n':
             parser_status = PARSER_STATUS_END;
+            parser_eos = true;
             return;
         }
     } else {

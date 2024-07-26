@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 5
+#define BUILTIN_SIZE 8
 
 static uint8_t mem[65536];
 
@@ -34,13 +34,17 @@ uint8_t *vm_ip;
 uint8_t vm_state;
 
 void vm_initialize() {
-    static const char *builtin[BUILTIN_SIZE] = {
-        ".",
-        "emit",
-        "cr",
-        ":",
-        ";"
-    };
+    static const char *builtin[BUILTIN_SIZE] =
+        {
+            ".",
+            "emit",
+            "cr",
+            ":",
+            ";",
+            "if",
+            "then",
+            "else"
+        };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
     size_t i = 0;
@@ -120,6 +124,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_JZ:
+            printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         }
         putchar(10);
     }
@@ -142,6 +150,10 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_JZ:
+            printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         }
@@ -178,6 +190,9 @@ int vm_run(bool debug) {
                 break;
             case VM_INSTRUCTION_CALL:
                 printf("%s 0x%016lX", "CALL", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_JZ:
+                printf("%s 0x%016lX", "JZ", *(uintptr_t*)(vm_ip + 1));
                 break;
             }
             putchar(10);

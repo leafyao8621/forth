@@ -12,10 +12,20 @@ uint8_t parser_status;
 
 uint8_t *parser_pending;
 
+uint8_t parser_control_stack[(sizeof(uintptr_t) + 1) * 20];
+uint8_t *parser_control_stack_cur;
+uint8_t *parser_control_stack_end;
+
+bool parser_eos;
+
 void parser_initialize(void) {
     buf_end = buf + 100;
     parser_state = PARSER_STATE_INTERPRET;
     parser_status = PARSER_STATUS_END;
+    parser_pending = 0;
+    parser_control_stack_cur = parser_control_stack;
+    parser_control_stack_end =
+        parser_control_stack + (sizeof(uintptr_t) + 1) * 20;
 }
 
 int parser_parse(bool line, FILE *fin) {
@@ -26,6 +36,7 @@ int parser_parse(bool line, FILE *fin) {
     uintptr_t num = 0;
     char *iter = 0;
     parser_status = PARSER_STATUS_RUNNING;
+    parser_eos = false;
     for (next_token(line, fin); !parser_status; next_token(line, fin)) {
         ret = parse_token(buf, buf_end, line, fin);
         if (!ret) {
@@ -56,6 +67,15 @@ int parser_parse(bool line, FILE *fin) {
                     case PARSER_HANDLER_SEMI_COLON:
                         ret_int = parser_handler_semi_colon();
                         break;
+                    case PARSER_HANDLER_SEMI_IF:
+                        ret_int = parser_handler_if();
+                        break;
+                    case PARSER_HANDLER_SEMI_THEN:
+                        ret_int = parser_handler_then();
+                        break;
+                    case PARSER_HANDLER_SEMI_ELSE:
+                        ret_int = parser_handler_else();
+                        break;
                     }
                 }
             } else {
@@ -67,6 +87,7 @@ int parser_parse(bool line, FILE *fin) {
                     if (meta == parser_pending) {
                         parser_status = PARSER_STATUS_END;
                         parser_pending = 0;
+                        parser_state = PARSER_STATE_INTERPRET;
                         ret_int = PARSER_STATUS_PENDING_DEFINITION;
                         break;
                     }
