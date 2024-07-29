@@ -3,7 +3,7 @@
 #include "../../util/status.h"
 
 int vm_handler_pushd(void) {
-    if (vm_data_stack_cur + sizeof(uintptr_t) >= vm_data_stack_end) {
+    if (vm_data_stack_cur + sizeof(uintptr_t) > vm_data_stack_end) {
         vm_state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_OVERFLOW;
     }

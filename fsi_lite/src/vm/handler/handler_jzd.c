@@ -4,7 +4,7 @@
 #include "../vm.h"
 #include "../../util/status.h"
 
-int vm_handler_jz(void) {
+int vm_handler_jzd(void) {
     if (vm_data_stack_cur == vm_data_stack) {
         vm_state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;

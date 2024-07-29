@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 8
+#define BUILTIN_SIZE 12
 
 static uint8_t mem[65536];
 
@@ -43,7 +43,11 @@ void vm_initialize() {
             ";",
             "if",
             "then",
-            "else"
+            "else",
+            "do",
+            "loop",
+            "+loop",
+            "i"
         };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
@@ -124,13 +128,32 @@ void vm_log(void) {
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
-        case VM_INSTRUCTION_JZ:
-            printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
+        case VM_INSTRUCTION_JZD:
+            printf("%s 0x%016lX", "JZD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_JMP:
             printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_2PUSHC:
+            printf("%s", "2PUSHC");
+            break;
+        case VM_INSTRUCTION_PEEKC:
+            printf("%s", "PEEKC");
+            break;
+        case VM_INSTRUCTION_2RMC:
+            printf("%s", "2RMC");
+            break;
+        case VM_INSTRUCTION_JNEC:
+            printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_INCC:
+            printf("%s", "INCC");
+            break;
+        case VM_INSTRUCTION_ADDC:
+            printf("%s", "ADDC");
             break;
         }
         putchar(10);
@@ -152,16 +175,11 @@ void vm_log(void) {
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
+        case VM_INSTRUCTION_EMIT:
+            printf("%s", "EMIT");
+            break;
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
-            iter += sizeof(uintptr_t);
-            break;
-        case VM_INSTRUCTION_JZ:
-            printf("%s 0x%016lX", "JZ", *(uintptr_t*)(iter + 1));
-            iter += sizeof(uintptr_t);
-            break;
-        case VM_INSTRUCTION_JMP:
-            printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         }
@@ -179,7 +197,7 @@ int vm_run(bool debug) {
     vm_state = VM_STATE_RUNNING;
     for (; vm_state != VM_STATE_HALTED; ++vm_ip) {
         if (debug) {
-            printf("Executing 0x%016lX ", (uintptr_t)vm_ip);
+            printf("\nExecuting 0x%016lX ", (uintptr_t)vm_ip);
             switch (*vm_ip) {
             case VM_INSTRUCTION_HALT:
                 printf("%s", "HALT");
@@ -199,11 +217,29 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_CALL:
                 printf("%s 0x%016lX", "CALL", *(uintptr_t*)(vm_ip + 1));
                 break;
-            case VM_INSTRUCTION_JZ:
+            case VM_INSTRUCTION_JZD:
                 printf("%s 0x%016lX", "JZ", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JMP:
                 printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_2PUSHC:
+                printf("%s", "2PUSHC");
+                break;
+            case VM_INSTRUCTION_PEEKC:
+                printf("%s", "PEEKC");
+                break;
+            case VM_INSTRUCTION_2RMC:
+                printf("%s", "2RMC");
+                break;
+            case VM_INSTRUCTION_JNEC:
+                printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_INCC:
+                printf("%s", "INCC");
+                break;
+            case VM_INSTRUCTION_ADDC:
+                printf("%s", "ADDC");
                 break;
             }
             putchar(10);
@@ -227,11 +263,29 @@ int vm_run(bool debug) {
         case VM_INSTRUCTION_CALL:
             ret = vm_handler_call();
             break;
-        case VM_INSTRUCTION_JZ:
-            ret = vm_handler_jz();
+        case VM_INSTRUCTION_JZD:
+            ret = vm_handler_jzd();
             break;
         case VM_INSTRUCTION_JMP:
             ret = vm_handler_jmp();
+            break;
+        case VM_INSTRUCTION_2PUSHC:
+            ret = vm_handler_2pushc();
+            break;
+        case VM_INSTRUCTION_PEEKC:
+            ret = vm_handler_peekc();
+            break;
+        case VM_INSTRUCTION_2RMC:
+            ret = vm_handler_2rmc();
+            break;
+        case VM_INSTRUCTION_JNEC:
+            ret = vm_handler_jnec();
+            break;
+        case VM_INSTRUCTION_INCC:
+            ret = vm_handler_incc();
+            break;
+        case VM_INSTRUCTION_ADDC:
+            ret = vm_handler_addc();
             break;
         }
     }
