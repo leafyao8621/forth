@@ -16,8 +16,8 @@ int parser_handler_do(void) {
         parser_status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(parser_control_stack_cur++) = PARSER_CONTROL_DO;
-    *(uint8_t**)parser_control_stack_cur = vm_compiled_cur;
-    parser_control_stack_cur += sizeof(uintptr_t);
+    *(parser_loop_stack_cur++) = PARSER_CONTROL_DO;
+    *(uint8_t**)parser_loop_stack_cur = vm_compiled_cur;
+    parser_loop_stack_cur += sizeof(uintptr_t);
     return PARSER_STATUS_OK;
 }

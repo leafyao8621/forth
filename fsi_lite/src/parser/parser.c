@@ -12,9 +12,13 @@ uint8_t parser_status;
 
 uint8_t *parser_pending;
 
-uint8_t parser_control_stack[(sizeof(uintptr_t) + 1) * 20];
-uint8_t *parser_control_stack_cur;
-uint8_t *parser_control_stack_end;
+uint8_t parser_conditional_stack[(sizeof(uintptr_t) + 1) * 20];
+uint8_t *parser_conditional_stack_cur;
+uint8_t *parser_conditional_stack_end;
+
+uint8_t parser_loop_stack[(sizeof(uintptr_t) + 1) * 20];
+uint8_t *parser_loop_stack_cur;
+uint8_t *parser_loop_stack_end;
 
 bool parser_eos;
 
@@ -23,9 +27,12 @@ void parser_initialize(void) {
     parser_state = PARSER_STATE_INTERPRET;
     parser_status = PARSER_STATUS_END;
     parser_pending = 0;
-    parser_control_stack_cur = parser_control_stack;
-    parser_control_stack_end =
-        parser_control_stack + (sizeof(uintptr_t) + 1) * 20;
+    parser_conditional_stack_cur = parser_conditional_stack;
+    parser_conditional_stack_end =
+        parser_conditional_stack + (sizeof(uintptr_t) + 1) * 20;
+    parser_loop_stack_cur = parser_loop_stack;
+    parser_loop_stack_end =
+        parser_loop_stack + (sizeof(uintptr_t) + 1) * 20;
 }
 
 int parser_parse(bool line, FILE *fin) {
@@ -87,6 +94,9 @@ int parser_parse(bool line, FILE *fin) {
                         break;
                     case PARSER_HANDLER_I:
                         ret_int = parser_handler_i();
+                        break;
+                    case PARSER_HANDLER_LEAVE:
+                        ret_int = parser_handler_leave();
                         break;
                     }
                 }

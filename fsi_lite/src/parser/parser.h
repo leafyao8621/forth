@@ -23,9 +23,13 @@ extern uint8_t parser_status;
 
 extern uint8_t *parser_pending;
 
-extern uint8_t parser_control_stack[(sizeof(uintptr_t) + 1) * 20];
-extern uint8_t *parser_control_stack_cur;
-extern uint8_t *parser_control_stack_end;
+extern uint8_t parser_conditional_stack[(sizeof(uintptr_t) + 1) * 20];
+extern uint8_t *parser_conditional_stack_cur;
+extern uint8_t *parser_conditional_stack_end;
+
+extern uint8_t parser_loop_stack[(sizeof(uintptr_t) + 1) * 20];
+extern uint8_t *parser_loop_stack_cur;
+extern uint8_t *parser_loop_stack_end;
 
 extern bool parser_eos;
 
