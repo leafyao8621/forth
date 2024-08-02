@@ -107,6 +107,9 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_EXIT:
                         ret_int = parser_handler_exit();
                         break;
+                    case PARSER_HANDLER_J:
+                        ret_int = parser_handler_j();
+                        break;
                     }
                 }
             } else {

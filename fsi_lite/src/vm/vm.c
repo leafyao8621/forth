@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 15
+#define BUILTIN_SIZE 43
 
 static uint8_t mem[65536];
 
@@ -50,7 +50,35 @@ void vm_initialize() {
             "i",
             "leave",
             "unloop",
-            "exit"
+            "exit",
+            "j",
+            "begin",
+            "while",
+            "repeat",
+            "until",
+            "again",
+            "+",
+            "-",
+            "*",
+            "/",
+            "1+",
+            "1-",
+            "2*",
+            "2/",
+            "lshift",
+            "rshift",
+            "and",
+            "or",
+            "xor",
+            "negate",
+            ">",
+            "<",
+            "=",
+            "u<",
+            "0<",
+            "0=",
+            "dup",
+            "drop"
         };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
@@ -158,6 +186,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_ADDC:
             printf("%s", "ADDC");
             break;
+        case VM_INSTRUCTION_3PEEKC:
+            printf("%s", "3PEEKC");
+            break;
         }
         putchar(10);
     }
@@ -244,6 +275,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_ADDC:
                 printf("%s", "ADDC");
                 break;
+            case VM_INSTRUCTION_3PEEKC:
+                printf("%s", "3PEEKC");
+                break;
             }
             putchar(10);
         }
@@ -289,6 +323,9 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_ADDC:
             ret = vm_handler_addc();
+            break;
+        case VM_INSTRUCTION_3PEEKC:
+            ret = vm_handler_3peekc();
             break;
         }
     }
