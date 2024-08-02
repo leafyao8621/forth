@@ -7,52 +7,57 @@
 int main(int argc, char **argv) {
     int ret = 0;
     bool debug = false;
+    bool script = false;
     parser_initialize();
     vm_initialize();
     vm_reset();
     if (argc > 1) {
         FILE *fin = 0;
-        if (argc == 2) {
-            fin = fopen(argv[1], "r");
+        int i = 1;
+        for (; i < argc; ++i) {
+            if (!strcmp(argv[i], "-d")) {
+                debug = true;
+                continue;
+            }
+            if (!strcmp(argv[i], "-s")) {
+                script = true;
+                continue;
+            }
+            break;
+        }
+        for (; i < argc; ++i) {
+            fin = fopen(argv[i], "r");
             if (!fin) {
-                fprintf(stderr, "Cannot open %s\n", argv[1]);
+                fprintf(stderr, "Cannot open %s\n", argv[i]);
                 return 1;
             }
-        } else {
-            if (!strcmp(argv[1], "-d")) {
-                debug = true;
-                fin = fopen(argv[2], "r");
-                if (!fin) {
-                    fprintf(stderr, "Cannot open %s\n", argv[2]);
-                    return 1;
-                }
-            } else {
-                fin = fopen(argv[1], "r");
-                if (!fin) {
-                    fprintf(stderr, "Cannot open %s\n", argv[1]);
-                    return 1;
-                }
+            ret = parser_parse(debug, false, fin);
+            fclose(fin);
+            if (ret) {
+                fprintf(
+                    stderr,
+                    "Error parsing\n%s\n",
+                    parser_status_lookup[ret]
+                );
+                return 1;
             }
-        }
-        ret = parser_parse(false, fin);
-        fclose(fin);
-        if (ret) {
-            fprintf(stderr, "Error parsing\n%s\n", parser_status_lookup[ret]);
-            return 1;
-        }
-        if (debug) {
-            vm_log();
-        }
-        ret = vm_run(debug);
-        if (ret) {
-            fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
-            return 1;
+            if (debug) {
+                vm_log();
+            }
+            ret = vm_run(debug);
+            if (ret) {
+                fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
+                return 1;
+            }
+            vm_reset();
         }
     }
+    if (script) {
+        return 0;
+    }
     for (;;) {
-        vm_reset();
         printf("%s", "> ");
-        ret = parser_parse(true, stdin);
+        ret = parser_parse(debug, true, stdin);
         if (ret == PARSER_STATUS_END_REPL) {
             break;
         }

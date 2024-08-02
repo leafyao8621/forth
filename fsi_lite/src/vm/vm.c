@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 13
+#define BUILTIN_SIZE 15
 
 static uint8_t mem[65536];
 
@@ -48,7 +48,9 @@ void vm_initialize() {
             "loop",
             "+loop",
             "i",
-            "leave"
+            "leave",
+            "unloop",
+            "exit"
         };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;

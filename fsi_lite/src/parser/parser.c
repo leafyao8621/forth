@@ -35,7 +35,7 @@ void parser_initialize(void) {
         parser_loop_stack + (sizeof(uintptr_t) + 1) * 20;
 }
 
-int parser_parse(bool line, FILE *fin) {
+int parser_parse(bool debug, bool line, FILE *fin) {
     bool ret = false;
     int ret_int = 0;
     uint8_t *meta = 0;
@@ -46,6 +46,9 @@ int parser_parse(bool line, FILE *fin) {
     parser_eos = false;
     for (next_token(line, fin); !parser_status; next_token(line, fin)) {
         ret = parse_token(buf, buf_end, line, fin);
+        if (debug) {
+            printf("token: %s\n", buf);
+        }
         if (!ret) {
             return PARSER_STATUS_TOKEN_TOO_LONG;
         }
@@ -97,6 +100,12 @@ int parser_parse(bool line, FILE *fin) {
                         break;
                     case PARSER_HANDLER_LEAVE:
                         ret_int = parser_handler_leave();
+                        break;
+                    case PARSER_HANDLER_UNLOOP:
+                        ret_int = parser_handler_unloop();
+                        break;
+                    case PARSER_HANDLER_EXIT:
+                        ret_int = parser_handler_exit();
                         break;
                     }
                 }

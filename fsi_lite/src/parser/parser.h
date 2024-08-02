@@ -34,6 +34,6 @@ extern uint8_t *parser_loop_stack_end;
 extern bool parser_eos;
 
 void parser_initialize(void);
-int parser_parse(bool line, FILE *fin);
+int parser_parse(bool debug, bool line, FILE *fin);
 
 #endif

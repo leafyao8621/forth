@@ -14,6 +14,8 @@
 #define PARSER_HANDLER_PLUS_LOOP 10
 #define PARSER_HANDLER_I 11
 #define PARSER_HANDLER_LEAVE 12
+#define PARSER_HANDLER_UNLOOP 13
+#define PARSER_HANDLER_EXIT 14
 
 int parser_handler_dot(void);
 int parser_handler_emit(void);
@@ -28,5 +30,7 @@ int parser_handler_loop(void);
 int parser_handler_plus_loop(void);
 int parser_handler_i(void);
 int parser_handler_leave(void);
+int parser_handler_unloop(void);
+int parser_handler_exit(void);
 
 #endif

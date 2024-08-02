@@ -18,12 +18,13 @@ const char *parser_status_lookup[14] =
         "PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH"
     };
 
-const char *vm_status_lookup[6] =
+const char *vm_status_lookup[7] =
     {
         "VM_STATUS_OK",
         "VM_STATUS_DATA_STACK_OVERFLOW",
         "VM_STATUS_DATA_STACK_UNDERFLOW",
         "VM_STATUS_INVALID_BASE",
         "VM_STATUS_CONTROL_STACK_OVERFLOW",
-        "VM_STATUS_CONTROL_STACK_UNDERFLOW"
+        "VM_STATUS_CONTROL_STACK_UNDERFLOW",
+        "VM_STATUS_INVALID_RETURN_ADDRESS"
     };
