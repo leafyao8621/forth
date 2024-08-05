@@ -42,8 +42,10 @@
 #define PARSER_HANDLER_ULT 38
 #define PARSER_HANDLER_ZERO_LT 39
 #define PARSER_HANDLER_ZERO_EQ 40
-#define PARSER_HANDLER_ZERO_DUP 41
-#define PARSER_HANDLER_ZERO_DROP 42
+#define PARSER_HANDLER_DUP 41
+#define PARSER_HANDLER_DROP 42
+#define PARSER_HANDLER_SWAP 43
+
 
 int parser_handler_dot(void);
 int parser_handler_emit(void);

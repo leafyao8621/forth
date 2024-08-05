@@ -7,6 +7,7 @@ int vm_handler_pint(void);
 int vm_handler_emit(void);
 int vm_handler_call(void);
 int vm_handler_jzd(void);
+int vm_handler_jnzd(void);
 int vm_handler_jmp(void);
 int vm_handler_2pushc(void);
 int vm_handler_peekc(void);

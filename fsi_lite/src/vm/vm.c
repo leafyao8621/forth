@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 43
+#define BUILTIN_SIZE 44
 
 static uint8_t mem[65536];
 
@@ -78,7 +78,8 @@ void vm_initialize() {
             "0<",
             "0=",
             "dup",
-            "drop"
+            "drop",
+            "swap"
         };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
@@ -161,6 +162,10 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_JZD:
             printf("%s 0x%016lX", "JZD", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_JNZD:
+            printf("%s 0x%016lX", "JNZD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_JMP:
@@ -252,7 +257,10 @@ int vm_run(bool debug) {
                 printf("%s 0x%016lX", "CALL", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JZD:
-                printf("%s 0x%016lX", "JZ", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%016lX", "JZD", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_JNZD:
+                printf("%s 0x%016lX", "JNZD", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JMP:
                 printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm_ip + 1));
@@ -302,6 +310,9 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_JZD:
             ret = vm_handler_jzd();
+            break;
+        case VM_INSTRUCTION_JNZD:
+            ret = vm_handler_jnzd();
             break;
         case VM_INSTRUCTION_JMP:
             ret = vm_handler_jmp();
