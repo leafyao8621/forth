@@ -194,6 +194,72 @@ void vm_log(void) {
         case VM_INSTRUCTION_3PEEKC:
             printf("%s", "3PEEKC");
             break;
+        case VM_INSTRUCTION_ADDD:
+            printf("%s", "ADDD");
+            break;
+        case VM_INSTRUCTION_SUBD:
+            printf("%s", "SUBD");
+            break;
+        case VM_INSTRUCTION_MULTD:
+            printf("%s", "MULTD");
+            break;
+        case VM_INSTRUCTION_DIVD:
+            printf("%s", "DIVD");
+            break;
+        case VM_INSTRUCTION_INCD:
+            printf("%s", "INCD");
+            break;
+        case VM_INSTRUCTION_DECD:
+            printf("%s", "DECD");
+            break;
+        case VM_INSTRUCTION_DUBD:
+            printf("%s", "DUBD");
+            break;
+        case VM_INSTRUCTION_HALFD:
+            printf("%s", "HALFD");
+            break;
+        case VM_INSTRUCTION_LSLD:
+            printf("%s", "LSLD");
+            break;
+        case VM_INSTRUCTION_LSRD:
+            printf("%s", "LSRD");
+            break;
+        case VM_INSTRUCTION_ANDD:
+            printf("%s", "ANDD");
+            break;
+        case VM_INSTRUCTION_ORD:
+            printf("%s", "ORD");
+            break;
+        case VM_INSTRUCTION_XORD:
+            printf("%s", "XORD");
+            break;
+        case VM_INSTRUCTION_NEGD:
+            printf("%s", "NEGD");
+            break;
+        case VM_INSTRUCTION_GTD:
+            printf("%s", "GTD");
+            break;
+        case VM_INSTRUCTION_LTD:
+            printf("%s", "LTD");
+            break;
+        case VM_INSTRUCTION_EQD:
+            printf("%s", "EQD");
+            break;
+        case VM_INSTRUCTION_ULTD:
+            printf("%s", "ULTD");
+            break;
+        case VM_INSTRUCTION_LTZD:
+            printf("%s", "LTZD");
+            break;
+        case VM_INSTRUCTION_EQZD:
+            printf("%s", "EQZD");
+            break;
+        case VM_INSTRUCTION_DUPD:
+            printf("%s", "DUPD");
+            break;
+        case VM_INSTRUCTION_SWAPD:
+            printf("%s", "SWAPD");
+            break;
         }
         putchar(10);
     }
@@ -220,6 +286,72 @@ void vm_log(void) {
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_ADDD:
+            printf("%s", "ADDD");
+            break;
+        case VM_INSTRUCTION_SUBD:
+            printf("%s", "SUBD");
+            break;
+        case VM_INSTRUCTION_MULTD:
+            printf("%s", "MULTD");
+            break;
+        case VM_INSTRUCTION_DIVD:
+            printf("%s", "DIVD");
+            break;
+        case VM_INSTRUCTION_INCD:
+            printf("%s", "INCD");
+            break;
+        case VM_INSTRUCTION_DECD:
+            printf("%s", "DECD");
+            break;
+        case VM_INSTRUCTION_DUBD:
+            printf("%s", "DUBD");
+            break;
+        case VM_INSTRUCTION_HALFD:
+            printf("%s", "HALFD");
+            break;
+        case VM_INSTRUCTION_LSLD:
+            printf("%s", "LSLD");
+            break;
+        case VM_INSTRUCTION_LSRD:
+            printf("%s", "LSRD");
+            break;
+        case VM_INSTRUCTION_ANDD:
+            printf("%s", "ANDD");
+            break;
+        case VM_INSTRUCTION_ORD:
+            printf("%s", "ORD");
+            break;
+        case VM_INSTRUCTION_XORD:
+            printf("%s", "XORD");
+            break;
+        case VM_INSTRUCTION_NEGD:
+            printf("%s", "NEGD");
+            break;
+        case VM_INSTRUCTION_GTD:
+            printf("%s", "GTD");
+            break;
+        case VM_INSTRUCTION_LTD:
+            printf("%s", "LTD");
+            break;
+        case VM_INSTRUCTION_EQD:
+            printf("%s", "EQD");
+            break;
+        case VM_INSTRUCTION_ULTD:
+            printf("%s", "ULTD");
+            break;
+        case VM_INSTRUCTION_LTZD:
+            printf("%s", "LTZD");
+            break;
+        case VM_INSTRUCTION_EQZD:
+            printf("%s", "EQZD");
+            break;
+        case VM_INSTRUCTION_DUPD:
+            printf("%s", "DUPD");
+            break;
+        case VM_INSTRUCTION_SWAPD:
+            printf("%s", "SWAPD");
             break;
         }
         putchar(10);
@@ -286,6 +418,72 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_3PEEKC:
                 printf("%s", "3PEEKC");
                 break;
+            case VM_INSTRUCTION_ADDD:
+                printf("%s", "ADDD");
+                break;
+            case VM_INSTRUCTION_SUBD:
+                printf("%s", "SUBD");
+                break;
+            case VM_INSTRUCTION_MULTD:
+                printf("%s", "MULTD");
+                break;
+            case VM_INSTRUCTION_DIVD:
+                printf("%s", "DIVD");
+                break;
+            case VM_INSTRUCTION_INCD:
+                printf("%s", "INCD");
+                break;
+            case VM_INSTRUCTION_DECD:
+                printf("%s", "DECD");
+                break;
+            case VM_INSTRUCTION_DUBD:
+                printf("%s", "DUBD");
+                break;
+            case VM_INSTRUCTION_HALFD:
+                printf("%s", "HALFD");
+                break;
+            case VM_INSTRUCTION_LSLD:
+                printf("%s", "LSLD");
+                break;
+            case VM_INSTRUCTION_LSRD:
+                printf("%s", "LSRD");
+                break;
+            case VM_INSTRUCTION_ANDD:
+                printf("%s", "ANDD");
+                break;
+            case VM_INSTRUCTION_ORD:
+                printf("%s", "ORD");
+                break;
+            case VM_INSTRUCTION_XORD:
+                printf("%s", "XORD");
+                break;
+            case VM_INSTRUCTION_NEGD:
+                printf("%s", "NEGD");
+                break;
+            case VM_INSTRUCTION_GTD:
+                printf("%s", "GTD");
+                break;
+            case VM_INSTRUCTION_LTD:
+                printf("%s", "LTD");
+                break;
+            case VM_INSTRUCTION_EQD:
+                printf("%s", "EQD");
+                break;
+            case VM_INSTRUCTION_ULTD:
+                printf("%s", "ULTD");
+                break;
+            case VM_INSTRUCTION_LTZD:
+                printf("%s", "LTZD");
+                break;
+            case VM_INSTRUCTION_EQZD:
+                printf("%s", "EQZD");
+                break;
+            case VM_INSTRUCTION_DUPD:
+                printf("%s", "DUPD");
+                break;
+            case VM_INSTRUCTION_SWAPD:
+                printf("%s", "SWAPD");
+                break;
             }
             putchar(10);
         }
@@ -337,6 +535,18 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_3PEEKC:
             ret = vm_handler_3peekc();
+            break;
+        case VM_INSTRUCTION_ADDD:
+            ret = vm_handler_addd();
+            break;
+        case VM_INSTRUCTION_SUBD:
+            ret = vm_handler_subd();
+            break;
+        case VM_INSTRUCTION_MULTD:
+            ret = vm_handler_multd();
+            break;
+        case VM_INSTRUCTION_DIVD:
+            ret = vm_handler_divd();
             break;
         }
     }

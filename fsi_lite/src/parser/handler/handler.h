@@ -63,5 +63,28 @@ int parser_handler_leave(void);
 int parser_handler_unloop(void);
 int parser_handler_exit(void);
 int parser_handler_j(void);
+int parser_handler_plus(void);
+int parser_handler_dash(void);
+int parser_handler_asterisk(void);
+int parser_handler_slash(void);
+int parser_handler_one_plus(void);
+int parser_handler_one_dash(void);
+int parser_handler_two_asterisk(void);
+int parser_handler_two_slash(void);
+int parser_handler_lshift(void);
+int parser_handler_rshift(void);
+int parser_handler_and(void);
+int parser_handler_or(void);
+int parser_handler_xor(void);
+int parser_handler_negate(void);
+int parser_handler_gt(void);
+int parser_handler_lt(void);
+int parser_handler_eq(void);
+int parser_handler_ult(void);
+int parser_handler_zero_lt(void);
+int parser_handler_zero_eq(void);
+int parser_handler_dup(void);
+int parser_handler_drop(void);
+int parser_handler_swap(void);
 
 #endif

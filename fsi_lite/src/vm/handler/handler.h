@@ -16,5 +16,9 @@ int vm_handler_jnec(void);
 int vm_handler_incc(void);
 int vm_handler_addc(void);
 int vm_handler_3peekc(void);
+int vm_handler_addd(void);
+int vm_handler_subd(void);
+int vm_handler_multd(void);
+int vm_handler_divd(void);
 
 #endif

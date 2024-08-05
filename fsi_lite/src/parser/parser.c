@@ -110,6 +110,75 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_J:
                         ret_int = parser_handler_j();
                         break;
+                    case PARSER_HANDLER_PLUS:
+                        ret_int = parser_handler_plus();
+                        break;
+                    case PARSER_HANDLER_DASH:
+                        ret_int = parser_handler_dash();
+                        break;
+                    case PARSER_HANDLER_ASTERISK:
+                        ret_int = parser_handler_asterisk();
+                        break;
+                    case PARSER_HANDLER_SLASH:
+                        ret_int = parser_handler_slash();
+                        break;
+                    case PARSER_HANDLER_ONE_PLUS:
+                        ret_int = parser_handler_one_plus();
+                        break;
+                    case PARSER_HANDLER_ONE_DASH:
+                        ret_int = parser_handler_one_dash();
+                        break;
+                    case PARSER_HANDLER_TWO_ASTERISK:
+                        ret_int = parser_handler_two_asterisk();
+                        break;
+                    case PARSER_HANDLER_TWO_SLASH:
+                        ret_int = parser_handler_two_slash();
+                        break;
+                    case PARSER_HANDLER_LSFHIFT:
+                        ret_int = parser_handler_lshift();
+                        break;
+                    case PARSER_HANDLER_RSFHIFT:
+                        ret_int = parser_handler_rshift();
+                        break;
+                    case PARSER_HANDLER_AND:
+                        ret_int = parser_handler_and();
+                        break;
+                    case PARSER_HANDLER_OR:
+                        ret_int = parser_handler_or();
+                        break;
+                    case PARSER_HANDLER_XOR:
+                        ret_int = parser_handler_xor();
+                        break;
+                    case PARSER_HANDLER_NEGATE:
+                        ret_int = parser_handler_negate();
+                        break;
+                    case PARSER_HANDLER_GT:
+                        ret_int = parser_handler_gt();
+                        break;
+                    case PARSER_HANDLER_LT:
+                        ret_int = parser_handler_lt();
+                        break;
+                    case PARSER_HANDLER_EQ:
+                        ret_int = parser_handler_eq();
+                        break;
+                    case PARSER_HANDLER_ULT:
+                        ret_int = parser_handler_ult();
+                        break;
+                    case PARSER_HANDLER_ZERO_LT:
+                        ret_int = parser_handler_zero_lt();
+                        break;
+                    case PARSER_HANDLER_ZERO_EQ:
+                        ret_int = parser_handler_zero_eq();
+                        break;
+                    case PARSER_HANDLER_DUP:
+                        ret_int = parser_handler_dup();
+                        break;
+                    case PARSER_HANDLER_DROP:
+                        ret_int = parser_handler_drop();
+                        break;
+                    case PARSER_HANDLER_SWAP:
+                        ret_int = parser_handler_swap();
+                        break;
                     }
                 }
             } else {
