@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 BIN = fsi
 
 %.o: %.c
-	$(CC) $(CFLAGS) -g -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -g -c $< -o $@
 
 $(BIN): $(OBJ)
 	$(CC) -g $(OBJ) -o $(BIN)
