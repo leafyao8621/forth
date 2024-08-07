@@ -26,25 +26,27 @@
 #define PARSER_HANDLER_DASH 22
 #define PARSER_HANDLER_ASTERISK 23
 #define PARSER_HANDLER_SLASH 24
-#define PARSER_HANDLER_ONE_PLUS 25
-#define PARSER_HANDLER_ONE_DASH 26
-#define PARSER_HANDLER_TWO_ASTERISK 27
-#define PARSER_HANDLER_TWO_SLASH 28
-#define PARSER_HANDLER_LSFHIFT 29
-#define PARSER_HANDLER_RSFHIFT 30
-#define PARSER_HANDLER_AND 31
-#define PARSER_HANDLER_OR 32
-#define PARSER_HANDLER_XOR 33
-#define PARSER_HANDLER_NEGATE 34
-#define PARSER_HANDLER_GT 35
-#define PARSER_HANDLER_LT 36
-#define PARSER_HANDLER_EQ 37
-#define PARSER_HANDLER_ULT 38
-#define PARSER_HANDLER_ZERO_LT 39
-#define PARSER_HANDLER_ZERO_EQ 40
-#define PARSER_HANDLER_DUP 41
-#define PARSER_HANDLER_DROP 42
-#define PARSER_HANDLER_SWAP 43
+#define PARSER_HANDLER_MOD 25
+#define PARSER_HANDLER_ONE_PLUS 26
+#define PARSER_HANDLER_ONE_DASH 27
+#define PARSER_HANDLER_TWO_ASTERISK 28
+#define PARSER_HANDLER_TWO_SLASH 29
+#define PARSER_HANDLER_LSFHIFT 30
+#define PARSER_HANDLER_RSFHIFT 31
+#define PARSER_HANDLER_AND 32
+#define PARSER_HANDLER_OR 33
+#define PARSER_HANDLER_XOR 34
+#define PARSER_HANDLER_INVERT 35
+#define PARSER_HANDLER_NEGATE 36
+#define PARSER_HANDLER_GT 37
+#define PARSER_HANDLER_LT 38
+#define PARSER_HANDLER_EQ 39
+#define PARSER_HANDLER_ULT 40
+#define PARSER_HANDLER_ZERO_LT 41
+#define PARSER_HANDLER_ZERO_EQ 42
+#define PARSER_HANDLER_DUP 43
+#define PARSER_HANDLER_DROP 44
+#define PARSER_HANDLER_SWAP 45
 
 
 int parser_handler_dot(void);
@@ -67,6 +69,7 @@ int parser_handler_plus(void);
 int parser_handler_dash(void);
 int parser_handler_asterisk(void);
 int parser_handler_slash(void);
+int parser_handler_mod(void);
 int parser_handler_one_plus(void);
 int parser_handler_one_dash(void);
 int parser_handler_two_asterisk(void);
@@ -76,6 +79,7 @@ int parser_handler_rshift(void);
 int parser_handler_and(void);
 int parser_handler_or(void);
 int parser_handler_xor(void);
+int parser_handler_invert(void);
 int parser_handler_negate(void);
 int parser_handler_gt(void);
 int parser_handler_lt(void);

@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 44
+#define BUILTIN_SIZE 46
 
 static uint8_t mem[65536];
 
@@ -61,6 +61,7 @@ void vm_initialize() {
             "-",
             "*",
             "/",
+            "mod",
             "1+",
             "1-",
             "2*",
@@ -70,6 +71,7 @@ void vm_initialize() {
             "and",
             "or",
             "xor",
+            "invert",
             "negate",
             ">",
             "<",
@@ -206,6 +208,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_DIVD:
             printf("%s", "DIVD");
             break;
+        case VM_INSTRUCTION_MODD:
+            printf("%s", "MODD");
+            break;
         case VM_INSTRUCTION_INCD:
             printf("%s", "INCD");
             break;
@@ -233,6 +238,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_XORD:
             printf("%s", "XORD");
             break;
+        case VM_INSTRUCTION_NOTD:
+            printf("%s", "NOTD");
+            break;
         case VM_INSTRUCTION_NEGD:
             printf("%s", "NEGD");
             break;
@@ -256,6 +264,9 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_DUPD:
             printf("%s", "DUPD");
+            break;
+        case VM_INSTRUCTION_DROPD:
+            printf("%s", "DROPD");
             break;
         case VM_INSTRUCTION_SWAPD:
             printf("%s", "SWAPD");
@@ -299,6 +310,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_DIVD:
             printf("%s", "DIVD");
             break;
+        case VM_INSTRUCTION_MODD:
+            printf("%s", "MODD");
+            break;
         case VM_INSTRUCTION_INCD:
             printf("%s", "INCD");
             break;
@@ -326,6 +340,9 @@ void vm_log(void) {
         case VM_INSTRUCTION_XORD:
             printf("%s", "XORD");
             break;
+        case VM_INSTRUCTION_NOTD:
+            printf("%s", "NOTD");
+            break;
         case VM_INSTRUCTION_NEGD:
             printf("%s", "NEGD");
             break;
@@ -349,6 +366,9 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_DUPD:
             printf("%s", "DUPD");
+            break;
+        case VM_INSTRUCTION_DROPD:
+            printf("%s", "DROPD");
             break;
         case VM_INSTRUCTION_SWAPD:
             printf("%s", "SWAPD");
@@ -430,6 +450,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_DIVD:
                 printf("%s", "DIVD");
                 break;
+            case VM_INSTRUCTION_MODD:
+                printf("%s", "MODD");
+                break;
             case VM_INSTRUCTION_INCD:
                 printf("%s", "INCD");
                 break;
@@ -457,6 +480,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_XORD:
                 printf("%s", "XORD");
                 break;
+            case VM_INSTRUCTION_NOTD:
+                printf("%s", "NOTD");
+                break;
             case VM_INSTRUCTION_NEGD:
                 printf("%s", "NEGD");
                 break;
@@ -480,6 +506,9 @@ int vm_run(bool debug) {
                 break;
             case VM_INSTRUCTION_DUPD:
                 printf("%s", "DUPD");
+                break;
+            case VM_INSTRUCTION_DROPD:
+                printf("%s", "DROPD");
                 break;
             case VM_INSTRUCTION_SWAPD:
                 printf("%s", "SWAPD");
@@ -551,6 +580,9 @@ int vm_run(bool debug) {
         case VM_INSTRUCTION_INCD:
             ret = vm_handler_incd();
             break;
+        case VM_INSTRUCTION_MODD:
+            ret = vm_handler_modd();
+            break;
         case VM_INSTRUCTION_DECD:
             ret = vm_handler_decd();
             break;
@@ -559,6 +591,54 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_HALFD:
             ret = vm_handler_halfd();
+            break;
+        case VM_INSTRUCTION_LSLD:
+            ret = vm_handler_lsld();
+            break;
+        case VM_INSTRUCTION_LSRD:
+            ret = vm_handler_lsrd();
+            break;
+        case VM_INSTRUCTION_ANDD:
+            ret = vm_handler_andd();
+            break;
+        case VM_INSTRUCTION_ORD:
+            ret = vm_handler_ord();
+            break;
+        case VM_INSTRUCTION_XORD:
+            ret = vm_handler_xord();
+            break;
+        case VM_INSTRUCTION_NOTD:
+            ret = vm_handler_notd();
+            break;
+        case VM_INSTRUCTION_NEGD:
+            ret = vm_handler_negd();
+            break;
+        case VM_INSTRUCTION_GTD:
+            ret = vm_handler_gtd();
+            break;
+        case VM_INSTRUCTION_LTD:
+            ret = vm_handler_ltd();
+            break;
+        case VM_INSTRUCTION_EQD:
+            ret = vm_handler_eqd();
+            break;
+        case VM_INSTRUCTION_ULTD:
+            ret = vm_handler_ultd();
+            break;
+        case VM_INSTRUCTION_LTZD:
+            ret = vm_handler_ltzd();
+            break;
+        case VM_INSTRUCTION_EQZD:
+            ret = vm_handler_eqzd();
+            break;
+        case VM_INSTRUCTION_DUPD:
+            ret = vm_handler_dupd();
+            break;
+        case VM_INSTRUCTION_DROPD:
+            ret = vm_handler_dropd();
+            break;
+        case VM_INSTRUCTION_SWAPD:
+            ret = vm_handler_swapd();
             break;
         }
     }

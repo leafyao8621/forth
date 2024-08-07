@@ -122,6 +122,9 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_SLASH:
                         ret_int = parser_handler_slash();
                         break;
+                    case PARSER_HANDLER_MOD:
+                        ret_int = parser_handler_mod();
+                        break;
                     case PARSER_HANDLER_ONE_PLUS:
                         ret_int = parser_handler_one_plus();
                         break;
@@ -148,6 +151,9 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                         break;
                     case PARSER_HANDLER_XOR:
                         ret_int = parser_handler_xor();
+                        break;
+                    case PARSER_HANDLER_INVERT:
+                        ret_int = parser_handler_invert();
                         break;
                     case PARSER_HANDLER_NEGATE:
                         ret_int = parser_handler_negate();

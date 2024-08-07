@@ -20,9 +20,26 @@ int vm_handler_addd(void);
 int vm_handler_subd(void);
 int vm_handler_multd(void);
 int vm_handler_divd(void);
+int vm_handler_modd(void);
 int vm_handler_incd(void);
 int vm_handler_decd(void);
 int vm_handler_dubd(void);
 int vm_handler_halfd(void);
+int vm_handler_lsld(void);
+int vm_handler_lsrd(void);
+int vm_handler_andd(void);
+int vm_handler_ord(void);
+int vm_handler_xord(void);
+int vm_handler_notd(void);
+int vm_handler_negd(void);
+int vm_handler_gtd(void);
+int vm_handler_ltd(void);
+int vm_handler_eqd(void);
+int vm_handler_ultd(void);
+int vm_handler_ltzd(void);
+int vm_handler_eqzd(void);
+int vm_handler_dupd(void);
+int vm_handler_dropd(void);
+int vm_handler_swapd(void);
 
 #endif
