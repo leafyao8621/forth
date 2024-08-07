@@ -548,6 +548,18 @@ int vm_run(bool debug) {
         case VM_INSTRUCTION_DIVD:
             ret = vm_handler_divd();
             break;
+        case VM_INSTRUCTION_INCD:
+            ret = vm_handler_incd();
+            break;
+        case VM_INSTRUCTION_DECD:
+            ret = vm_handler_decd();
+            break;
+        case VM_INSTRUCTION_DUBD:
+            ret = vm_handler_dubd();
+            break;
+        case VM_INSTRUCTION_HALFD:
+            ret = vm_handler_halfd();
+            break;
         }
     }
     return ret;

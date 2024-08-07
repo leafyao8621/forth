@@ -20,5 +20,9 @@ int vm_handler_addd(void);
 int vm_handler_subd(void);
 int vm_handler_multd(void);
 int vm_handler_divd(void);
+int vm_handler_incd(void);
+int vm_handler_decd(void);
+int vm_handler_dubd(void);
+int vm_handler_halfd(void);
 
 #endif
