@@ -42,6 +42,10 @@ int parser_handler_loop(void) {
     *(vm_compiled_cur++) = VM_INSTRUCTION_JNEC;
     *(uint8_t**)(vm_compiled_cur) =
         *(uint8_t**)(parser_loop_stack_cur + 1) - 1;
+    if (vm_compiled_cur + sizeof(uintptr_t) > vm_compiled_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
+    }
     vm_compiled_cur += sizeof(uintptr_t);
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
