@@ -15,7 +15,7 @@ int parser_handler_while(void) {
         *(parser_loop_stack_cur - sizeof(uintptr_t) - 1) !=
         PARSER_CONTROL_BEGIN) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
     }
     if (parser_loop_stack_cur == parser_loop_stack_end) {
         parser_status = PARSER_STATUS_END;

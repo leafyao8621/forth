@@ -7,7 +7,6 @@ int parser_handler_begin(void) {
         parser_status = PARSER_STATUS_END;
         return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
     }
-    *(vm_compiled_cur++) = VM_INSTRUCTION_2PUSHC;
     if (parser_loop_stack_cur == parser_loop_stack_end) {
         parser_status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW;
