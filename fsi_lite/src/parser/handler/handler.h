@@ -67,6 +67,8 @@ int parser_handler_exit(void);
 int parser_handler_begin(void);
 int parser_handler_while(void);
 int parser_handler_repeat(void);
+int parser_handler_until(void);
+int parser_handler_again(void);
 int parser_handler_j(void);
 int parser_handler_plus(void);
 int parser_handler_dash(void);

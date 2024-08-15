@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
         return 0;
     }
     for (;;) {
+        vm_reset();
         printf("%s", "> ");
         ret = parser_parse(debug, true, stdin);
         if (ret == PARSER_STATUS_END_REPL) {

@@ -110,6 +110,21 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_J:
                         ret_int = parser_handler_j();
                         break;
+                    case PARSER_HANDLER_BEGIN:
+                        ret_int = parser_handler_begin();
+                        break;
+                    case PARSER_HANDLER_WHILE:
+                        ret_int = parser_handler_while();
+                        break;
+                    case PARSER_HANDLER_REPEAT:
+                        ret_int = parser_handler_repeat();
+                        break;
+                    case PARSER_HANDLER_UNTIL:
+                        ret_int = parser_handler_until();
+                        break;
+                    case PARSER_HANDLER_AGAIN:
+                        ret_int = parser_handler_again();
+                        break;
                     case PARSER_HANDLER_PLUS:
                         ret_int = parser_handler_plus();
                         break;
