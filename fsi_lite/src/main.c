@@ -10,7 +10,6 @@ int main(int argc, char **argv) {
     bool script = false;
     parser_initialize();
     vm_initialize();
-    vm_reset();
     if (argc > 1) {
         FILE *fin = 0;
         int i = 1;
@@ -26,6 +25,7 @@ int main(int argc, char **argv) {
             break;
         }
         for (; i < argc; ++i) {
+            vm_reset();
             fin = fopen(argv[i], "r");
             if (!fin) {
                 fprintf(stderr, "Cannot open %s\n", argv[i]);
@@ -49,7 +49,6 @@ int main(int argc, char **argv) {
                 fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
                 return 1;
             }
-            vm_reset();
         }
     }
     if (script) {
