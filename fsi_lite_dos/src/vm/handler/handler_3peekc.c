@@ -1,6 +1,6 @@
 #include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int vm_handler_3peekc(void) {
     if (vm_control_stack_cur - 3 * sizeof(uintptr_t) < vm_control_stack) {

@@ -1,8 +1,6 @@
-#include <stdio.h>
-
 #include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int vm_handler_modd(void) {
     if (vm_data_stack_cur - (sizeof(uintptr_t) << 1) < vm_data_stack) {

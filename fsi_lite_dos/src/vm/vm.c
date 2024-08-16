@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include "vm.h"
-#include "handler/handler.h"
-#include "../util/status.h"
+#include "src\vm\vm.h"
+#include "src\vm\handler\handler.h"
+#include "src\util\status.h"
 
 #define BUILTIN_SIZE 46
 

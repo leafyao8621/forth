@@ -1,6 +1,6 @@
 #include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int vm_handler_jnec(void) {
     if (vm_control_stack_cur - (sizeof(uintptr_t) << 1) < vm_control_stack) {

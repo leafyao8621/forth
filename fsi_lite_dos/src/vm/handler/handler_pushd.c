@@ -1,6 +1,6 @@
 #include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int vm_handler_pushd(void) {
     if (vm_data_stack_cur + sizeof(uintptr_t) > vm_data_stack_end) {

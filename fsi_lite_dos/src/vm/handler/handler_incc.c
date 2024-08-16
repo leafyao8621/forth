@@ -1,8 +1,6 @@
-#include <stdio.h>
-
 #include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int vm_handler_incc(void) {
     if (vm_control_stack_cur == vm_control_stack) {
