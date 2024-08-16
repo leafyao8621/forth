@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include "handler.h"
 #include "../vm.h"
 #include "../../util/status.h"
