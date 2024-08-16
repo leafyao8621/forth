@@ -2,8 +2,8 @@
 #define PARSER_PARSER_H_
 
 #include <stdio.h>
-#include <stdbool.h>
-#include <stdint.h>
+#include "src\util\stdbool.h"
+#include "src\util\stdint.h"
 
 #define PARSER_STATE_INTERPRET 0x1
 #define PARSER_STATE_COMPILE 0x2

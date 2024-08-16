@@ -1,6 +1,6 @@
-#include "../parser.h"
-#include "../../vm/vm.h"
-#include "../../util/status.h"
+#include "src\parser\parser.h"
+#include "src\vm\vm.h"
+#include "src\util\status.h"
 
 int parser_handler_mod(void) {
     if (parser_state & PARSER_STATE_INTERPRET) {

@@ -1,8 +1,8 @@
 #include <string.h>
 
-#include "vm/vm.h"
-#include "parser/parser.h"
-#include "util/status.h"
+#include "src\vm\vm.h"
+#include "src\parser\parser.h"
+#include "src\util\status.h"
 
 int main(int argc, char **argv) {
     int ret = 0;

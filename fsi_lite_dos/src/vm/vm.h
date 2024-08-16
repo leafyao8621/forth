@@ -1,8 +1,8 @@
 #ifndef VM_VM_H_
 #define VM_VM_H_
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "src\util\stdbool.h"
+#include "src\util\stdint.h"
 
 #define VM_LOOKUP_META_BUILTIN 0x1
 #define VM_LOOKUP_META_MEMORY 0x2
