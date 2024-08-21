@@ -4,7 +4,8 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 46
+#define BUILTIN_SIZE 54
+#define MEMORY_SIZE 2
 
 static uint8_t mem[65536];
 
@@ -57,6 +58,14 @@ void vm_initialize() {
             "repeat",
             "until",
             "again",
+            "create",
+            "variable",
+            "allocate",
+            "cells",
+            "@",
+            "!",
+            "c@",
+            "c!",
             "+",
             "-",
             "*",
@@ -83,8 +92,20 @@ void vm_initialize() {
             "drop",
             "swap"
         };
+    static const char *memory[MEMORY_SIZE] =
+        {
+            "base",
+            "here"
+        };
+    static const uintptr_t memory_value[MEMORY_SIZE] =
+        {
+            10,
+            0
+        };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
+    const char **iter_memory = memory;
+    const uintptr_t *iter_memory_value = memory_value;
     size_t i = 0;
     vm_lookup = mem;
     vm_lookup_cur = vm_lookup;
@@ -105,7 +126,8 @@ void vm_initialize() {
     vm_compiled_cur = vm_compiled;
     vm_compiled_end = vm_compiled + 24000;
     vm_memory = vm_compiled_end;
-    vm_memory_cur = vm_memory;
+    vm_memory_cur = vm_memory + sizeof(size_t);
+    *(uint8_t**)vm_memory_cur = vm_memory;
     vm_memory_end = mem + 65536;
     for (; i < BUILTIN_SIZE; ++i, ++iter_builtin) {
         *(vm_lookup_cur++) = VM_LOOKUP_META_BUILTIN;
@@ -116,8 +138,19 @@ void vm_initialize() {
         }
         *(vm_lookup_cur++) = 0;
     }
-    *(size_t*)vm_memory_cur = 10;
-    vm_memory_cur += sizeof(size_t);
+    for (i = 0; i < MEMORY_SIZE; ++i, ++iter_memory, ++iter_memory_value) {
+        *(vm_lookup_cur++) = VM_LOOKUP_META_MEMORY;
+        *(uintptr_t*)(vm_lookup_cur) = *(uintptr_t*)vm_memory_cur;
+        if (i != 1) {
+            **(uintptr_t**)vm_memory_cur = *iter_memory_value;
+        }
+        vm_lookup_cur += sizeof(size_t);
+        *vm_memory_cur += sizeof(size_t);
+        for (iter_str = *iter_memory; *iter_str; ++iter_str, ++vm_lookup_cur) {
+            *vm_lookup_cur = *iter_str;
+        }
+        *(vm_lookup_cur++) = 0;
+    }
 }
 
 void vm_log(void) {
@@ -131,12 +164,22 @@ void vm_log(void) {
         if (*iter & VM_LOOKUP_META_CALL) {
             printf("%s ", "CALL");
         }
-        printf("%016lX ", *(size_t*)(++iter));
+        if (*iter & VM_LOOKUP_META_MEMORY) {
+            printf("%s ", "MEMORY");
+        }
+        printf("0x%016lX ", *(size_t*)(++iter));
         iter += sizeof(size_t);
         for (; *iter; ++iter) {
             putchar(*iter);
         }
         putchar(10);
+    }
+    puts("Memory:");
+    for (
+        iter = vm_memory;
+        iter < *(uint8_t**)vm_memory_cur;
+        iter += sizeof(uintptr_t)) {
+        printf("0x%016lX 0x%016lX\n", (uintptr_t)iter, *(uintptr_t*)iter);
     }
     puts("Compiled:");
     for (iter = vm_compiled; iter < vm_compiled_cur; ++iter) {

@@ -22,31 +22,39 @@
 #define PARSER_HANDLER_REPEAT 18
 #define PARSER_HANDLER_UNTIL 19
 #define PARSER_HANDLER_AGAIN 20
-#define PARSER_HANDLER_PLUS 21
-#define PARSER_HANDLER_DASH 22
-#define PARSER_HANDLER_ASTERISK 23
-#define PARSER_HANDLER_SLASH 24
-#define PARSER_HANDLER_MOD 25
-#define PARSER_HANDLER_ONE_PLUS 26
-#define PARSER_HANDLER_ONE_DASH 27
-#define PARSER_HANDLER_TWO_ASTERISK 28
-#define PARSER_HANDLER_TWO_SLASH 29
-#define PARSER_HANDLER_LSFHIFT 30
-#define PARSER_HANDLER_RSFHIFT 31
-#define PARSER_HANDLER_AND 32
-#define PARSER_HANDLER_OR 33
-#define PARSER_HANDLER_XOR 34
-#define PARSER_HANDLER_INVERT 35
-#define PARSER_HANDLER_NEGATE 36
-#define PARSER_HANDLER_GT 37
-#define PARSER_HANDLER_LT 38
-#define PARSER_HANDLER_EQ 39
-#define PARSER_HANDLER_ULT 40
-#define PARSER_HANDLER_ZERO_LT 41
-#define PARSER_HANDLER_ZERO_EQ 42
-#define PARSER_HANDLER_DUP 43
-#define PARSER_HANDLER_DROP 44
-#define PARSER_HANDLER_SWAP 45
+#define PARSER_HANDLER_CREATE 21
+#define PARSER_HANDLER_VARIABLE 22
+#define PARSER_HANDLER_ALLOCATE 23
+#define PARSER_HANDLER_CELLS 24
+#define PARSER_HANDLER_AT 25
+#define PARSER_HANDLER_BANG 26
+#define PARSER_CAT 27
+#define PARSER_CBANG 28
+#define PARSER_HANDLER_PLUS 29
+#define PARSER_HANDLER_DASH 30
+#define PARSER_HANDLER_ASTERISK 31
+#define PARSER_HANDLER_SLASH 32
+#define PARSER_HANDLER_MOD 33
+#define PARSER_HANDLER_ONE_PLUS 34
+#define PARSER_HANDLER_ONE_DASH 35
+#define PARSER_HANDLER_TWO_ASTERISK 36
+#define PARSER_HANDLER_TWO_SLASH 37
+#define PARSER_HANDLER_LSFHIFT 38
+#define PARSER_HANDLER_RSFHIFT 39
+#define PARSER_HANDLER_AND 40
+#define PARSER_HANDLER_OR 41
+#define PARSER_HANDLER_XOR 42
+#define PARSER_HANDLER_INVERT 43
+#define PARSER_HANDLER_NEGATE 44
+#define PARSER_HANDLER_GT 45
+#define PARSER_HANDLER_LT 46
+#define PARSER_HANDLER_EQ 47
+#define PARSER_HANDLER_ULT 48
+#define PARSER_HANDLER_ZERO_LT 49
+#define PARSER_HANDLER_ZERO_EQ 50
+#define PARSER_HANDLER_DUP 51
+#define PARSER_HANDLER_DROP 52
+#define PARSER_HANDLER_SWAP 53
 
 
 int parser_handler_dot(void);
@@ -64,12 +72,20 @@ int parser_handler_i(void);
 int parser_handler_leave(void);
 int parser_handler_unloop(void);
 int parser_handler_exit(void);
+int parser_handler_j(void);
 int parser_handler_begin(void);
 int parser_handler_while(void);
 int parser_handler_repeat(void);
 int parser_handler_until(void);
 int parser_handler_again(void);
-int parser_handler_j(void);
+int parser_handler_create(void);
+int parser_handler_variable(void);
+int parser_handler_allocate(void);
+int parser_handler_cells(void);
+int parser_handler_at(void);
+int parser_handler_bang(void);
+int parser_handler_cat(void);
+int parser_handler_cbang(void);
 int parser_handler_plus(void);
 int parser_handler_dash(void);
 int parser_handler_asterisk(void);
