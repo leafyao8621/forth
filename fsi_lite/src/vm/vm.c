@@ -353,6 +353,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_DEF:
+            printf("%s 0x%016lX", "DEF", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         case VM_INSTRUCTION_ALLOC:
             printf("%s", "ALLOC");
             break;
@@ -505,6 +509,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_3PEEKC:
                 printf("%s", "3PEEKC");
                 break;
+            case VM_INSTRUCTION_DEF:
+                printf("%s 0x%016lX", "DEF", *(uintptr_t*)(vm_ip + 1));
+                break;
             case VM_INSTRUCTION_ALLOC:
                 printf("%s", "ALLOC");
                 break;
@@ -643,6 +650,9 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_3PEEKC:
             ret = vm_handler_3peekc();
+            break;
+        case VM_INSTRUCTION_DEF:
+            ret = vm_handler_def();
             break;
         case VM_INSTRUCTION_ALLOC:
             ret = vm_handler_alloc();

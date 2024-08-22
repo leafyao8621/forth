@@ -56,10 +56,21 @@ int parser_parse(bool debug, bool line, FILE *fin) {
         if (ret) {
             if (*meta == VM_LOOKUP_META_BUILTIN) {
                 if (parser_state & PARSER_STATE_NAME) {
-                    *meta ^= VM_LOOKUP_META_BUILTIN;
-                    *meta |= VM_LOOKUP_META_CALL;
+                    *meta = VM_LOOKUP_META_CALL;
                     *addr = (uintptr_t)vm_compiled_cur;
                     parser_state ^= PARSER_STATE_NAME;
+                } else if (parser_state & PARSER_STATE_CREATE) {
+                    if (
+                        vm_interpreted_cur + sizeof(uintptr_t) >
+                        vm_interpreted_end) {
+                        parser_status = PARSER_STATUS_END;
+                        ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                        break;
+                    }
+                    *meta = VM_LOOKUP_META_MEMORY;
+                    *(uintptr_t*)vm_interpreted_cur = (uintptr_t)addr;
+                    vm_interpreted_cur += sizeof(uintptr_t);
+                    parser_state ^= PARSER_STATE_CREATE;
                 } else {
                     switch (*addr) {
                     case PARSER_HANDLER_DOT:
@@ -124,6 +135,9 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                         break;
                     case PARSER_HANDLER_AGAIN:
                         ret_int = parser_handler_again();
+                        break;
+                    case PARSER_HANDLER_CREATE:
+                        ret_int = parser_handler_create();
                         break;
                     case PARSER_HANDLER_ALLOCATE:
                         ret_int = parser_handler_allocate();
@@ -219,6 +233,18 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     parser_pending = meta;
                     *addr = (uintptr_t)vm_compiled_cur;
                     parser_state ^= PARSER_STATE_NAME;
+                } else if (parser_state & PARSER_STATE_CREATE) {
+                    if (
+                        vm_interpreted_cur + sizeof(uintptr_t) >
+                        vm_interpreted_end) {
+                        parser_status = PARSER_STATUS_END;
+                        ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                        break;
+                    }
+                    *meta = VM_LOOKUP_META_MEMORY;
+                    *(uintptr_t*)vm_interpreted_cur = (uintptr_t)addr;
+                    vm_interpreted_cur += sizeof(uintptr_t);
+                    parser_state ^= PARSER_STATE_CREATE;
                 } else {
                     if (meta == parser_pending) {
                         parser_status = PARSER_STATUS_END;
@@ -326,12 +352,14 @@ int parser_parse(bool debug, bool line, FILE *fin) {
         } else {
             if (parser_state & PARSER_STATE_NAME) {
                 if (vm_lookup_cur == vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
                     ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
                     break;
                 }
                 parser_pending = vm_lookup_cur;
                 *(vm_lookup_cur++) = VM_LOOKUP_META_CALL;
                 if (vm_lookup_cur + sizeof(uintptr_t) >= vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
                     ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
                     break;
                 }
@@ -339,17 +367,56 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                 vm_lookup_cur += sizeof(uintptr_t);
                 for (iter = buf; *iter; ++iter) {
                     if (vm_lookup_cur == vm_lookup_end) {
+                        parser_status = PARSER_STATUS_END;
                         ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
                         break;
                     }
                     *(vm_lookup_cur++) = *iter;
                 }
                 if (vm_lookup_cur == vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
                     ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
                     break;
                 }
                 *(vm_lookup_cur++) = 0;
                 parser_state ^= PARSER_STATE_NAME;
+            } else if (parser_state & PARSER_STATE_CREATE) {
+                if (vm_lookup_cur == vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
+                }
+                *(vm_lookup_cur++) = VM_LOOKUP_META_MEMORY;
+                if (vm_lookup_cur + sizeof(uintptr_t) >= vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
+                }
+                if (
+                    vm_interpreted_cur + sizeof(uintptr_t) >
+                    vm_interpreted_end) {
+                    parser_status = PARSER_STATUS_END;
+                    ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                    break;
+                }
+                *(uint8_t**)vm_interpreted_cur = vm_lookup_cur;
+                vm_interpreted_cur += sizeof(uintptr_t);
+                vm_lookup_cur += sizeof(uintptr_t);
+                for (iter = buf; *iter; ++iter) {
+                    if (vm_lookup_cur == vm_lookup_end) {
+                        parser_status = PARSER_STATUS_END;
+                        ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                        break;
+                    }
+                    *(vm_lookup_cur++) = *iter;
+                }
+                if (vm_lookup_cur == vm_lookup_end) {
+                    parser_status = PARSER_STATUS_END;
+                    ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
+                    break;
+                }
+                *(vm_lookup_cur++) = 0;
+                parser_state ^= PARSER_STATE_CREATE;
             } else {
                 switch (*vm_memory) {
                 case 10:
