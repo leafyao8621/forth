@@ -125,6 +125,12 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_AGAIN:
                         ret_int = parser_handler_again();
                         break;
+                    case PARSER_HANDLER_BANG:
+                        ret_int = parser_handler_bang();
+                        break;
+                    case PARSER_HANDLER_AT:
+                        ret_int = parser_handler_at();
+                        break;
                     case PARSER_HANDLER_PLUS:
                         ret_int = parser_handler_plus();
                         break;
@@ -342,35 +348,16 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                 switch (*vm_memory) {
                 case 10:
                     ret = parser_int10(buf, &num);
-                    if (parser_state & PARSER_STATE_INTERPRET) {
-                        if (vm_interpreted_cur == vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_INTERPRETED_OVERFLOW;
-                        }
-                        *(vm_interpreted_cur++) = VM_INSTRUCTION_PUSHD;
-                        if (
-                            vm_interpreted_cur + sizeof(uintptr_t) >
-                            vm_interpreted_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_INTERPRETED_OVERFLOW;
-                        }
-                        *(uintptr_t*)vm_interpreted_cur = num;
-                        vm_interpreted_cur += sizeof(uintptr_t);
+                    if (!ret) {
+                        ret_int = PARSER_STATUS_INVALID_BASE10;
+                        break;
                     }
-                    if (parser_state & PARSER_STATE_COMPILE) {
-                        if (vm_compiled_cur == vm_compiled_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_COMPILED_OVERFLOW;
-                        }
-                        *(vm_compiled_cur++) = VM_INSTRUCTION_PUSHD;
-                        if (
-                            vm_compiled_cur + sizeof(uintptr_t) >
-                            vm_compiled_end) {
-                            parser_status = PARSER_STATUS_END;
-                            return PARSER_STATUS_COMPILED_OVERFLOW;
-                        }
-                        *(uintptr_t*)vm_compiled_cur = num;
-                        vm_compiled_cur += sizeof(uintptr_t);
+                    break;
+                case 16:
+                    ret = parser_int16(buf, &num);
+                    if (!ret) {
+                        ret_int = PARSER_STATUS_INVALID_BASE16;
+                        break;
                     }
                     break;
                 default:
@@ -380,9 +367,35 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                 if (ret_int) {
                     break;
                 }
-                if (!ret) {
-                    ret_int = PARSER_STATUS_INVALID_BASE10;
-                    break;
+                if (parser_state & PARSER_STATE_INTERPRET) {
+                    if (vm_interpreted_cur == vm_interpreted_end) {
+                        parser_status = PARSER_STATUS_END;
+                        return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                    }
+                    *(vm_interpreted_cur++) = VM_INSTRUCTION_PUSHD;
+                    if (
+                        vm_interpreted_cur + sizeof(uintptr_t) >
+                        vm_interpreted_end) {
+                        parser_status = PARSER_STATUS_END;
+                        return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                    }
+                    *(uintptr_t*)vm_interpreted_cur = num;
+                    vm_interpreted_cur += sizeof(uintptr_t);
+                }
+                if (parser_state & PARSER_STATE_COMPILE) {
+                    if (vm_compiled_cur == vm_compiled_end) {
+                        parser_status = PARSER_STATUS_END;
+                        return PARSER_STATUS_COMPILED_OVERFLOW;
+                    }
+                    *(vm_compiled_cur++) = VM_INSTRUCTION_PUSHD;
+                    if (
+                        vm_compiled_cur + sizeof(uintptr_t) >
+                        vm_compiled_end) {
+                        parser_status = PARSER_STATUS_END;
+                        return PARSER_STATUS_COMPILED_OVERFLOW;
+                    }
+                    *(uintptr_t*)vm_compiled_cur = num;
+                    vm_compiled_cur += sizeof(uintptr_t);
                 }
             }
         }

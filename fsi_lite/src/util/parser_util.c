@@ -100,3 +100,19 @@ bool parser_int10(char *buf, uintptr_t *out) {
     }
     return true;
 }
+
+bool parser_int16(char *buf, uintptr_t *out) {
+    char *iter = buf;
+    *out = 0;
+    for (; *iter; ++iter) {
+        *out <<= 4;
+        if (*iter >= '0' && *iter <= '9') {
+            *out += *iter - '0';
+        } else if (*iter >= 'A' && *iter <= 'F') {
+            *out += *iter - 'A' + 0xA;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
