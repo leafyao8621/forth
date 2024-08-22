@@ -195,6 +195,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_PUSHID:
+            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
@@ -343,6 +347,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_PUSHID:
+            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
@@ -469,6 +477,9 @@ int vm_run(bool debug) {
                 break;
             case VM_INSTRUCTION_PUSHD:
                 printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_PUSHID:
+                printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_PINT:
                 printf("%s", "PINT");
@@ -611,6 +622,9 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_PUSHD:
             ret = vm_handler_pushd();
+            break;
+        case VM_INSTRUCTION_PUSHID:
+            ret = vm_handler_pushid();
             break;
         case VM_INSTRUCTION_PINT:
             ret = vm_handler_pint();

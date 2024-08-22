@@ -3,6 +3,7 @@
 
 int vm_handler_ret(void);
 int vm_handler_pushd(void);
+int vm_handler_pushid(void);
 int vm_handler_pint(void);
 int vm_handler_emit(void);
 int vm_handler_call(void);
