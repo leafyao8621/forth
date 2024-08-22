@@ -125,6 +125,12 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                     case PARSER_HANDLER_AGAIN:
                         ret_int = parser_handler_again();
                         break;
+                    case PARSER_HANDLER_ALLOCATE:
+                        ret_int = parser_handler_allocate();
+                        break;
+                    case PARSER_HANDLER_CELLS:
+                        ret_int = parser_handler_cells();
+                        break;
                     case PARSER_HANDLER_BANG:
                         ret_int = parser_handler_bang();
                         break;

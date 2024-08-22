@@ -3,7 +3,7 @@
 #include "../../util/status.h"
 
 int vm_handler_ldd(void) {
-    if (vm_data_stack_cur - sizeof(uintptr_t) < vm_data_stack) {
+    if (vm_data_stack_cur == vm_data_stack) {
         vm_state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;
     }

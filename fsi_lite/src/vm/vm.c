@@ -239,6 +239,12 @@ void vm_log(void) {
         case VM_INSTRUCTION_3PEEKC:
             printf("%s", "3PEEKC");
             break;
+        case VM_INSTRUCTION_ALLOC:
+            printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            printf("%s", "MULTCSD");
+            break;
         case VM_INSTRUCTION_STD:
             printf("%s", "STD");
             break;
@@ -346,6 +352,12 @@ void vm_log(void) {
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_ALLOC:
+            printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            printf("%s", "MULTCSD");
             break;
         case VM_INSTRUCTION_STD:
             printf("%s", "STD");
@@ -493,6 +505,12 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_3PEEKC:
                 printf("%s", "3PEEKC");
                 break;
+            case VM_INSTRUCTION_ALLOC:
+                printf("%s", "ALLOC");
+                break;
+            case VM_INSTRUCTION_MULTCSD:
+                printf("%s", "MULTCSD");
+                break;
             case VM_INSTRUCTION_STD:
                 printf("%s", "STD");
                 break;
@@ -625,6 +643,12 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_3PEEKC:
             ret = vm_handler_3peekc();
+            break;
+        case VM_INSTRUCTION_ALLOC:
+            ret = vm_handler_alloc();
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            ret = vm_handler_multcsd();
             break;
         case VM_INSTRUCTION_STD:
             ret = vm_handler_std();

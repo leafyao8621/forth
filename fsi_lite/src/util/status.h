@@ -25,8 +25,9 @@
 #define VM_STATUS_CONTROL_STACK_UNDERFLOW 5
 #define VM_STATUS_INVALID_RETURN_ADDRESS 6
 #define VM_STATUS_INVALID_MEMORY_ADDRESS 7
+#define VM_STATUS_INVALID_MEMORY_ALLOCATION 8
 
 extern const char *parser_status_lookup[15];
-extern const char *vm_status_lookup[8];
+extern const char *vm_status_lookup[9];
 
 #endif
