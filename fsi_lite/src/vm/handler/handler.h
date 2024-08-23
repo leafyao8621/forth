@@ -18,6 +18,7 @@ int vm_handler_incc(void);
 int vm_handler_addc(void);
 int vm_handler_3peekc(void);
 int vm_handler_def(void);
+int vm_handler_defa(void);
 int vm_handler_alloc(void);
 int vm_handler_multcsd(void);
 int vm_handler_std(void);

@@ -2,8 +2,7 @@
 main
 create begin
 create main
-create abcd
-1 cells allocate
+variable abcd
 begin . cr
 main . cr
 abcd . cr
