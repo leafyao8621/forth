@@ -72,7 +72,7 @@ typedef unsigned char bool;
 #define BUILTIN_SIZE 54
 #define MEMORY_SIZE 2
 
-uint8_t mem[65536];
+uint8_t mem[32768];
 
 uint8_t *vm_lookup;
 uint8_t *vm_lookup_cur;
@@ -557,7 +557,7 @@ void vm_log(void) {
     uint8_t *iter = 0;
     puts("Lookup:");
     for (iter = vm_lookup; iter < vm_lookup_cur; ++iter) {
-        printf("0x%016lX ", (uintptr_t)iter);
+        printf("0x%04X ", (uintptr_t)iter);
         if (*iter & VM_LOOKUP_META_BUILTIN) {
             printf("%s ", "BUILTIN");
         }
@@ -567,7 +567,7 @@ void vm_log(void) {
         if (*iter & VM_LOOKUP_META_MEMORY) {
             printf("%s ", "MEMORY");
         }
-        printf("0x%016lX ", *(size_t*)(++iter));
+        printf("0x%04X ", *(size_t*)(++iter));
         iter += sizeof(size_t);
         for (; *iter; ++iter) {
             putchar(*iter);
@@ -579,11 +579,11 @@ void vm_log(void) {
         iter = vm_memory;
         iter < *(uint8_t**)vm_memory_cur;
         iter += sizeof(uintptr_t)) {
-        printf("0x%016lX 0x%016lX\n", (uintptr_t)iter, *(uintptr_t*)iter);
+        printf("0x%04X 0x%04X\n", (uintptr_t)iter, *(uintptr_t*)iter);
     }
     puts("Compiled:");
     for (iter = vm_compiled; iter < vm_compiled_cur; ++iter) {
-        printf("0x%016lX ", (uintptr_t)iter);
+        printf("0x%04X ", (uintptr_t)iter);
         switch (*iter) {
         case VM_INSTRUCTION_HALT:
             printf("%s", "HALT");
@@ -592,11 +592,11 @@ void vm_log(void) {
             printf("%s", "RET");
             break;
         case VM_INSTRUCTION_PUSHD:
-            printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PUSHID:
-            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "PUSHID", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PINT:
@@ -606,19 +606,19 @@ void vm_log(void) {
             printf("%s", "EMIT");
             break;
         case VM_INSTRUCTION_CALL:
-            printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_JZD:
-            printf("%s 0x%016lX", "JZD", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "JZD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_JNZD:
-            printf("%s 0x%016lX", "JNZD", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "JNZD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_JMP:
-            printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "JMP", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_2PUSHC:
@@ -631,7 +631,7 @@ void vm_log(void) {
             printf("%s", "2RMC");
             break;
         case VM_INSTRUCTION_JNEC:
-            printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "JNEC", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_INCC:
@@ -735,7 +735,7 @@ void vm_log(void) {
     }
     puts("Interpreted:");
     for (iter = vm_interpreted; iter < vm_interpreted_cur; ++iter) {
-        printf("0x%016lX ", (uintptr_t)iter);
+        printf("0x%04X ", (uintptr_t)iter);
         switch (*iter) {
         case VM_INSTRUCTION_HALT:
             printf("%s", "HALT");
@@ -744,11 +744,11 @@ void vm_log(void) {
             printf("%s", "RET");
             break;
         case VM_INSTRUCTION_PUSHD:
-            printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PUSHID:
-            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "PUSHID", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PINT:
@@ -758,15 +758,15 @@ void vm_log(void) {
             printf("%s", "EMIT");
             break;
         case VM_INSTRUCTION_CALL:
-            printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_DEF:
-            printf("%s 0x%016lX", "DEF", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "DEF", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_DEFA:
-            printf("%s 0x%016lX", "DEFA", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%04X", "DEFA", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_ALLOC:
@@ -871,7 +871,7 @@ int vm_run(bool debug) {
     vm_state = VM_STATE_RUNNING;
     for (; vm_state != VM_STATE_HALTED; ++vm_ip) {
         if (debug) {
-            printf("\nExecuting 0x%016lX ", (uintptr_t)vm_ip);
+            printf("\nExecuting 0x%04X ", (uintptr_t)vm_ip);
             switch (*vm_ip) {
             case VM_INSTRUCTION_HALT:
                 printf("%s", "HALT");
@@ -880,10 +880,10 @@ int vm_run(bool debug) {
                 printf("%s", "RET");
                 break;
             case VM_INSTRUCTION_PUSHD:
-                printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "PUSHD", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_PUSHID:
-                printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "PUSHID", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_PINT:
                 printf("%s", "PINT");
@@ -892,16 +892,16 @@ int vm_run(bool debug) {
                 printf("%s", "EMIT");
                 break;
             case VM_INSTRUCTION_CALL:
-                printf("%s 0x%016lX", "CALL", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "CALL", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JZD:
-                printf("%s 0x%016lX", "JZD", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "JZD", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JNZD:
-                printf("%s 0x%016lX", "JNZD", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "JNZD", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_JMP:
-                printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "JMP", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_2PUSHC:
                 printf("%s", "2PUSHC");
@@ -913,7 +913,7 @@ int vm_run(bool debug) {
                 printf("%s", "2RMC");
                 break;
             case VM_INSTRUCTION_JNEC:
-                printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "JNEC", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_INCC:
                 printf("%s", "INCC");
@@ -925,10 +925,10 @@ int vm_run(bool debug) {
                 printf("%s", "3PEEKC");
                 break;
             case VM_INSTRUCTION_DEF:
-                printf("%s 0x%016lX", "DEF", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "DEF", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_DEFA:
-                printf("%s 0x%016lX", "DEFA", *(uintptr_t*)(vm_ip + 1));
+                printf("%s 0x%04X", "DEFA", *(uintptr_t*)(vm_ip + 1));
                 break;
             case VM_INSTRUCTION_ALLOC:
                 printf("%s", "ALLOC");
@@ -2096,10 +2096,10 @@ int vm_handler_pint(void) {
     vm_data_stack_cur -= sizeof(uintptr_t);
     switch (*vm_memory) {
     case 10:
-        printf("%ld", *(intptr_t*)vm_data_stack_cur);
+        printf("%d", *(intptr_t*)vm_data_stack_cur);
         break;
     case 16:
-        printf("0x%016lx", *(intptr_t*)vm_data_stack_cur);
+        printf("0x%04X", *(intptr_t*)vm_data_stack_cur);
         break;
     default:
         vm_state = VM_STATE_HALTED;
