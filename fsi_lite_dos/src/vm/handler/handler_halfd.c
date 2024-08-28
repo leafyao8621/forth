@@ -1,8 +1,6 @@
-#include <stdio.h>
-
 #include "handler.h"
-#include "src\vm\vm.h"
-#include "src\util\status.h"
+#include "../vm.h"
+#include "../../util/status.h"
 
 int vm_handler_halfd(void) {
     if (vm_data_stack_cur == vm_data_stack) {

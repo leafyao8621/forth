@@ -1,10 +1,11 @@
 #include <stdio.h>
 
-#include "src\vm\vm.h"
-#include "src\vm\handler\handler.h"
-#include "src\util\status.h"
+#include "vm.h"
+#include "handler/handler.h"
+#include "../util/status.h"
 
-#define BUILTIN_SIZE 46
+#define BUILTIN_SIZE 54
+#define MEMORY_SIZE 2
 
 static uint8_t mem[65536];
 
@@ -57,6 +58,14 @@ void vm_initialize() {
             "repeat",
             "until",
             "again",
+            "create",
+            "variable",
+            "allocate",
+            "cells",
+            "@",
+            "!",
+            "c@",
+            "c!",
             "+",
             "-",
             "*",
@@ -83,8 +92,20 @@ void vm_initialize() {
             "drop",
             "swap"
         };
+    static const char *memory[MEMORY_SIZE] =
+        {
+            "base",
+            "here"
+        };
+    static const uintptr_t memory_value[MEMORY_SIZE] =
+        {
+            10,
+            0
+        };
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
+    const char **iter_memory = memory;
+    const uintptr_t *iter_memory_value = memory_value;
     size_t i = 0;
     vm_lookup = mem;
     vm_lookup_cur = vm_lookup;
@@ -105,7 +126,8 @@ void vm_initialize() {
     vm_compiled_cur = vm_compiled;
     vm_compiled_end = vm_compiled + 24000;
     vm_memory = vm_compiled_end;
-    vm_memory_cur = vm_memory;
+    vm_memory_cur = vm_memory + sizeof(size_t);
+    *(uint8_t**)vm_memory_cur = vm_memory;
     vm_memory_end = mem + 65536;
     for (; i < BUILTIN_SIZE; ++i, ++iter_builtin) {
         *(vm_lookup_cur++) = VM_LOOKUP_META_BUILTIN;
@@ -116,8 +138,19 @@ void vm_initialize() {
         }
         *(vm_lookup_cur++) = 0;
     }
-    *(size_t*)vm_memory_cur = 10;
-    vm_memory_cur += sizeof(size_t);
+    for (i = 0; i < MEMORY_SIZE; ++i, ++iter_memory, ++iter_memory_value) {
+        *(vm_lookup_cur++) = VM_LOOKUP_META_MEMORY;
+        *(uintptr_t*)(vm_lookup_cur) = *(uintptr_t*)vm_memory_cur;
+        if (i != 1) {
+            **(uintptr_t**)vm_memory_cur = *iter_memory_value;
+        }
+        vm_lookup_cur += sizeof(size_t);
+        *vm_memory_cur += sizeof(size_t);
+        for (iter_str = *iter_memory; *iter_str; ++iter_str, ++vm_lookup_cur) {
+            *vm_lookup_cur = *iter_str;
+        }
+        *(vm_lookup_cur++) = 0;
+    }
 }
 
 void vm_log(void) {
@@ -131,12 +164,22 @@ void vm_log(void) {
         if (*iter & VM_LOOKUP_META_CALL) {
             printf("%s ", "CALL");
         }
-        printf("%016lX ", *(size_t*)(++iter));
+        if (*iter & VM_LOOKUP_META_MEMORY) {
+            printf("%s ", "MEMORY");
+        }
+        printf("0x%016lX ", *(size_t*)(++iter));
         iter += sizeof(size_t);
         for (; *iter; ++iter) {
             putchar(*iter);
         }
         putchar(10);
+    }
+    puts("Memory:");
+    for (
+        iter = vm_memory;
+        iter < *(uint8_t**)vm_memory_cur;
+        iter += sizeof(uintptr_t)) {
+        printf("0x%016lX 0x%016lX\n", (uintptr_t)iter, *(uintptr_t*)iter);
     }
     puts("Compiled:");
     for (iter = vm_compiled; iter < vm_compiled_cur; ++iter) {
@@ -150,6 +193,10 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_PUSHD:
             printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_PUSHID:
+            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_PINT:
@@ -195,6 +242,18 @@ void vm_log(void) {
             break;
         case VM_INSTRUCTION_3PEEKC:
             printf("%s", "3PEEKC");
+            break;
+        case VM_INSTRUCTION_ALLOC:
+            printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            printf("%s", "MULTCSD");
+            break;
+        case VM_INSTRUCTION_STD:
+            printf("%s", "STD");
+            break;
+        case VM_INSTRUCTION_LDD:
+            printf("%s", "LDD");
             break;
         case VM_INSTRUCTION_ADDD:
             printf("%s", "ADDD");
@@ -288,6 +347,10 @@ void vm_log(void) {
             printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_PUSHID:
+            printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         case VM_INSTRUCTION_PINT:
             printf("%s", "PINT");
             break;
@@ -297,6 +360,26 @@ void vm_log(void) {
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_DEF:
+            printf("%s 0x%016lX", "DEF", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_DEFA:
+            printf("%s 0x%016lX", "DEFA", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_ALLOC:
+            printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            printf("%s", "MULTCSD");
+            break;
+        case VM_INSTRUCTION_STD:
+            printf("%s", "STD");
+            break;
+        case VM_INSTRUCTION_LDD:
+            printf("%s", "LDD");
             break;
         case VM_INSTRUCTION_ADDD:
             printf("%s", "ADDD");
@@ -399,6 +482,9 @@ int vm_run(bool debug) {
             case VM_INSTRUCTION_PUSHD:
                 printf("%s 0x%016lX", "PUSHD", *(uintptr_t*)(vm_ip + 1));
                 break;
+            case VM_INSTRUCTION_PUSHID:
+                printf("%s 0x%016lX", "PUSHID", *(uintptr_t*)(vm_ip + 1));
+                break;
             case VM_INSTRUCTION_PINT:
                 printf("%s", "PINT");
                 break;
@@ -437,6 +523,24 @@ int vm_run(bool debug) {
                 break;
             case VM_INSTRUCTION_3PEEKC:
                 printf("%s", "3PEEKC");
+                break;
+            case VM_INSTRUCTION_DEF:
+                printf("%s 0x%016lX", "DEF", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_DEFA:
+                printf("%s 0x%016lX", "DEFA", *(uintptr_t*)(vm_ip + 1));
+                break;
+            case VM_INSTRUCTION_ALLOC:
+                printf("%s", "ALLOC");
+                break;
+            case VM_INSTRUCTION_MULTCSD:
+                printf("%s", "MULTCSD");
+                break;
+            case VM_INSTRUCTION_STD:
+                printf("%s", "STD");
+                break;
+            case VM_INSTRUCTION_LDD:
+                printf("%s", "LDD");
                 break;
             case VM_INSTRUCTION_ADDD:
                 printf("%s", "ADDD");
@@ -526,6 +630,9 @@ int vm_run(bool debug) {
         case VM_INSTRUCTION_PUSHD:
             ret = vm_handler_pushd();
             break;
+        case VM_INSTRUCTION_PUSHID:
+            ret = vm_handler_pushid();
+            break;
         case VM_INSTRUCTION_PINT:
             ret = vm_handler_pint();
             break;
@@ -564,6 +671,24 @@ int vm_run(bool debug) {
             break;
         case VM_INSTRUCTION_3PEEKC:
             ret = vm_handler_3peekc();
+            break;
+        case VM_INSTRUCTION_DEF:
+            ret = vm_handler_def();
+            break;
+        case VM_INSTRUCTION_DEFA:
+            ret = vm_handler_defa();
+            break;
+        case VM_INSTRUCTION_ALLOC:
+            ret = vm_handler_alloc();
+            break;
+        case VM_INSTRUCTION_MULTCSD:
+            ret = vm_handler_multcsd();
+            break;
+        case VM_INSTRUCTION_STD:
+            ret = vm_handler_std();
+            break;
+        case VM_INSTRUCTION_LDD:
+            ret = vm_handler_ldd();
             break;
         case VM_INSTRUCTION_ADDD:
             ret = vm_handler_addd();

@@ -3,6 +3,7 @@
 
 int vm_handler_ret(void);
 int vm_handler_pushd(void);
+int vm_handler_pushid(void);
 int vm_handler_pint(void);
 int vm_handler_emit(void);
 int vm_handler_call(void);
@@ -16,6 +17,12 @@ int vm_handler_jnec(void);
 int vm_handler_incc(void);
 int vm_handler_addc(void);
 int vm_handler_3peekc(void);
+int vm_handler_def(void);
+int vm_handler_defa(void);
+int vm_handler_alloc(void);
+int vm_handler_multcsd(void);
+int vm_handler_std(void);
+int vm_handler_ldd(void);
 int vm_handler_addd(void);
 int vm_handler_subd(void);
 int vm_handler_multd(void);

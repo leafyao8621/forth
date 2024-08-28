@@ -1,1 +1,4 @@
 .vscode
+fsi
+parser_handler.c
+vm_handler.c

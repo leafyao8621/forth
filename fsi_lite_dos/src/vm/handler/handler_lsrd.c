@@ -1,6 +1,6 @@
 #include "handler.h"
-#include "src\vm\vm.h"
-#include "src\util\status.h"
+#include "../vm.h"
+#include "../../util/status.h"
 
 int vm_handler_lsrd(void) {
     if (vm_data_stack_cur - (sizeof(uintptr_t) << 1) < vm_data_stack) {

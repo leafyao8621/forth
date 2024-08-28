@@ -1,6 +1,8 @@
+#include <stdio.h>
+
 #include "handler.h"
-#include "src\vm\vm.h"
-#include "src\util\status.h"
+#include "../vm.h"
+#include "../../util/status.h"
 
 int vm_handler_pint(void) {
     if (vm_data_stack_cur == vm_data_stack) {
@@ -12,7 +14,11 @@ int vm_handler_pint(void) {
     case 10:
         printf("%ld", *(intptr_t*)vm_data_stack_cur);
         break;
+    case 16:
+        printf("0x%016lx", *(intptr_t*)vm_data_stack_cur);
+        break;
     default:
+        vm_state = VM_STATE_HALTED;
         return VM_STATUS_INVALID_BASE;
     }
     return VM_STATUS_OK;
