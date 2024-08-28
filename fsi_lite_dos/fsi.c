@@ -528,7 +528,7 @@ void vm_initialize() {
     vm_memory = vm_compiled_end;
     vm_memory_cur = vm_memory + sizeof(size_t);
     *(uint8_t**)vm_memory_cur = vm_memory;
-    vm_memory_end = mem + 65536;
+    vm_memory_end = mem + 32768;
     for (; i < BUILTIN_SIZE; ++i, ++iter_builtin) {
         *(vm_lookup_cur++) = VM_LOOKUP_META_BUILTIN;
         *(size_t*)(vm_lookup_cur) = i;
