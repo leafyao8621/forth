@@ -154,8 +154,8 @@ int parser_parse(bool debug, bool line, FILE *fin);
 #define PARSER_STATUS_LOOKUP_OVERFLOW 10
 #define PARSER_STATUS_PENDING_DEFINITION 11
 #define PARSER_STATUS_CONTROL_STACK_OVERFLOW 12
-#define PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW 13
-#define PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH 14
+#define PARSER_STATUS_CONTROL_STACK_UNDERFLOW 13
+#define PARSER_STATUS_CONTROL_STACK_MISMATCH 14
 
 #define VM_STATUS_OK 0
 #define VM_STATUS_DATA_STACK_OVERFLOW 1
@@ -181,9 +181,9 @@ const char *parser_status_lookup[15] =
         "PARSER_STATUS_NOT_IN_COMPILATION_MODE",
         "PARSER_STATUS_LOOKUP_OVERFLOW",
         "PARSER_STATUS_PENDING_DEFINITION",
-        "PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW",
-        "PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW",
-        "PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH"
+        "PARSER_STATUS_CONTROL_STACK_OVERFLOW",
+        "PARSER_STATUS_CONTROL_STACK_UNDERFLOW",
+        "PARSER_STATUS_CONTROL_STACK_MISMATCH"
     };
 
 const char *vm_status_lookup[9] =
@@ -509,22 +509,22 @@ void vm_initialize() {
     size_t i = 0;
     vm_lookup = mem;
     vm_lookup_cur = vm_lookup;
-    vm_lookup_end = mem + 9500;
+    vm_lookup_end = mem + 4000;
     vm_literal = vm_lookup_end;
     vm_literal_cur = vm_literal;
-    vm_literal_end = vm_literal + 2000;
+    vm_literal_end = vm_literal + 1000;
     vm_interpreted = vm_literal_end;
     vm_interpreted_cur = vm_interpreted;
-    vm_interpreted_end = vm_interpreted + 2000;
+    vm_interpreted_end = vm_interpreted + 1000;
     vm_data_stack = vm_interpreted_end;
     vm_data_stack_cur = vm_data_stack;
-    vm_data_stack_end = vm_data_stack + 2000;
+    vm_data_stack_end = vm_data_stack + 1000;
     vm_control_stack = vm_data_stack_end;
     vm_control_stack_cur = vm_control_stack;
-    vm_control_stack_end = vm_control_stack + 2000;
+    vm_control_stack_end = vm_control_stack + 1000;
     vm_compiled = vm_control_stack_end;
     vm_compiled_cur = vm_compiled;
-    vm_compiled_end = vm_compiled + 24000;
+    vm_compiled_end = vm_compiled + 12000;
     vm_memory = vm_compiled_end;
     vm_memory_cur = vm_memory + sizeof(size_t);
     *(uint8_t**)vm_memory_cur = vm_memory;
@@ -2231,12 +2231,12 @@ int parser_handler_again(void) {
         parser_loop_stack_cur - (sizeof(uintptr_t) + 1) <
         parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1);
     if (*parser_loop_stack_cur != PARSER_CONTROL_BEGIN) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -2540,13 +2540,13 @@ int parser_handler_else(void) {
     }
     if (parser_conditional_stack_cur == parser_conditional_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_conditional_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
         *parser_conditional_stack_cur != PARSER_CONTROL_IF) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     *parser_conditional_stack_cur = PARSER_CONTROL_ELSE;
     if (vm_compiled_cur == vm_compiled_end) {
@@ -2709,14 +2709,14 @@ int parser_handler_leave(void) {
     }
     if (parser_loop_stack_cur == parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
         *parser_loop_stack_cur != PARSER_CONTROL_DO &&
         *parser_loop_stack_cur != PARSER_CONTROL_DO_LEAVE) {
             parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     parser_loop_stack_cur += (sizeof(uintptr_t) + 1);
     if (parser_loop_stack_cur == parser_loop_stack_end) {
@@ -2752,14 +2752,14 @@ int parser_handler_loop(void) {
     }
     if (parser_loop_stack_cur == parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
         *parser_loop_stack_cur != PARSER_CONTROL_DO &&
         *parser_loop_stack_cur != PARSER_CONTROL_DO_LEAVE) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     for (
         ;
@@ -2771,7 +2771,7 @@ int parser_handler_loop(void) {
     }
     if (*parser_loop_stack_cur != PARSER_CONTROL_DO) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -2949,14 +2949,14 @@ int parser_handler_plus_loop(void) {
     }
     if (parser_loop_stack_cur == parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
         *parser_loop_stack_cur != PARSER_CONTROL_DO &&
         *parser_loop_stack_cur != PARSER_CONTROL_DO_LEAVE) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     for (
         ;
@@ -2968,7 +2968,7 @@ int parser_handler_plus_loop(void) {
     }
     if (*parser_loop_stack_cur != PARSER_CONTROL_DO) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -3000,7 +3000,7 @@ int parser_handler_repeat(void) {
         parser_loop_stack_cur - ((sizeof(uintptr_t) + 1) << 1) <
         parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1) << 1;
     if (
@@ -3008,7 +3008,7 @@ int parser_handler_repeat(void) {
         *(parser_loop_stack_cur + (sizeof(uintptr_t) + 1)) !=
         PARSER_CONTROL_WHILE) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -3054,7 +3054,7 @@ int parser_handler_semi_colon(void) {
         parser_conditional_stack_cur != parser_conditional_stack ||
         parser_loop_stack_cur != parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -3108,13 +3108,13 @@ int parser_handler_then(void) {
         return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
     }
     if (parser_conditional_stack_cur == parser_conditional_stack) {
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_conditional_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
         *parser_conditional_stack_cur != PARSER_CONTROL_IF &&
         *parser_conditional_stack_cur != PARSER_CONTROL_ELSE) {
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     **(uint8_t***)(parser_conditional_stack_cur + 1) = vm_compiled_cur - 1;
     return PARSER_STATUS_OK;
@@ -3196,12 +3196,12 @@ int parser_handler_until(void) {
         parser_loop_stack_cur - (sizeof(uintptr_t) + 1) <
         parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     parser_loop_stack_cur -= (sizeof(uintptr_t) + 1);
     if (*parser_loop_stack_cur != PARSER_CONTROL_BEGIN) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+        return PARSER_STATUS_CONTROL_STACK_MISMATCH;
     }
     if (vm_compiled_cur == vm_compiled_end) {
         parser_status = PARSER_STATUS_END;
@@ -3239,13 +3239,13 @@ int parser_handler_while(void) {
     }
     if (parser_loop_stack_cur == parser_loop_stack) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     if (
         *(parser_loop_stack_cur - sizeof(uintptr_t) - 1) !=
         PARSER_CONTROL_BEGIN) {
         parser_status = PARSER_STATUS_END;
-        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
+        return PARSER_STATUS_CONTROL_STACK_UNDERFLOW;
     }
     if (parser_loop_stack_cur == parser_loop_stack_end) {
         parser_status = PARSER_STATUS_END;
