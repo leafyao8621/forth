@@ -464,6 +464,7 @@ void vm_initialize() {
             "variable",
             "allocate",
             "cells",
+            "cell+",
             "@",
             "!",
             "c@",
