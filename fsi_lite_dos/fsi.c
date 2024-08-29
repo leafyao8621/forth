@@ -2255,7 +2255,7 @@ int parser_handler_again(void) {
     return PARSER_STATUS_OK;
 }
 
-int parser_handler_allocate(void) {
+int parser_handler_allot(void) {
     if (parser_state & PARSER_STATE_INTERPRET) {
         if (vm_interpreted_cur == vm_interpreted_end) {
             parser_status = PARSER_STATUS_END;
