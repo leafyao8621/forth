@@ -1,62 +1,39 @@
-#include <fsi/util/parser_handlers.h>
+#include "../parser.h"
+#include "../../vm/vm.h"
+#include "../../util/status.h"
 
-ForthVMErr parser_handle_repeat(ForthParser *parser, ForthVM *vm) {
-    if (!parser || !vm) {
-        return FORTHVM_ERR_NULL_PTR;
+int parser_handler_repeat(void) {
+    if (parser_state & PARSER_STATE_INTERPRET) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
     }
-    int ret = 0;
-    char opcode = OPCODE_JMP;
-    switch (parser->state) {
-    case FORTHPARSER_STATE_INTERPRET:
-        return FORTHVM_ERR_NOT_IN_COMPILATION_MODE;
-    case FORTHPARSER_STATE_COMPILE:
-        ret = DArrayChar_pop_back(&parser->loop_type);
-        if (ret) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        if (
-            parser->loop_type.data[parser->loop_type.size] !=
-            FORTHPARSER_LOOP_TYPE_WHILE) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        ret = DArrayOffset_pop_back(&parser->loop_offset);
-        if (ret) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        vm->compiled.data[parser->loop_offset.data[parser->loop_offset.size]] =
-            vm->compiled.size + 8;
-        ret = DArrayChar_pop_back(&parser->loop_type);
-        if (ret) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        if (
-            parser->loop_type.data[parser->loop_type.size] !=
-            FORTHPARSER_LOOP_TYPE_BEGIN) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        ret = DArrayOffset_pop_back(&parser->loop_offset);
-        if (ret) {
-            return FORTHVM_ERR_NOT_BALANCED;
-        }
-        ret = DArrayChar_push_back(&vm->compiled, &opcode);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        ret =
-            DArrayChar_push_back_batch(
-                &vm->compiled,
-                (char*)(parser->loop_offset.data + parser->loop_offset.size),
-                sizeof(size_t));
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        break;
-    case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 34;
-        vm->offset.data[34] = vm->compiled.size;
-        vm->offset_flags.data[34] = OFFSET_PENDING;
-        parser->state = FORTHPARSER_STATE_COMPILE;
-        break;
+    if (
+        parser_loop_stack_cur - ((sizeof(uintptr_t) + 1) << 1) <
+        parser_loop_stack) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
     }
-    return FORTHVM_ERR_OK;
+    parser_loop_stack_cur -= (sizeof(uintptr_t) + 1) << 1;
+    if (
+        *parser_loop_stack_cur != PARSER_CONTROL_BEGIN ||
+        *(parser_loop_stack_cur + (sizeof(uintptr_t) + 1)) !=
+        PARSER_CONTROL_WHILE) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
+    }
+    if (vm_compiled_cur == vm_compiled_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
+    }
+    *(vm_compiled_cur++) = VM_INSTRUCTION_JMP;
+    *(uint8_t**)(vm_compiled_cur) =
+        *(uint8_t**)(parser_loop_stack_cur + 1) - 1;
+    if (vm_compiled_cur + sizeof(uintptr_t) > vm_compiled_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
+    }
+    vm_compiled_cur += sizeof(uintptr_t);
+    **(uint8_t***)(parser_loop_stack_cur + (sizeof(uintptr_t) + 2)) =
+        vm_compiled_cur - 1;
+    return PARSER_STATUS_OK;
 }

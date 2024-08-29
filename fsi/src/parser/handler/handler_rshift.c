@@ -1,30 +1,21 @@
-#include <fsi/util/parser_handlers.h>
+#include "../parser.h"
+#include "../../vm/vm.h"
+#include "../../util/status.h"
 
-ForthVMErr parser_handle_rshift(ForthParser *parser, ForthVM *vm) {
-    if (!parser || !vm) {
-        return FORTHVM_ERR_NULL_PTR;
-    }
-    char opcode = OPCODE_LSR;
-    int ret = 0;
-    switch (parser->state) {
-    case FORTHPARSER_STATE_INTERPRET:
-        ret = DArrayChar_push_back(&vm->interpreted, &opcode);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
+int parser_handler_rshift(void) {
+    if (parser_state & PARSER_STATE_INTERPRET) {
+        if (vm_interpreted_cur == vm_interpreted_end) {
+            parser_status = PARSER_STATUS_END;
+            return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        break;
-    case FORTHPARSER_STATE_COMPILE:
-        ret = DArrayChar_push_back(&vm->compiled, &opcode);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        break;
-    case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 52;
-        vm->offset.data[52] = vm->compiled.size;
-        vm->offset_flags.data[52] = OFFSET_PENDING;
-        parser->state = FORTHPARSER_STATE_COMPILE;
-        break;
+        *(vm_interpreted_cur++) = VM_INSTRUCTION_LSRD;
     }
-    return FORTHVM_ERR_OK;
+    if (parser_state & PARSER_STATE_COMPILE) {
+        if (vm_compiled_cur == vm_compiled_end) {
+            parser_status = PARSER_STATUS_END;
+            return PARSER_STATUS_COMPILED_OVERFLOW;
+        }
+        *(vm_compiled_cur++) = VM_INSTRUCTION_LSRD;
+    }
+    return PARSER_STATUS_OK;
 }

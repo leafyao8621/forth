@@ -1,25 +1,17 @@
-#include <fsi/util/parser_handlers.h>
-#include <fsi/util/parser_operations.h>
+#include "../parser.h"
+#include "../../vm/vm.h"
+#include "../../util/status.h"
 
-ForthVMErr parser_handle_create(ForthParser *parser, ForthVM *vm) {
-    if (!parser || !vm) {
-        return FORTHVM_ERR_NULL_PTR;
+int parser_handler_create(void) {
+    if (parser_state & PARSER_STATE_INTERPRET) {
+        parser_state |= PARSER_STATE_CREATE;
+        if (vm_interpreted_cur == vm_interpreted_end) {
+            parser_status = PARSER_STATUS_END;
+            return PARSER_STATUS_INTERPRETED_OVERFLOW;
+        }
+        *(vm_interpreted_cur++) = VM_INSTRUCTION_DEF;
+    } else {
+        *parser_pending |= VM_LOOKUP_META_MEMORY;
     }
-    switch (parser->state) {
-    case FORTHPARSER_STATE_INTERPRET:
-    case FORTHPARSER_STATE_COMPILE:
-        parser->prev_state = parser->state;
-        parser->state = FORTHPARSER_STATE_CREATE;
-        break;
-    case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 38;
-        vm->offset.data[38] = vm->compiled.size;
-        vm->offset_flags.data[38] = OFFSET_PENDING;
-        parser->state = FORTHPARSER_STATE_COMPILE;
-        break;
-    case FORTHPARSER_STATE_CREATE:
-    case FORTHPARSER_STATE_VARIABLE:
-        return FORTHVM_ERR_UNDEFINED_BEHAVIOR;
-    }
-    return FORTHVM_ERR_OK;
+    return PARSER_STATUS_OK;
 }

@@ -1,45 +1,28 @@
-#include <fsi/util/parser_handlers.h>
+#include "../parser.h"
+#include "../../vm/vm.h"
+#include "../../util/status.h"
 
-ForthVMErr parser_handle_if(ForthParser *parser, ForthVM *vm) {
-    if (!parser || !vm) {
-        return FORTHVM_ERR_NULL_PTR;
+int parser_handler_if(void) {
+    if (parser_state & PARSER_STATE_INTERPRET) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
     }
-    char opcode = OPCODE_JZD;
-    size_t dummy = 0;
-    char conditional_type = FORTHPARSER_CONDITIONAL_TYPE_IF;
-    int ret = 0;
-    switch (parser->state) {
-    case FORTHPARSER_STATE_INTERPRET:
-        return FORTHVM_ERR_NOT_IN_COMPILATION_MODE;
-    case FORTHPARSER_STATE_COMPILE:
-        ret = DArrayChar_push_back(&vm->compiled, &opcode);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        ret =
-            DArrayChar_push_back(&parser->conditional_type, &conditional_type);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        ret =
-            DArrayOffset_push_back(
-                &parser->conditional_offset, &vm->compiled.size);
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        ret =
-            DArrayChar_push_back_batch(
-                &vm->compiled, (char*)&dummy, sizeof(size_t));
-        if (ret) {
-            return FORTHVM_ERR_OUT_OF_MEMORY;
-        }
-        break;
-    case FORTHPARSER_STATE_DEFINE:
-        parser->offset = 22;
-        vm->offset.data[22] = vm->compiled.size;
-        vm->offset_flags.data[22] = OFFSET_PENDING;
-        parser->state = FORTHPARSER_STATE_COMPILE;
-        break;
+    if (vm_compiled_cur == vm_compiled_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    return FORTHVM_ERR_OK;
+    *(vm_compiled_cur++) = VM_INSTRUCTION_JZD;
+    if (parser_conditional_stack_cur == parser_conditional_stack_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW;
+    }
+    *(parser_conditional_stack_cur++) = PARSER_CONTROL_IF;
+    *(uint8_t**)parser_conditional_stack_cur = vm_compiled_cur;
+    parser_conditional_stack_cur += sizeof(uintptr_t);
+    if (vm_compiled_cur + sizeof(uintptr_t) > vm_compiled_end) {
+        parser_status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
+    }
+    vm_compiled_cur += sizeof(uintptr_t);
+    return PARSER_STATUS_OK;
 }
