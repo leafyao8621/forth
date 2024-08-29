@@ -462,7 +462,7 @@ void vm_initialize() {
             "again",
             "create",
             "variable",
-            "allocate",
+            "allot",
             "cells",
             "cell+",
             "@",
