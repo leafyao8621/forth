@@ -4,7 +4,7 @@
 #include "handler/handler.h"
 #include "../util/status.h"
 
-#define BUILTIN_SIZE 54
+#define BUILTIN_SIZE 55
 #define MEMORY_SIZE 2
 
 static uint8_t mem[65536];
@@ -60,8 +60,9 @@ void vm_initialize() {
             "again",
             "create",
             "variable",
-            "allocate",
+            "allot",
             "cells",
+            "cell+",
             "@",
             "!",
             "c@",

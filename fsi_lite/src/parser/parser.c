@@ -143,8 +143,8 @@ int parser_parse(bool debug, bool line, FILE *fin) {
                         ret_int = parser_handler_variable();
                         break;
 
-                    case PARSER_HANDLER_ALLOCATE:
-                        ret_int = parser_handler_allocate();
+                    case PARSER_HANDLER_ALLOT:
+                        ret_int = parser_handler_allot();
                         break;
                     case PARSER_HANDLER_CELLS:
                         ret_int = parser_handler_cells();
