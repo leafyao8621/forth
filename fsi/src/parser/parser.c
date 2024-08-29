@@ -20,6 +20,10 @@ ForthParserStatus parser_initialize(ForthParser *parser) {
     return PARSER_STATUS_OK;
 }
 
+void parser_finalize(ForthParser *parser) {
+    DArrayChar_finalize(&parser->buf);
+}
+
 ForthParserStatus parser_parse(
     ForthVM *vm, ForthParser *parser, bool debug, bool line, char *str) {
     bool ret = false;
@@ -30,15 +34,15 @@ ForthParserStatus parser_parse(
     char *iter = 0;
     parser->status = PARSER_STATUS_RUNNING;
     parser->eos = false;
-    for (next_token(line, fin); !parser->status; next_token(line, fin)) {
-        ret = parse_token(buf, buf_end, line, fin);
+    for (next_token(line, str); !parser->status; next_token(line, str)) {
+        ret = parse_token(&parser->buf, line, str);
         if (debug) {
-            printf("token: %s\n", buf);
+            printf("token: %s\n", parser->buf);
         }
         if (!ret) {
             return PARSER_STATUS_OUT_OF_MEMORY;
         }
-        ret = lookup_token(buf, &meta, &addr);
+        ret = lookup_token(parser->buf.data, &meta, &addr);
         if (ret) {
             if (*meta == VM_LOOKUP_META_BUILTIN) {
                 if (parser->state & PARSER_STATE_NAME) {
@@ -355,7 +359,7 @@ ForthParserStatus parser_parse(
                 }
                 *(uintptr_t*)vm->lookup_cur = (uintptr_t)vm->compiled_cur;
                 vm->lookup_cur += sizeof(uintptr_t);
-                for (iter = buf; *iter; ++iter) {
+                for (iter = parser->buf.data; *iter; ++iter) {
                     if (vm->lookup_cur == vm->lookup_end) {
                         parser->status = PARSER_STATUS_END;
                         ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
@@ -392,7 +396,7 @@ ForthParserStatus parser_parse(
                 *(uint8_t**)vm->interpreted_cur = vm->lookup_cur;
                 vm->interpreted_cur += sizeof(uintptr_t);
                 vm->lookup_cur += sizeof(uintptr_t);
-                for (iter = buf; *iter; ++iter) {
+                for (iter = parser->buf.data; *iter; ++iter) {
                     if (vm->lookup_cur == vm->lookup_end) {
                         parser->status = PARSER_STATUS_END;
                         ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
@@ -410,14 +414,14 @@ ForthParserStatus parser_parse(
             } else {
                 switch (*vm->memory) {
                 case 10:
-                    ret = parser_int10(buf, &num);
+                    ret = parser_int10(parser->buf.data, &num);
                     if (!ret) {
                         ret_int = PARSER_STATUS_INVALID_BASE10;
                         break;
                     }
                     break;
                 case 16:
-                    ret = parser_int16(buf, &num);
+                    ret = parser_int16(parser->buf.data, &num);
                     if (!ret) {
                         ret_int = PARSER_STATUS_INVALID_BASE16;
                         break;

@@ -105,11 +105,11 @@ ForthVMStatus vm_initialize(
     vm->control_stack_end = vm->control_stack + control_stack;
     vm->compiled = vm->control_stack_end;
     vm->compiled_cur = vm->compiled;
-    vm->compiled_end = vm->compiled + 24000;
+    vm->compiled_end = vm->compiled + compiled;
     vm->memory = vm->compiled_end;
     vm->memory_cur = vm->memory + sizeof(size_t);
     *(uint8_t**)vm->memory_cur = vm->memory;
-    vm->memory_end = vm->mem + 65536;
+    vm->memory_end = vm->mem + memory;
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
     const char **iter_memory = memory;
@@ -118,7 +118,8 @@ ForthVMStatus vm_initialize(
         *(vm->lookup_cur++) = VM_LOOKUP_META_BUILTIN;
         *(size_t*)(vm->lookup_cur) = i;
         vm->lookup_cur += sizeof(size_t);
-        for (iter_str = *iter_builtin; *iter_str; ++iter_str, ++vm->lookup_cur) {
+        for (
+            iter_str = *iter_builtin; *iter_str; ++iter_str, ++vm->lookup_cur) {
             *vm->lookup_cur = *iter_str;
         }
         *(vm->lookup_cur++) = 0;

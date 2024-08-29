@@ -5,8 +5,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-bool parse_token(char *buf, char *buf_end, bool line, FILE *fin);
-void next_token(bool line, FILE *fin);
+#include <containers/dstring.h>
+
+bool parse_token(String *buf, bool line, char *str);
+void next_token(bool line, char *str);
 bool lookup_token(char *buf, uint8_t **meta, uintptr_t **addr);
 bool parser_int10(char *buf, uintptr_t *out);
 bool parser_int16(char *buf, uintptr_t *out);
