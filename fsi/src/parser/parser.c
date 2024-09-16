@@ -28,8 +28,8 @@ ForthParserStatus parser_parse(
     ForthVM *vm, ForthParser *parser, bool debug, bool line, char *str) {
     bool ret = false;
     int ret_int = 0;
-    // uint8_t *meta = 0;
-    // uintptr_t *addr = 0;
+    uint8_t *meta = 0;
+    uintptr_t *addr = 0;
     // uintptr_t num = 0;
     char *iter = str;
     parser->status = PARSER_STATUS_RUNNING;
@@ -44,7 +44,7 @@ ForthParserStatus parser_parse(
         if (!ret) {
             return PARSER_STATUS_OUT_OF_MEMORY;
         }
-        // ret = lookup_token(parser->buf.data, &meta, &addr);
+        ret = lookup_token(vm, parser->buf.data, &meta, &addr);
         // if (ret) {
         //     if (*meta == VM_LOOKUP_META_BUILTIN) {
         //         if (parser->state & PARSER_STATE_NAME) {
