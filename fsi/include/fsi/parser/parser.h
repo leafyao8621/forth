@@ -7,6 +7,9 @@
 
 #include <containers/dstring.h>
 
+#include <fsi/util/status.h>
+#include <fsi/vm/vm.h>
+
 #define PARSER_STATE_INTERPRET 0x1
 #define PARSER_STATE_COMPILE 0x2
 #define PARSER_STATE_NAME 0x4
@@ -34,7 +37,6 @@ typedef struct ForthParser {
     uint8_t loop_stack[(sizeof(uintptr_t) + 1) * 20];
     uint8_t *loop_stack_cur;
     uint8_t *loop_stack_end;
-    bool eos;
 } ForthParser;
 
 ForthParserStatus parser_initialize(ForthParser *parser);

@@ -1,11 +1,10 @@
 #include <string.h>
 
-#include "vm/vm.h"
-#include "parser/parser.h"
-#include "util/status.h"
+#include <fsi/vm/vm.h>
+#include <fsi/parser/parser.h>
+#include <fsi/util/parser_util.h>
 
 int main(int argc, char **argv) {
-    int ret = 0;
     bool debug = false;
     bool script = false;
     size_t memory = 65536;
@@ -19,7 +18,14 @@ int main(int argc, char **argv) {
     ForthParser parser;
     ForthVMStatus ret_vm = VM_STATUS_OK;
     ForthParserStatus ret_parser = PARSER_STATUS_OK;
-    parser_initialize(&parser);
+    ret_parser = parser_initialize(&parser);
+    String buf;
+    int ret = DArrayChar_initialize(&buf, 1000);
+    if (ret) {
+        fprintf(stderr, "%s\n", "Out of memory");
+        return 1;
+    }
+    bool success = false;
     if (argc > 1) {
         FILE *fin = 0;
         int i = 1;
@@ -49,32 +55,43 @@ int main(int argc, char **argv) {
             fin = fopen(argv[i], "r");
             if (!fin) {
                 fprintf(stderr, "Cannot open %s\n", argv[i]);
+                DArrayChar_finalize(&buf);
                 vm_finalize(&vm);
                 parser_finalize(&parser);
                 return 1;
             }
-            ret = parser_parse(&vm, &parser, debug, false, "");
+            success = read_file(fin, &buf);
             fclose(fin);
+            if (!success) {
+                fprintf(stderr, "%s\n", "Out of memory");
+                DArrayChar_finalize(&buf);
+                vm_finalize(&vm);
+                parser_finalize(&parser);
+                return 1;
+            }
+            ret = parser_parse(&vm, &parser, debug, false, buf.data);
             if (ret) {
                 fprintf(
                     stderr,
                     "Error parsing\n%s\n",
                     parser_status_lookup[ret]
                 );
+                DArrayChar_finalize(&buf);
                 vm_finalize(&vm);
                 parser_finalize(&parser);
                 return 1;
             }
-            if (debug) {
-                vm_log(&vm);
-            }
-            ret_vm = vm_run(&vm, debug);
-            if (ret_vm) {
-                fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
-                vm_finalize(&vm);
-                parser_finalize(&parser);
-                return 1;
-            }
+            // if (debug) {
+            //     vm_log(&vm);
+            // }
+            // ret_vm = vm_run(&vm, debug);
+            // if (ret_vm) {
+            //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
+            //     DArrayChar_finalize(&buf);
+            //     vm_finalize(&vm);
+            //     parser_finalize(&parser);
+            //     return 1;
+            // }
         }
     } else {
         ret_vm =
@@ -94,25 +111,38 @@ int main(int argc, char **argv) {
     for (;;) {
         vm_reset(&vm);
         printf("%s", "> ");
-        ret = parser_parse(&vm, &parser, debug, true, "");
-        if (ret == PARSER_STATUS_END_REPL) {
+        ret = get_input(&buf);
+        if (ret == 1) {
+            break;
+        }
+        if (ret == 2) {
+            fprintf(stderr, "%s\n", "Out of memory");
+            DArrayChar_finalize(&buf);
+            vm_finalize(&vm);
+            parser_finalize(&parser);
+            return 1;
+        }
+        ret_parser = parser_parse(&vm, &parser, debug, true, buf.data);
+        if (ret_parser == PARSER_STATUS_END_REPL) {
             break;
         }
         if (ret) {
-            fprintf(stderr, "Error parsing\n%s\n", parser_status_lookup[ret]);
-            if (!parser.eos) {
-                for (ret = fgetc(stdin); ret != '\n'; ret = fgetc(stdin));
-            }
+            fprintf(
+                stderr,
+                "Error parsing\n%s\n",
+                parser_status_lookup[ret_parser]
+            );
             continue;
         }
-        if (debug) {
-            vm_log(&vm);
-        }
-        ret = vm_run(&vm, debug);
-        if (ret) {
-            fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
-        }
+        // if (debug) {
+        //     vm_log(&vm);
+        // }
+        // ret_vm = vm_run(&vm, debug);
+        // if (ret) {
+        //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);
+        // }
     }
+    DArrayChar_finalize(&buf);
     vm_finalize(&vm);
     parser_finalize(&parser);
     return 0;

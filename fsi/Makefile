@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic
-SRC = $(wildcard src/vm/*.c) $(wildcard src/vm/*/*.c) $(wildcard src/parser/*.c) $(wildcard src/parser/*/*.c) $(wildcard src/util/*.c)
+# SRC = $(wildcard src/vm/*.c) $(wildcard src/vm/*/*.c) $(wildcard src/parser/*.c) $(wildcard src/parser/*/*.c) $(wildcard src/util/*.c)
+SRC = $(wildcard src/vm/*.c) $(wildcard src/parser/*.c) $(wildcard src/util/*.c)
 OBJ = $(SRC:.c=.o)
 LIB = lib/libfsi.so
 BIN = fsi
@@ -20,4 +21,4 @@ clean:
 	@rm $(LIB)
 	@rm $(BIN)
 valgrind: $(BIN)
-	@valgrind -s --leak-check=full ./$(BIN) script/a.fs
+	@valgrind -s --leak-check=full ./$(BIN) -d script/a.fs

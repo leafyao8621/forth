@@ -1,4 +1,4 @@
-#include "status.h"
+#include <fsi/util/status.h>
 
 const char *parser_status_lookup[15] =
     {
@@ -19,9 +19,10 @@ const char *parser_status_lookup[15] =
         "PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH"
     };
 
-const char *vm_status_lookup[9] =
+const char *vm_status_lookup[10] =
     {
         "VM_STATUS_OK",
+        "VM_STATUS_OUT_OF_MEMORY,"
         "VM_STATUS_DATA_STACK_OVERFLOW",
         "VM_STATUS_DATA_STACK_UNDERFLOW",
         "VM_STATUS_INVALID_BASE",

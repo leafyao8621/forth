@@ -69,7 +69,7 @@ typedef enum ForthVMState {
 } ForthVMState;
 
 typedef struct ForthVM {
-    uint8_t mem;
+    uint8_t *mem;
     uint8_t *lookup;
     uint8_t *lookup_cur;
     uint8_t *lookup_end;

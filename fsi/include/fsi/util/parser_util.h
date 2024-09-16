@@ -5,10 +5,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include <containers/dstring.h>
+#include <fsi/parser/parser.h>
 
-bool parse_token(String *buf, bool line, char *str);
-void next_token(bool line, char *str);
+bool read_file(FILE *fin, String *buf);
+int get_input(String *buf);
+bool parse_token(ForthParser *parser, bool line, char **str);
+void next_token(ForthParser *parser, bool line, char **str);
 bool lookup_token(char *buf, uint8_t **meta, uintptr_t **addr);
 bool parser_int10(char *buf, uintptr_t *out);
 bool parser_int16(char *buf, uintptr_t *out);
