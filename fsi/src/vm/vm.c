@@ -43,7 +43,7 @@ ForthVMStatus vm_initialize(
             "again",
             "create",
             "variable",
-            "allocate",
+            "allot",
             "cells",
             "@",
             "!",

@@ -1,36 +1,36 @@
-#include "../parser.h"
-#include "../../vm/vm.h"
-#include "../../util/status.h"
+#include <fsi/util/status.h>
 
-int parser_handler_else(void) {
-    if (parser_state & PARSER_STATE_INTERPRET) {
-        parser_status = PARSER_STATUS_END;
+#include "handler.h"
+
+int parser_handler_else(ForthParser *parser, ForthVM *vm) {
+    if (parser->state & PARSER_STATE_INTERPRET) {
+        parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_NOT_IN_COMPILATION_MODE;
     }
-    if (parser_conditional_stack_cur == parser_conditional_stack) {
-        parser_status = PARSER_STATUS_END;
+    if (parser->conditional_stack_cur == parser->conditional_stack) {
+        parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW;
     }
-    parser_conditional_stack_cur -= (sizeof(uintptr_t) + 1);
+    parser->conditional_stack_cur -= (sizeof(uintptr_t) + 1);
     if (
-        *parser_conditional_stack_cur != PARSER_CONTROL_IF) {
-        parser_status = PARSER_STATUS_END;
+        *parser->conditional_stack_cur != PARSER_CONTROL_IF) {
+        parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
     }
-    *parser_conditional_stack_cur = PARSER_CONTROL_ELSE;
-    if (vm_compiled_cur == vm_compiled_end) {
-        parser_status = PARSER_STATUS_END;
+    *parser->conditional_stack_cur = PARSER_CONTROL_ELSE;
+    if (vm->compiled_cur == vm->compiled_end) {
+        parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm_compiled_cur++) = VM_INSTRUCTION_JMP;
-    if (parser_conditional_stack_cur == parser_conditional_stack_end) {
-        parser_status = PARSER_STATUS_END;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_JMP;
+    if (parser->conditional_stack_cur == parser->conditional_stack_end) {
+        parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW;
     }
-    **(uint8_t***)(parser_conditional_stack_cur + 1) =
-        vm_compiled_cur + sizeof(uintptr_t) - 1;
-    *(uint8_t**)(parser_conditional_stack_cur + 1) = vm_compiled_cur;
-    vm_compiled_cur += sizeof(uintptr_t);
-    parser_conditional_stack_cur += (sizeof(uintptr_t) + 1);
+    **(uint8_t***)(parser->conditional_stack_cur + 1) =
+        vm->compiled_cur + sizeof(uintptr_t) - 1;
+    *(uint8_t**)(parser->conditional_stack_cur + 1) = vm->compiled_cur;
+    vm->compiled_cur += sizeof(uintptr_t);
+    parser->conditional_stack_cur += (sizeof(uintptr_t) + 1);
     return PARSER_STATUS_OK;
 }

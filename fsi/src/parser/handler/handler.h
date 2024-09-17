@@ -1,6 +1,9 @@
 #ifndef PARSER_HANDLER_H_
 #define PARSER_HANDLER_H_
 
+#include <fsi/parser/parser.h>
+#include <fsi/vm/vm.h>
+
 #define PARSER_HANDLER_DOT 0
 #define PARSER_HANDLER_EMIT 1
 #define PARSER_HANDLER_CR 2
@@ -24,7 +27,7 @@
 #define PARSER_HANDLER_AGAIN 20
 #define PARSER_HANDLER_CREATE 21
 #define PARSER_HANDLER_VARIABLE 22
-#define PARSER_HANDLER_ALLOCATE 23
+#define PARSER_HANDLER_ALLOT 23
 #define PARSER_HANDLER_CELLS 24
 #define PARSER_HANDLER_AT 25
 #define PARSER_HANDLER_BANG 26
@@ -57,59 +60,59 @@
 #define PARSER_HANDLER_SWAP 53
 
 
-int parser_handler_dot(void);
-int parser_handler_emit(void);
-int parser_handler_cr(void);
-int parser_handler_colon(void);
-int parser_handler_semi_colon(void);
-int parser_handler_if(void);
-int parser_handler_then(void);
-int parser_handler_else(void);
-int parser_handler_do(void);
-int parser_handler_loop(void);
-int parser_handler_plus_loop(void);
-int parser_handler_i(void);
-int parser_handler_leave(void);
-int parser_handler_unloop(void);
-int parser_handler_exit(void);
-int parser_handler_j(void);
-int parser_handler_begin(void);
-int parser_handler_while(void);
-int parser_handler_repeat(void);
-int parser_handler_until(void);
-int parser_handler_again(void);
-int parser_handler_create(void);
-int parser_handler_variable(void);
-int parser_handler_allocate(void);
-int parser_handler_cells(void);
-int parser_handler_at(void);
-int parser_handler_bang(void);
-int parser_handler_cat(void);
-int parser_handler_cbang(void);
-int parser_handler_plus(void);
-int parser_handler_dash(void);
-int parser_handler_asterisk(void);
-int parser_handler_slash(void);
-int parser_handler_mod(void);
-int parser_handler_one_plus(void);
-int parser_handler_one_dash(void);
-int parser_handler_two_asterisk(void);
-int parser_handler_two_slash(void);
-int parser_handler_lshift(void);
-int parser_handler_rshift(void);
-int parser_handler_and(void);
-int parser_handler_or(void);
-int parser_handler_xor(void);
-int parser_handler_invert(void);
-int parser_handler_negate(void);
-int parser_handler_gt(void);
-int parser_handler_lt(void);
-int parser_handler_eq(void);
-int parser_handler_ult(void);
-int parser_handler_zero_lt(void);
-int parser_handler_zero_eq(void);
-int parser_handler_dup(void);
-int parser_handler_drop(void);
-int parser_handler_swap(void);
+int parser_handler_dot(ForthParser *parser, ForthVM *vm);
+int parser_handler_emit(ForthParser *parser, ForthVM *vm);
+int parser_handler_cr(ForthParser *parser, ForthVM *vm);
+int parser_handler_colon(ForthParser *parser);
+int parser_handler_semi_colon(ForthParser *parser, ForthVM *vm);
+int parser_handler_if(ForthParser *parser, ForthVM *vm);
+int parser_handler_then(ForthParser *parser, ForthVM *vm);
+int parser_handler_else(ForthParser *parser, ForthVM *vm);
+int parser_handler_do(ForthParser *parser, ForthVM *vm);
+int parser_handler_loop(ForthParser *parser, ForthVM *vm);
+int parser_handler_plus_loop(ForthParser *parser, ForthVM *vm);
+int parser_handler_i(ForthParser *parser, ForthVM *vm);
+int parser_handler_leave(ForthParser *parser, ForthVM *vm);
+int parser_handler_unloop(ForthParser *parser, ForthVM *vm);
+int parser_handler_exit(ForthParser *parser, ForthVM *vm);
+int parser_handler_j(ForthParser *parser, ForthVM *vm);
+int parser_handler_begin(ForthParser *parser, ForthVM *vm);
+int parser_handler_while(ForthParser *parser, ForthVM *vm);
+int parser_handler_repeat(ForthParser *parser, ForthVM *vm);
+int parser_handler_until(ForthParser *parser, ForthVM *vm);
+int parser_handler_again(ForthParser *parser, ForthVM *vm);
+int parser_handler_create(ForthParser *parser, ForthVM *vm);
+int parser_handler_variable(ForthParser *parser, ForthVM *vm);
+int parser_handler_allot(ForthParser *parser, ForthVM *vm);
+int parser_handler_cells(ForthParser *parser, ForthVM *vm);
+int parser_handler_bang(ForthParser *parser, ForthVM *vm);
+int parser_handler_at(ForthParser *parser, ForthVM *vm);
+int parser_handler_cat(ForthParser *parser, ForthVM *vm);
+int parser_handler_cbang(ForthParser *parser, ForthVM *vm);
+int parser_handler_plus(ForthParser *parser, ForthVM *vm);
+int parser_handler_dash(ForthParser *parser, ForthVM *vm);
+int parser_handler_asterisk(ForthParser *parser, ForthVM *vm);
+int parser_handler_slash(ForthParser *parser, ForthVM *vm);
+int parser_handler_mod(ForthParser *parser, ForthVM *vm);
+int parser_handler_one_plus(ForthParser *parser, ForthVM *vm);
+int parser_handler_one_dash(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_asterisk(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_slash(ForthParser *parser, ForthVM *vm);
+int parser_handler_lshift(ForthParser *parser, ForthVM *vm);
+int parser_handler_rshift(ForthParser *parser, ForthVM *vm);
+int parser_handler_and(ForthParser *parser, ForthVM *vm);
+int parser_handler_or(ForthParser *parser, ForthVM *vm);
+int parser_handler_xor(ForthParser *parser, ForthVM *vm);
+int parser_handler_invert(ForthParser *parser, ForthVM *vm);
+int parser_handler_negate(ForthParser *parser, ForthVM *vm);
+int parser_handler_gt(ForthParser *parser, ForthVM *vm);
+int parser_handler_lt(ForthParser *parser, ForthVM *vm);
+int parser_handler_eq(ForthParser *parser, ForthVM *vm);
+int parser_handler_ult(ForthParser *parser, ForthVM *vm);
+int parser_handler_zero_lt(ForthParser *parser, ForthVM *vm);
+int parser_handler_zero_eq(ForthParser *parser, ForthVM *vm);
+int parser_handler_dup(ForthParser *parser, ForthVM *vm);
+int parser_handler_drop(ForthParser *parser, ForthVM *vm);
+int parser_handler_swap(ForthParser *parser, ForthVM *vm);
 
 #endif

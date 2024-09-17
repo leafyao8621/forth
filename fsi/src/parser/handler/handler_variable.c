@@ -1,17 +1,17 @@
-#include "../parser.h"
-#include "../../vm/vm.h"
-#include "../../util/status.h"
+#include <fsi/util/status.h>
 
-int parser_handler_variable(void) {
-    if (parser_state & PARSER_STATE_INTERPRET) {
-        parser_state |= PARSER_STATE_CREATE;
-        if (vm_interpreted_cur == vm_interpreted_end) {
-            parser_status = PARSER_STATUS_END;
+#include "handler.h"
+
+int parser_handler_variable(ForthParser *parser, ForthVM *vm) {
+    if (parser->state & PARSER_STATE_INTERPRET) {
+        parser->state |= PARSER_STATE_CREATE;
+        if (vm->interpreted_cur == vm->interpreted_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(vm_interpreted_cur++) = VM_INSTRUCTION_DEFA;
+        *(vm->interpreted_cur++) = VM_INSTRUCTION_DEFA;
     } else {
-        *parser_pending |= VM_LOOKUP_META_MEMORY;
+        *parser->pending |= VM_LOOKUP_META_MEMORY;
     }
     return PARSER_STATUS_OK;
 }

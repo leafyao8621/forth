@@ -1,43 +1,43 @@
-#include "../parser.h"
-#include "../../vm/vm.h"
-#include "../../util/status.h"
+#include <fsi/util/status.h>
 
-int parser_handler_cr(void) {
-    if (parser_state & PARSER_STATE_INTERPRET) {
-        if (vm_interpreted_cur == vm_interpreted_end) {
-            parser_status = PARSER_STATUS_END;
+#include "handler.h"
+
+int parser_handler_cr(ForthParser *parser, ForthVM *vm) {
+    if (parser->state & PARSER_STATE_INTERPRET) {
+        if (vm->interpreted_cur == vm->interpreted_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(vm_interpreted_cur++) = VM_INSTRUCTION_PUSHD;
-        if (vm_interpreted_cur + sizeof(uintptr_t) > vm_interpreted_end) {
-            parser_status = PARSER_STATUS_END;
+        *(vm->interpreted_cur++) = VM_INSTRUCTION_PUSHD;
+        if (vm->interpreted_cur + sizeof(uintptr_t) > vm->interpreted_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(uintptr_t*)vm_interpreted_cur = 10;
-        vm_interpreted_cur += sizeof(uintptr_t);
-        if (vm_interpreted_cur == vm_interpreted_end) {
-            parser_status = PARSER_STATUS_END;
+        *(uintptr_t*)vm->interpreted_cur = 10;
+        vm->interpreted_cur += sizeof(uintptr_t);
+        if (vm->interpreted_cur == vm->interpreted_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(vm_interpreted_cur++) = VM_INSTRUCTION_EMIT;
+        *(vm->interpreted_cur++) = VM_INSTRUCTION_EMIT;
     }
-    if (parser_state & PARSER_STATE_COMPILE) {
-        if (vm_compiled_cur == vm_interpreted_end) {
-            parser_status = PARSER_STATUS_END;
+    if (parser->state & PARSER_STATE_COMPILE) {
+        if (vm->compiled_cur == vm->interpreted_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_COMPILED_OVERFLOW;
         }
-        *(vm_compiled_cur++) = VM_INSTRUCTION_PUSHD;
-        if (vm_compiled_cur + sizeof(uintptr_t) >= vm_compiled_end) {
-            parser_status = PARSER_STATUS_END;
+        *(vm->compiled_cur++) = VM_INSTRUCTION_PUSHD;
+        if (vm->compiled_cur + sizeof(uintptr_t) >= vm->compiled_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_COMPILED_OVERFLOW;
         }
-        *(uintptr_t*)vm_compiled_cur = 10;
-        vm_compiled_cur += sizeof(uintptr_t);
-        if (vm_compiled_cur == vm_compiled_end) {
-            parser_status = PARSER_STATUS_END;
+        *(uintptr_t*)vm->compiled_cur = 10;
+        vm->compiled_cur += sizeof(uintptr_t);
+        if (vm->compiled_cur == vm->compiled_end) {
+            parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_COMPILED_OVERFLOW;
         }
-        *(vm_compiled_cur++) = VM_INSTRUCTION_EMIT;
+        *(vm->compiled_cur++) = VM_INSTRUCTION_EMIT;
     }
     return PARSER_STATUS_OK;
 }

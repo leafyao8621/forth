@@ -81,9 +81,9 @@ int main(int argc, char **argv) {
                 parser_finalize(&parser);
                 return 1;
             }
-            // if (debug) {
-            //     vm_log(&vm);
-            // }
+            if (debug) {
+                vm_log(&vm);
+            }
             // ret_vm = vm_run(&vm, debug);
             // if (ret_vm) {
             //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
@@ -134,9 +134,9 @@ int main(int argc, char **argv) {
             );
             continue;
         }
-        // if (debug) {
-        //     vm_log(&vm);
-        // }
+        if (debug) {
+            vm_log(&vm);
+        }
         // ret_vm = vm_run(&vm, debug);
         // if (ret) {
         //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);

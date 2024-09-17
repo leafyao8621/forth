@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic
 # SRC = $(wildcard src/vm/*.c) $(wildcard src/vm/*/*.c) $(wildcard src/parser/*.c) $(wildcard src/parser/*/*.c) $(wildcard src/util/*.c)
-SRC = $(wildcard src/vm/*.c) $(wildcard src/parser/*.c) $(wildcard src/util/*.c)
+SRC = $(wildcard src/vm/*.c) $(wildcard src/parser/*.c) $(wildcard src/util/*.c) $(wildcard src/parser/*/*.c)
 OBJ = $(SRC:.c=.o)
 LIB = lib/libfsi.so
 BIN = fsi
