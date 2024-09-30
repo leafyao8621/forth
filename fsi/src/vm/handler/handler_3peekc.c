@@ -1,4 +1,4 @@
-#include <handler.h>
+#include "handler.h"
 
 int vm_handler_3peekc(ForthVM *vm) {
     if (vm->control_stack_cur - 3 * sizeof(uintptr_t) < vm->control_stack) {

@@ -1,4 +1,4 @@
-#include <handler.h>
+#include "handler.h"
 
 int vm_handler_defa(ForthVM *vm) {
     **(uint8_t***)(vm->ip + 1) = *(uint8_t**)vm->memory_cur;
