@@ -3,7 +3,6 @@
 #include "handler.h"
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm) {
-    puts("afdasdff");
     if (parser->state & PARSER_STATE_INTERPRET) {
         if (vm->interpreted_cur == vm->interpreted_end) {
             parser->status = PARSER_STATUS_END;
