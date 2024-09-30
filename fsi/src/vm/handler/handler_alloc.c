@@ -1,21 +1,19 @@
-#include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include <handler.h>
 
-int vm_handler_alloc(void) {
-    if (vm_data_stack_cur == vm_data_stack) {
-        vm_state = VM_STATE_HALTED;
+int vm_handler_alloc(ForthVM *vm) {
+    if (vm->data_stack_cur == vm->data_stack) {
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;
     }
-    vm_data_stack_cur -= sizeof(uintptr_t);
+    vm->data_stack_cur -= sizeof(uintptr_t);
     if (
-        *(uint8_t**)vm_memory_cur + *(intptr_t*)(vm_data_stack_cur) >
-        vm_memory_end ||
-        *(uint8_t**)vm_memory_cur + *(intptr_t*)(vm_data_stack_cur) <
-        vm_memory) {
-        vm_state = VM_STATE_HALTED;
+        *(uint8_t**)vm->memory_cur + *(intptr_t*)(vm->data_stack_cur) >
+        vm->memory_end ||
+        *(uint8_t**)vm->memory_cur + *(intptr_t*)(vm->data_stack_cur) <
+        vm->memory) {
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_INVALID_MEMORY_ALLOCATION;
     }
-    *(uint8_t**)vm_memory_cur += *(intptr_t*)(vm_data_stack_cur);
+    *(uint8_t**)vm->memory_cur += *(intptr_t*)(vm->data_stack_cur);
     return VM_STATUS_OK;
 }

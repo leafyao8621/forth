@@ -1,15 +1,13 @@
 #include <stdio.h>
 
-#include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include <handler.h>
 
-int vm_handler_emit(void) {
-    if (vm_data_stack_cur == vm_data_stack) {
-        vm_state = VM_STATE_HALTED;
+int vm_handler_emit(ForthVM *vm) {
+    if (vm->data_stack_cur == vm->data_stack) {
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;
     }
-    vm_data_stack_cur -= sizeof(uintptr_t);
-    putchar(*(uintptr_t*)vm_data_stack_cur);
+    vm->data_stack_cur -= sizeof(uintptr_t);
+    putchar(*(uintptr_t*)vm->data_stack_cur);
     return VM_STATUS_OK;
 }

@@ -1,27 +1,25 @@
-#include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include <handler.h>
 
-int vm_handler_ret(void) {
-    if (vm_control_stack_cur == vm_control_stack) {
-        vm_state = VM_STATE_HALTED;
+int vm_handler_ret(ForthVM *vm) {
+    if (vm->control_stack_cur == vm->control_stack) {
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_CONTROL_STACK_UNDERFLOW;
     }
-    vm_control_stack_cur -= sizeof(uintptr_t);
+    vm->control_stack_cur -= sizeof(uintptr_t);
     if (
         !(
             (
-                *(uint8_t**)vm_control_stack_cur >= vm_compiled &&
-                *(uint8_t**)vm_control_stack_cur < vm_compiled_end
+                *(uint8_t**)vm->control_stack_cur >= vm->compiled &&
+                *(uint8_t**)vm->control_stack_cur < vm->compiled_end
             ) ||
             (
-                *(uint8_t**)vm_control_stack_cur >= vm_interpreted &&
-                *(uint8_t**)vm_control_stack_cur < vm_interpreted_end
+                *(uint8_t**)vm->control_stack_cur >= vm->interpreted &&
+                *(uint8_t**)vm->control_stack_cur < vm->interpreted_end
             )
         )) {
-        vm_state = VM_STATE_HALTED;
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_INVALID_RETURN_ADDRESS;
     }
-    vm_ip = *(uint8_t**)vm_control_stack_cur;
+    vm->ip = *(uint8_t**)vm->control_stack_cur;
     return VM_STATUS_OK;
 }

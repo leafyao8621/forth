@@ -1,17 +1,15 @@
-#include "handler.h"
-#include "../vm.h"
-#include "../../util/status.h"
+#include <handler.h>
 
-int vm_handler_jnzd(void) {
-    if (vm_data_stack_cur == vm_data_stack) {
-        vm_state = VM_STATE_HALTED;
+int vm_handler_jnzd(ForthVM *vm) {
+    if (vm->data_stack_cur == vm->data_stack) {
+        vm->state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;
     }
-    vm_data_stack_cur -= sizeof(uintptr_t);
-    if (*(intptr_t*)vm_data_stack_cur) {
-        vm_ip = *(uint8_t**)(vm_ip + 1);
+    vm->data_stack_cur -= sizeof(uintptr_t);
+    if (*(intptr_t*)vm->data_stack_cur) {
+        vm->ip = *(uint8_t**)(vm->ip + 1);
     } else {
-        vm_ip += sizeof(uintptr_t);
+        vm->ip += sizeof(uintptr_t);
     }
     return VM_STATUS_OK;
 }
