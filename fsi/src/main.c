@@ -84,14 +84,14 @@ int main(int argc, char **argv) {
             if (debug) {
                 vm_log(&vm);
             }
-            // ret_vm = vm_run(&vm, debug);
-            // if (ret_vm) {
-            //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
-            //     DArrayChar_finalize(&buf);
-            //     vm_finalize(&vm);
-            //     parser_finalize(&parser);
-            //     return 1;
-            // }
+            ret_vm = vm_run(&vm, debug);
+            if (ret_vm) {
+                fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
+                DArrayChar_finalize(&buf);
+                vm_finalize(&vm);
+                parser_finalize(&parser);
+                return 1;
+            }
         }
     } else {
         ret_vm =
@@ -137,10 +137,10 @@ int main(int argc, char **argv) {
         if (debug) {
             vm_log(&vm);
         }
-        // ret_vm = vm_run(&vm, debug);
-        // if (ret) {
-        //     fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);
-        // }
+        ret_vm = vm_run(&vm, debug);
+        if (ret) {
+            fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);
+        }
     }
     DArrayChar_finalize(&buf);
     vm_finalize(&vm);
