@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 54
+#define BUILTIN_SIZE 56
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -49,6 +49,8 @@ ForthVMStatus vm_initialize(
             "!",
             "c@",
             "c!",
+            ",",
+            "c,",
             "+",
             "-",
             "*",
@@ -85,7 +87,7 @@ ForthVMStatus vm_initialize(
             10,
             0
         };
-    vm->mem = malloc(memory);
+    vm->mem = calloc(memory, 1);
     if (!vm->mem) {
         return VM_STATUS_OUT_OF_MEMORY;
     }
@@ -243,11 +245,23 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_MULTCSD:
             printf("%s", "MULTCSD");
             break;
+        case VM_INSTRUCTION_LDD:
+            printf("%s", "LDD");
+            break;
         case VM_INSTRUCTION_STD:
             printf("%s", "STD");
             break;
-        case VM_INSTRUCTION_LDD:
-            printf("%s", "LDD");
+        case VM_INSTRUCTION_LDCD:
+            printf("%s", "LDCD");
+            break;
+        case VM_INSTRUCTION_STCD:
+            printf("%s", "STCD");
+            break;
+        case VM_INSTRUCTION_PUSHM:
+            printf("%s", "PUSHM");
+            break;
+        case VM_INSTRUCTION_PUSHCM:
+            printf("%s", "PUSHCM");
             break;
         case VM_INSTRUCTION_ADDD:
             printf("%s", "ADDD");
@@ -369,11 +383,23 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_MULTCSD:
             printf("%s", "MULTCSD");
             break;
+        case VM_INSTRUCTION_LDD:
+            printf("%s", "LDD");
+            break;
         case VM_INSTRUCTION_STD:
             printf("%s", "STD");
             break;
-        case VM_INSTRUCTION_LDD:
-            printf("%s", "LDD");
+        case VM_INSTRUCTION_LDCD:
+            printf("%s", "LDCD");
+            break;
+        case VM_INSTRUCTION_STCD:
+            printf("%s", "STCD");
+            break;
+        case VM_INSTRUCTION_PUSHM:
+            printf("%s", "PUSHM");
+            break;
+        case VM_INSTRUCTION_PUSHCM:
+            printf("%s", "PUSHCM");
             break;
         case VM_INSTRUCTION_ADDD:
             printf("%s", "ADDD");
@@ -530,11 +556,23 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_MULTCSD:
                 printf("%s", "MULTCSD");
                 break;
+            case VM_INSTRUCTION_LDD:
+                printf("%s", "LDD");
+                break;
             case VM_INSTRUCTION_STD:
                 printf("%s", "STD");
                 break;
-            case VM_INSTRUCTION_LDD:
-                printf("%s", "LDD");
+            case VM_INSTRUCTION_LDCD:
+                printf("%s", "LDCD");
+                break;
+            case VM_INSTRUCTION_STCD:
+                printf("%s", "STCD");
+                break;
+            case VM_INSTRUCTION_PUSHM:
+                printf("%s", "PUSHM");
+                break;
+            case VM_INSTRUCTION_PUSHCM:
+                printf("%s", "PUSHCM");
                 break;
             case VM_INSTRUCTION_ADDD:
                 printf("%s", "ADDD");
@@ -678,11 +716,17 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
         case VM_INSTRUCTION_MULTCSD:
             ret = vm_handler_multcsd(vm);
             break;
+        case VM_INSTRUCTION_LDD:
+            ret = vm_handler_ldd(vm);
+            break;
         case VM_INSTRUCTION_STD:
             ret = vm_handler_std(vm);
             break;
-        case VM_INSTRUCTION_LDD:
-            ret = vm_handler_ldd(vm);
+        case VM_INSTRUCTION_LDCD:
+            ret = vm_handler_ldcd(vm);
+            break;
+        case VM_INSTRUCTION_STCD:
+            ret = vm_handler_stcd(vm);
             break;
         case VM_INSTRUCTION_ADDD:
             ret = vm_handler_addd(vm);

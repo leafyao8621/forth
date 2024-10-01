@@ -140,11 +140,17 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_CELLS:
                         ret_int = parser_handler_cells(parser, vm);
                         break;
+                    case PARSER_HANDLER_AT:
+                        ret_int = parser_handler_at(parser, vm);
+                        break;
                     case PARSER_HANDLER_BANG:
                         ret_int = parser_handler_bang(parser, vm);
                         break;
-                    case PARSER_HANDLER_AT:
-                        ret_int = parser_handler_at(parser, vm);
+                    case PARSER_HANDLER_CAT:
+                        ret_int = parser_handler_cat(parser, vm);
+                        break;
+                    case PARSER_HANDLER_CBANG:
+                        ret_int = parser_handler_cbang(parser, vm);
                         break;
                     case PARSER_HANDLER_PLUS:
                         ret_int = parser_handler_plus(parser, vm);
@@ -397,13 +403,13 @@ ForthParserStatus parser_parse(
                 *(uint8_t**)vm->interpreted_cur = vm->lookup_cur;
                 vm->interpreted_cur += sizeof(uintptr_t);
                 vm->lookup_cur += sizeof(uintptr_t);
-                for (iter = parser->buf.data; *iter; ++iter) {
+                for (char *iter_buf = parser->buf.data; *iter_buf; ++iter_buf) {
                     if (vm->lookup_cur == vm->lookup_end) {
                         parser->status = PARSER_STATUS_END;
                         ret_int = PARSER_STATUS_LOOKUP_OVERFLOW;
                         break;
                     }
-                    *(vm->lookup_cur++) = *iter;
+                    *(vm->lookup_cur++) = *iter_buf;
                 }
                 if (vm->lookup_cur == vm->lookup_end) {
                     parser->status = PARSER_STATUS_END;
