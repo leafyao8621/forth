@@ -174,8 +174,8 @@ void vm_log(ForthVM *vm) {
     for (
         uint8_t *iter = vm->memory;
         iter < *(uint8_t**)vm->memory_cur;
-        iter += sizeof(uintptr_t)) {
-        printf("0x%016lX 0x%016lX\n", (uintptr_t)iter, *(uintptr_t*)iter);
+        ++iter) {
+        printf("0x%016lX 0x%02hhX\n", (uintptr_t)iter, *iter);
     }
     puts("Compiled:");
     for (uint8_t *iter = vm->compiled; iter < vm->compiled_cur; ++iter) {
@@ -727,6 +727,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_STCD:
             ret = vm_handler_stcd(vm);
+            break;
+        case VM_INSTRUCTION_PUSHM:
+            ret = vm_handler_pushm(vm);
+            break;
+        case VM_INSTRUCTION_PUSHCM:
+            ret = vm_handler_pushcm(vm);
             break;
         case VM_INSTRUCTION_ADDD:
             ret = vm_handler_addd(vm);

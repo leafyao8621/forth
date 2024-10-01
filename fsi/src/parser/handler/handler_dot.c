@@ -9,7 +9,6 @@ int parser_handler_dot(ForthParser *parser, ForthVM *vm) {
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
         *(vm->interpreted_cur++) = VM_INSTRUCTION_PINT;
-        printf("%p", vm->interpreted_cur);
     }
     if (parser->state & PARSER_STATE_COMPILE) {
         if (vm->compiled_cur == vm->compiled_end) {

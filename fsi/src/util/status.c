@@ -1,6 +1,6 @@
 #include <fsi/util/status.h>
 
-const char *parser_status_lookup[15] =
+const char *parser_status_lookup[16] =
     {
         "PARSER_STATUS_OK",
         "PARSER_STATUS_END_REPL",
@@ -12,6 +12,7 @@ const char *parser_status_lookup[15] =
         "PARSER_STATUS_INVALID_BASE16",
         "PARSER_STATUS_NESTED_COMPILATION_MODE",
         "PARSER_STATUS_NOT_IN_COMPILATION_MODE",
+        "PARSER_STATUS_NOT_IN_INTERPRETATION_MODE",
         "PARSER_STATUS_LOOKUP_OVERFLOW",
         "PARSER_STATUS_PENDING_DEFINITION",
         "PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW",

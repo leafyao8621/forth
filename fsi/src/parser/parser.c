@@ -152,6 +152,12 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_CBANG:
                         ret_int = parser_handler_cbang(parser, vm);
                         break;
+                    case PARSER_HANDLER_COMMA:
+                        ret_int = parser_handler_comma(parser, vm);
+                        break;
+                    case PARSER_HANDLER_CCOMMA:
+                        ret_int = parser_handler_ccomma(parser, vm);
+                        break;
                     case PARSER_HANDLER_PLUS:
                         ret_int = parser_handler_plus(parser, vm);
                         break;
@@ -320,14 +326,14 @@ ForthParserStatus parser_parse(
                             vm->interpreted_cur += sizeof(uintptr_t);
                             if (vm->interpreted_cur == vm->interpreted_end) {
                                 parser->status = PARSER_STATUS_END;
-                                ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                                 break;
                             }
                         }
                         if (parser->state & PARSER_STATE_COMPILE) {
                             if (vm->compiled_cur == vm->interpreted_end) {
                                 parser->status = PARSER_STATUS_END;
-                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
                             *(vm->compiled_cur++) = VM_INSTRUCTION_CALL;
@@ -335,14 +341,15 @@ ForthParserStatus parser_parse(
                                 vm->compiled_cur + sizeof(uintptr_t) >=
                                 vm->compiled_end) {
                                 parser->status = PARSER_STATUS_END;
-                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
-                            *(uint8_t**)vm->compiled_cur = (uint8_t*)(*addr - 1);
+                            *(uint8_t**)vm->compiled_cur =
+                                (uint8_t*)(*addr - 1);
                             vm->compiled_cur += sizeof(uintptr_t);
                             if (vm->compiled_cur == vm->compiled_end) {
                                 parser->status = PARSER_STATUS_END;
-                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
                         }

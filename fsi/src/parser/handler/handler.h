@@ -91,6 +91,8 @@ int parser_handler_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_at(ForthParser *parser, ForthVM *vm);
 int parser_handler_cat(ForthParser *parser, ForthVM *vm);
 int parser_handler_cbang(ForthParser *parser, ForthVM *vm);
+int parser_handler_comma(ForthParser *parser, ForthVM *vm);
+int parser_handler_ccomma(ForthParser *parser, ForthVM *vm);
 int parser_handler_plus(ForthParser *parser, ForthVM *vm);
 int parser_handler_dash(ForthParser *parser, ForthVM *vm);
 int parser_handler_asterisk(ForthParser *parser, ForthVM *vm);
