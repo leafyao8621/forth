@@ -8,7 +8,7 @@ int vm_handler_ldcd(ForthVM *vm) {
     if (
         *(uint8_t**)(vm->data_stack_cur - sizeof(uintptr_t)) <
         vm->memory ||
-        *(uint8_t**)(vm->data_stack_cur - sizeof(uintptr_t)) >
+        *(uint8_t**)(vm->data_stack_cur - sizeof(uintptr_t)) >=
         *(uint8_t**)vm->memory_cur) {
         vm->state = VM_STATE_HALTED;
         return VM_STATUS_INVALID_MEMORY_ADDRESS;

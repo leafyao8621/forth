@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
             vm_log(&vm);
         }
         ret_vm = vm_run(&vm, debug);
-        if (ret) {
+        if (ret_vm) {
             fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);
         }
     }

@@ -725,6 +725,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
         case VM_INSTRUCTION_ALLOC:
             ret = vm_handler_alloc(vm);
             break;
+        case VM_INSTRUCTION_ALLOCC:
+            ret = vm_handler_allocc(vm);
+            break;
         case VM_INSTRUCTION_MULTCSD:
             ret = vm_handler_multcsd(vm);
             break;

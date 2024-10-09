@@ -22,6 +22,7 @@ int vm_handler_3peekc(ForthVM *vm);
 int vm_handler_def(ForthVM *vm);
 int vm_handler_defa(ForthVM *vm);
 int vm_handler_alloc(ForthVM *vm);
+int vm_handler_allocc(ForthVM *vm);
 int vm_handler_multcsd(ForthVM *vm);
 int vm_handler_ldd(ForthVM *vm);
 int vm_handler_std(ForthVM *vm);

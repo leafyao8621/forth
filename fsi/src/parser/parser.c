@@ -48,6 +48,7 @@ ForthParserStatus parser_parse(
         if (ret) {
             if (*meta == VM_LOOKUP_META_BUILTIN) {
                 if (parser->state & PARSER_STATE_NAME) {
+                    parser->pending = meta;
                     *meta = VM_LOOKUP_META_CALL;
                     *addr = (uintptr_t)vm->compiled_cur;
                     parser->state ^= PARSER_STATE_NAME;
@@ -367,7 +368,7 @@ ForthParserStatus parser_parse(
                                 return PARSER_STATUS_INTERPRETED_OVERFLOW;
                             }
                             *(vm->interpreted_cur++) = VM_INSTRUCTION_DEF;
-                            parser->pending = *addr;
+                            parser->pending = (uint8_t*)*addr;
                             continue;
                         }
                         if (parser->state & PARSER_STATE_INTERPRET) {
