@@ -163,6 +163,9 @@ void vm_log(ForthVM *vm) {
         if (*iter & VM_LOOKUP_META_MEMORY) {
             printf("%s ", "MEMORY");
         }
+        if (*iter & VM_LOOKUP_META_CREATE) {
+            printf("%s ", "CREATE");
+        }
         printf("0x%016lX ", *(size_t*)(++iter));
         iter += sizeof(size_t);
         for (; *iter; ++iter) {
@@ -241,6 +244,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_ALLOC:
             printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_ALLOCC:
+            printf("%s", "ALLOCC");
             break;
         case VM_INSTRUCTION_MULTCSD:
             printf("%s", "MULTCSD");
@@ -379,6 +385,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_ALLOC:
             printf("%s", "ALLOC");
+            break;
+        case VM_INSTRUCTION_ALLOCC:
+            printf("%s", "ALLOCC");
             break;
         case VM_INSTRUCTION_MULTCSD:
             printf("%s", "MULTCSD");
@@ -552,6 +561,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_ALLOC:
                 printf("%s", "ALLOC");
+                break;
+            case VM_INSTRUCTION_ALLOCC:
+                printf("%s", "ALLOCC");
                 break;
             case VM_INSTRUCTION_MULTCSD:
                 printf("%s", "MULTCSD");

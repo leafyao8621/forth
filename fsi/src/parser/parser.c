@@ -63,6 +63,30 @@ ForthParserStatus parser_parse(
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
                     parser->state ^= PARSER_STATE_CREATE;
+                    if (parser->pending) {
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(vm->interpreted_cur++) = VM_INSTRUCTION_CALL;
+                        if (
+                            vm->interpreted_cur + sizeof(uintptr_t) >=
+                            vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(uint8_t**)vm->interpreted_cur =
+                            (uint8_t*)(parser->pending - 1);
+                        vm->interpreted_cur += sizeof(uintptr_t);
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        parser->pending = 0;
+                    }
                 } else {
                     switch (*addr) {
                     case PARSER_HANDLER_DOT:
@@ -252,6 +276,30 @@ ForthParserStatus parser_parse(
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
                     parser->state ^= PARSER_STATE_CREATE;
+                    if (parser->pending) {
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(vm->interpreted_cur++) = VM_INSTRUCTION_CALL;
+                        if (
+                            vm->interpreted_cur + sizeof(uintptr_t) >=
+                            vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(uint8_t**)vm->interpreted_cur =
+                            (uint8_t*)(parser->pending - 1);
+                        vm->interpreted_cur += sizeof(uintptr_t);
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        parser->pending = 0;
+                    }
                 } else {
                     if (meta == parser->pending) {
                         parser->status = PARSER_STATUS_END;
@@ -307,6 +355,21 @@ ForthParserStatus parser_parse(
                         }
                     }
                     if (*meta & VM_LOOKUP_META_CALL) {
+                        if (*meta & VM_LOOKUP_META_CREATE) {
+                            if (!(parser->state & PARSER_STATE_INTERPRET)) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
+                            }
+                            parser->state |= PARSER_STATE_CREATE;
+                            if (vm->interpreted_cur == vm->interpreted_end) {
+                                parser->status = PARSER_STATUS_END;
+                                return PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            }
+                            *(vm->interpreted_cur++) = VM_INSTRUCTION_DEF;
+                            parser->pending = *addr;
+                            continue;
+                        }
                         if (parser->state & PARSER_STATE_INTERPRET) {
                             if (vm->interpreted_cur == vm->interpreted_end) {
                                 parser->status = PARSER_STATUS_END;
@@ -425,6 +488,30 @@ ForthParserStatus parser_parse(
                 }
                 *(vm->lookup_cur++) = 0;
                 parser->state ^= PARSER_STATE_CREATE;
+                if (parser->pending) {
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(vm->interpreted_cur++) = VM_INSTRUCTION_CALL;
+                        if (
+                            vm->interpreted_cur + sizeof(uintptr_t) >=
+                            vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        *(uint8_t**)vm->interpreted_cur =
+                            (uint8_t*)(parser->pending - 1);
+                        vm->interpreted_cur += sizeof(uintptr_t);
+                        if (vm->interpreted_cur == vm->interpreted_end) {
+                            parser->status = PARSER_STATUS_END;
+                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                            break;
+                        }
+                        parser->pending = 0;
+                    }
             } else {
                 switch (*vm->memory) {
                 case 10:
