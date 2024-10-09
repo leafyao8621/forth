@@ -11,7 +11,12 @@ int parser_handler_variable(ForthParser *parser, ForthVM *vm) {
         }
         *(vm->interpreted_cur++) = VM_INSTRUCTION_DEFA;
     } else {
-        *parser->pending |= VM_LOOKUP_META_MEMORY;
+        *parser->pending |= VM_LOOKUP_META_CREATE;
+        if (vm->compiled_cur == vm->compiled_end) {
+            parser->status = PARSER_STATUS_END;
+            return PARSER_STATUS_COMPILED_OVERFLOW;
+        }
+        *(vm->compiled_cur++) = VM_INSTRUCTION_ALLOCC;
     }
     return PARSER_STATUS_OK;
 }

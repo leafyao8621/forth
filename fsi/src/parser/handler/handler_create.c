@@ -11,7 +11,7 @@ int parser_handler_create(ForthParser *parser, ForthVM *vm) {
         }
         *(vm->interpreted_cur++) = VM_INSTRUCTION_DEF;
     } else {
-        *parser->pending |= VM_LOOKUP_META_MEMORY;
+        *parser->pending |= VM_LOOKUP_META_CREATE;
     }
     return PARSER_STATUS_OK;
 }
