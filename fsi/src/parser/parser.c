@@ -86,6 +86,24 @@ ForthParserStatus parser_parse(
                             ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                             break;
                         }
+                        if (*parser->pending & VM_LOOKUP_META_DOES) {
+                            if (
+                                vm->lookup_cur + sizeof(uintptr_t) >=
+                                vm->lookup_end) {
+                                parser->status = PARSER_STATUS_END;
+                                return PARSER_STATUS_LOOKUP_OVERFLOW;
+                            }
+                            memmove(
+                                addr + 1,
+                                addr,
+                                vm->lookup_cur - (uint8_t*)addr
+                            );
+                            *meta |=
+                                VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
+                            vm->lookup_cur += sizeof(uintptr_t);
+                            next_function(&parser->pending);
+                            *(uint8_t**)(addr + 1) = parser->pending;
+                        }
                         parser->pending = 0;
                     }
                 } else {
@@ -302,6 +320,24 @@ ForthParserStatus parser_parse(
                             ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                             break;
                         }
+                        if (*parser->pending & VM_LOOKUP_META_DOES) {
+                            if (
+                                vm->lookup_cur + sizeof(uintptr_t) >=
+                                vm->lookup_end) {
+                                parser->status = PARSER_STATUS_END;
+                                return PARSER_STATUS_LOOKUP_OVERFLOW;
+                            }
+                            memmove(
+                                addr + 1,
+                                addr,
+                                vm->lookup_cur - (uint8_t*)addr
+                            );
+                            *meta |=
+                                VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
+                            vm->lookup_cur += sizeof(uintptr_t);
+                            next_function(&parser->pending);
+                            *(uint8_t**)(addr + 1) = parser->pending;
+                        }
                         parser->pending = 0;
                     }
                 } else {
@@ -388,8 +424,13 @@ ForthParserStatus parser_parse(
                                 ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
                                 break;
                             }
-                            *(uint8_t**)vm->interpreted_cur =
-                                (uint8_t*)(*addr - 1);
+                            if (*meta & VM_LOOKUP_META_INDIRECT) {
+                                *(uint8_t**)vm->interpreted_cur =
+                                    (uint8_t*)(addr[1] - 1);
+                            } else {
+                                *(uint8_t**)vm->interpreted_cur =
+                                    (uint8_t*)(*addr - 1);
+                            }
                             vm->interpreted_cur += sizeof(uintptr_t);
                             if (vm->interpreted_cur == vm->interpreted_end) {
                                 parser->status = PARSER_STATUS_END;
@@ -411,8 +452,13 @@ ForthParserStatus parser_parse(
                                 ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
-                            *(uint8_t**)vm->compiled_cur =
-                                (uint8_t*)(*addr - 1);
+                            if (*meta & VM_LOOKUP_META_INDIRECT) {
+                                *(uint8_t**)vm->compiled_cur =
+                                    (uint8_t*)(addr[1] - 1);
+                            } else {
+                                *(uint8_t**)vm->compiled_cur =
+                                    (uint8_t*)(*addr - 1);
+                            }
                             vm->compiled_cur += sizeof(uintptr_t);
                             if (vm->compiled_cur == vm->compiled_end) {
                                 parser->status = PARSER_STATUS_END;
@@ -477,6 +523,44 @@ ForthParserStatus parser_parse(
                 *(uint8_t**)vm->interpreted_cur = vm->lookup_cur;
                 vm->interpreted_cur += sizeof(uintptr_t);
                 vm->lookup_cur += sizeof(uintptr_t);
+                parser->state ^= PARSER_STATE_CREATE;
+                if (parser->pending) {
+                    if (vm->interpreted_cur == vm->interpreted_end) {
+                        parser->status = PARSER_STATUS_END;
+                        ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                        break;
+                    }
+                    *(vm->interpreted_cur++) = VM_INSTRUCTION_CALL;
+                    if (
+                        vm->interpreted_cur + sizeof(uintptr_t) >=
+                        vm->interpreted_end) {
+                        parser->status = PARSER_STATUS_END;
+                        ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                        break;
+                    }
+                    *(uint8_t**)vm->interpreted_cur =
+                        (uint8_t*)(parser->pending - 1);
+                    vm->interpreted_cur += sizeof(uintptr_t);
+                    if (vm->interpreted_cur == vm->interpreted_end) {
+                        parser->status = PARSER_STATUS_END;
+                        ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                        break;
+                    }
+                    if (*parser->pending & VM_LOOKUP_META_DOES) {
+                        vm->lookup_cur[-1 - sizeof(uintptr_t)] |=
+                            VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
+                        if (
+                            vm->lookup_cur + sizeof(uintptr_t) >=
+                            vm->lookup_end) {
+                            parser->status = PARSER_STATUS_END;
+                            return PARSER_STATUS_LOOKUP_OVERFLOW;
+                        }
+                        next_function(&parser->pending);
+                        *(uint8_t**)vm->lookup_cur = parser->pending;
+                        vm->lookup_cur += sizeof(uintptr_t);
+                    }
+                    parser->pending = 0;
+                }
                 for (char *iter_buf = parser->buf.data; *iter_buf; ++iter_buf) {
                     if (vm->lookup_cur == vm->lookup_end) {
                         parser->status = PARSER_STATUS_END;
@@ -491,31 +575,6 @@ ForthParserStatus parser_parse(
                     break;
                 }
                 *(vm->lookup_cur++) = 0;
-                parser->state ^= PARSER_STATE_CREATE;
-                if (parser->pending) {
-                        if (vm->interpreted_cur == vm->interpreted_end) {
-                            parser->status = PARSER_STATUS_END;
-                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
-                            break;
-                        }
-                        *(vm->interpreted_cur++) = VM_INSTRUCTION_CALL;
-                        if (
-                            vm->interpreted_cur + sizeof(uintptr_t) >=
-                            vm->interpreted_end) {
-                            parser->status = PARSER_STATUS_END;
-                            ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
-                            break;
-                        }
-                        *(uint8_t**)vm->interpreted_cur =
-                            (uint8_t*)(parser->pending - 1);
-                        vm->interpreted_cur += sizeof(uintptr_t);
-                        if (vm->interpreted_cur == vm->interpreted_end) {
-                            parser->status = PARSER_STATUS_END;
-                            ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
-                            break;
-                        }
-                        parser->pending = 0;
-                    }
             } else {
                 switch (*vm->memory) {
                 case 10:

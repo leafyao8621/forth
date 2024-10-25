@@ -15,5 +15,6 @@ void next_token(ForthParser *parser, bool line, char **str);
 bool lookup_token(ForthVM *vm, char *buf, uint8_t **meta, uintptr_t **addr);
 bool parser_int10(char *buf, uintptr_t *out);
 bool parser_int16(char *buf, uintptr_t *out);
+void next_function(uint8_t **addr);
 
 #endif

@@ -158,11 +158,11 @@ void vm_log(ForthVM *vm) {
         if (*iter & VM_LOOKUP_META_BUILTIN) {
             printf("%s ", "BUILTIN");
         }
-        if (*iter & VM_LOOKUP_META_CALL) {
-            printf("%s ", "CALL");
-        }
         if (*iter & VM_LOOKUP_META_MEMORY) {
             printf("%s ", "MEMORY");
+        }
+        if (*iter & VM_LOOKUP_META_CALL) {
+            printf("%s ", "CALL");
         }
         if (*iter & VM_LOOKUP_META_CREATE) {
             printf("%s ", "CREATE");
@@ -175,9 +175,7 @@ void vm_log(ForthVM *vm) {
         }
         printf("0x%016lX ", *(uintptr_t*)(++iter));
         iter += sizeof(uintptr_t);
-        if (
-            (iter[-1 - sizeof(uintptr_t)] & VM_LOOKUP_META_DOES) ||
-            (iter[-1 - sizeof(uintptr_t)] & VM_LOOKUP_META_INDIRECT)) {
+        if (iter[-1 - sizeof(uintptr_t)] & VM_LOOKUP_META_INDIRECT) {
             printf("0x%016lX ", *(uintptr_t*)iter);
             iter += sizeof(uintptr_t);
         }

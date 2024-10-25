@@ -110,12 +110,25 @@ void next_token(ForthParser *parser, bool line, char **str) {
 bool lookup_token(ForthVM *vm, char *buf, uint8_t **meta, uintptr_t **addr) {
     uint8_t *iter = vm->lookup;
     for (; iter < vm->lookup_cur; ++iter) {
-        if (!strcmp(buf, (const char*)(iter + sizeof(uintptr_t) + 1))) {
-            *meta = iter;
-            *addr = (uintptr_t*)(iter + 1);
-            return true;
+        if (*iter & VM_LOOKUP_META_INDIRECT) {
+            if (
+                !strcmp(
+                    buf,
+                    (const char*)
+                        (iter + sizeof(uintptr_t) + 1 + sizeof(uintptr_t)))) {
+                *meta = iter;
+                *addr = (uintptr_t*)(iter + 1);
+                return true;
+            }
+            iter += sizeof(uintptr_t) + 1 + sizeof(uintptr_t);
+        } else {
+            if (!strcmp(buf, (const char*)(iter + sizeof(uintptr_t) + 1))) {
+                *meta = iter;
+                *addr = (uintptr_t*)(iter + 1);
+                return true;
+            }
+            iter += sizeof(uintptr_t) + 1;
         }
-        iter += sizeof(uintptr_t) + 1;
         for (; *iter && iter < vm->lookup_cur; ++iter);
     }
     return false;
@@ -156,4 +169,20 @@ bool parser_int16(char *buf, uintptr_t *out) {
         }
     }
     return true;
+}
+
+void next_function(uint8_t **addr) {
+    for (; **addr; ++(*addr)) {
+        switch (**addr) {
+        case VM_INSTRUCTION_PUSHD:
+        case VM_INSTRUCTION_PUSHID:
+        case VM_INSTRUCTION_CALL:
+        case VM_INSTRUCTION_JZD:
+        case VM_INSTRUCTION_JNZD:
+        case VM_INSTRUCTION_JMP:
+        case VM_INSTRUCTION_JNEC:
+            *addr += sizeof(uintptr_t);
+        }
+    }
+    ++(*addr);
 }
