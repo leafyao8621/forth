@@ -173,11 +173,13 @@ void vm_log(ForthVM *vm) {
         if (*iter & VM_LOOKUP_META_INDIRECT) {
             printf("%s ", "INDIRECT");
         }
-        printf("0x%016lX ", *(size_t*)(++iter));
-        iter += sizeof(size_t);
-        if (iter[-1 - sizeof(size_t)] & VM_LOOKUP_META_INDIRECT) {
-            printf("0x%016lX ", *(size_t*)iter);
-            iter += sizeof(size_t);
+        printf("0x%016lX ", *(uintptr_t*)(++iter));
+        iter += sizeof(uintptr_t);
+        if (
+            (iter[-1 - sizeof(uintptr_t)] & VM_LOOKUP_META_DOES) ||
+            (iter[-1 - sizeof(uintptr_t)] & VM_LOOKUP_META_INDIRECT)) {
+            printf("0x%016lX ", *(uintptr_t*)iter);
+            iter += sizeof(uintptr_t);
         }
         for (; *iter; ++iter) {
             putchar(*iter);
