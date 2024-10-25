@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 56
+#define BUILTIN_SIZE 57
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -45,6 +45,7 @@ ForthVMStatus vm_initialize(
             "variable",
             "allot",
             "cells",
+            "does>",
             "@",
             "!",
             "c@",
@@ -166,8 +167,18 @@ void vm_log(ForthVM *vm) {
         if (*iter & VM_LOOKUP_META_CREATE) {
             printf("%s ", "CREATE");
         }
+        if (*iter & VM_LOOKUP_META_DOES) {
+            printf("%s ", "DOES");
+        }
+        if (*iter & VM_LOOKUP_META_INDIRECT) {
+            printf("%s ", "INDIRECT");
+        }
         printf("0x%016lX ", *(size_t*)(++iter));
         iter += sizeof(size_t);
+        if (iter[-1 - sizeof(size_t)] & VM_LOOKUP_META_INDIRECT) {
+            printf("0x%016lX ", *(size_t*)iter);
+            iter += sizeof(size_t);
+        }
         for (; *iter; ++iter) {
             putchar(*iter);
         }

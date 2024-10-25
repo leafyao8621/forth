@@ -29,37 +29,38 @@
 #define PARSER_HANDLER_VARIABLE 22
 #define PARSER_HANDLER_ALLOT 23
 #define PARSER_HANDLER_CELLS 24
-#define PARSER_HANDLER_AT 25
-#define PARSER_HANDLER_BANG 26
-#define PARSER_HANDLER_CAT 27
-#define PARSER_HANDLER_CBANG 28
-#define PARSER_HANDLER_COMMA 29
-#define PARSER_HANDLER_CCOMMA 30
-#define PARSER_HANDLER_PLUS 31
-#define PARSER_HANDLER_DASH 32
-#define PARSER_HANDLER_ASTERISK 33
-#define PARSER_HANDLER_SLASH 34
-#define PARSER_HANDLER_MOD 35
-#define PARSER_HANDLER_ONE_PLUS 36
-#define PARSER_HANDLER_ONE_DASH 37
-#define PARSER_HANDLER_TWO_ASTERISK 38
-#define PARSER_HANDLER_TWO_SLASH 39
-#define PARSER_HANDLER_LSFHIFT 40
-#define PARSER_HANDLER_RSFHIFT 41
-#define PARSER_HANDLER_AND 42
-#define PARSER_HANDLER_OR 43
-#define PARSER_HANDLER_XOR 44
-#define PARSER_HANDLER_INVERT 45
-#define PARSER_HANDLER_NEGATE 46
-#define PARSER_HANDLER_GT 47
-#define PARSER_HANDLER_LT 48
-#define PARSER_HANDLER_EQ 49
-#define PARSER_HANDLER_ULT 50
-#define PARSER_HANDLER_ZERO_LT 51
-#define PARSER_HANDLER_ZERO_EQ 52
-#define PARSER_HANDLER_DUP 53
-#define PARSER_HANDLER_DROP 54
-#define PARSER_HANDLER_SWAP 55
+#define PARSER_HANDLER_DOES_GT 25
+#define PARSER_HANDLER_AT 26
+#define PARSER_HANDLER_BANG 27
+#define PARSER_HANDLER_CAT 28
+#define PARSER_HANDLER_CBANG 29
+#define PARSER_HANDLER_COMMA 30
+#define PARSER_HANDLER_CCOMMA 31
+#define PARSER_HANDLER_PLUS 32
+#define PARSER_HANDLER_DASH 33
+#define PARSER_HANDLER_ASTERISK 34
+#define PARSER_HANDLER_SLASH 35
+#define PARSER_HANDLER_MOD 36
+#define PARSER_HANDLER_ONE_PLUS 37
+#define PARSER_HANDLER_ONE_DASH 38
+#define PARSER_HANDLER_TWO_ASTERISK 39
+#define PARSER_HANDLER_TWO_SLASH 40
+#define PARSER_HANDLER_LSFHIFT 41
+#define PARSER_HANDLER_RSFHIFT 42
+#define PARSER_HANDLER_AND 43
+#define PARSER_HANDLER_OR 44
+#define PARSER_HANDLER_XOR 45
+#define PARSER_HANDLER_INVERT 46
+#define PARSER_HANDLER_NEGATE 47
+#define PARSER_HANDLER_GT 48
+#define PARSER_HANDLER_LT 49
+#define PARSER_HANDLER_EQ 50
+#define PARSER_HANDLER_ULT 51
+#define PARSER_HANDLER_ZERO_LT 52
+#define PARSER_HANDLER_ZERO_EQ 53
+#define PARSER_HANDLER_DUP 54
+#define PARSER_HANDLER_DROP 55
+#define PARSER_HANDLER_SWAP 56
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -87,6 +88,7 @@ int parser_handler_create(ForthParser *parser, ForthVM *vm);
 int parser_handler_variable(ForthParser *parser, ForthVM *vm);
 int parser_handler_allot(ForthParser *parser, ForthVM *vm);
 int parser_handler_cells(ForthParser *parser, ForthVM *vm);
+int parser_handler_does_gt(ForthParser *parser, ForthVM *vm);
 int parser_handler_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_at(ForthParser *parser, ForthVM *vm);
 int parser_handler_cat(ForthParser *parser, ForthVM *vm);
