@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include <fsi/util/status.h>
 
 #include "handler.h"
