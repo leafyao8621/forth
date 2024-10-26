@@ -61,7 +61,7 @@ ForthParserStatus parser_parse(
                         ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                         break;
                     }
-                    indirect = meta & VM_LOOKUP_META_INDIRECT;
+                    indirect = *meta & VM_LOOKUP_META_INDIRECT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
@@ -298,7 +298,7 @@ ForthParserStatus parser_parse(
                         ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                         break;
                     }
-                    indirect = meta & VM_LOOKUP_META_INDIRECT;
+                    indirect = *meta & VM_LOOKUP_META_INDIRECT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
