@@ -101,10 +101,10 @@ ForthParserStatus parser_parse(
                                     addr,
                                     vm->lookup_cur - (uint8_t*)addr
                                 );
+                                vm->lookup_cur += sizeof(uintptr_t);
                             }
                             *meta |=
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
-                            vm->lookup_cur += sizeof(uintptr_t);
                             next_function(&parser->pending);
                             *(uint8_t**)(addr + 1) = parser->pending;
                         }
@@ -338,10 +338,10 @@ ForthParserStatus parser_parse(
                                     addr,
                                     vm->lookup_cur - (uint8_t*)addr
                                 );
+                                vm->lookup_cur += sizeof(uintptr_t);
                             }
                             *meta |=
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
-                            vm->lookup_cur += sizeof(uintptr_t);
                             next_function(&parser->pending);
                             *(uint8_t**)(addr + 1) = parser->pending;
                         }
