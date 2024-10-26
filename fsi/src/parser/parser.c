@@ -32,6 +32,7 @@ ForthParserStatus parser_parse(
     uintptr_t *addr = 0;
     uintptr_t num = 0;
     char *iter = str;
+    bool indirect = false;
     parser->status = PARSER_STATUS_RUNNING;
     for (
         next_token(parser, line, &iter);
@@ -60,6 +61,7 @@ ForthParserStatus parser_parse(
                         ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                         break;
                     }
+                    indirect = meta & VM_LOOKUP_META_INDIRECT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
@@ -87,17 +89,19 @@ ForthParserStatus parser_parse(
                             break;
                         }
                         if (*parser->pending & VM_LOOKUP_META_DOES) {
-                            if (
-                                vm->lookup_cur + sizeof(uintptr_t) >=
-                                vm->lookup_end) {
-                                parser->status = PARSER_STATUS_END;
-                                return PARSER_STATUS_LOOKUP_OVERFLOW;
+                            if (!indirect) {
+                                if (
+                                    vm->lookup_cur + sizeof(uintptr_t) >=
+                                    vm->lookup_end) {
+                                    parser->status = PARSER_STATUS_END;
+                                    return PARSER_STATUS_LOOKUP_OVERFLOW;
+                                }
+                                memmove(
+                                    addr + 1,
+                                    addr,
+                                    vm->lookup_cur - (uint8_t*)addr
+                                );
                             }
-                            memmove(
-                                addr + 1,
-                                addr,
-                                vm->lookup_cur - (uint8_t*)addr
-                            );
                             *meta |=
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
                             vm->lookup_cur += sizeof(uintptr_t);
@@ -294,6 +298,7 @@ ForthParserStatus parser_parse(
                         ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                         break;
                     }
+                    indirect = meta & VM_LOOKUP_META_INDIRECT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
@@ -321,17 +326,19 @@ ForthParserStatus parser_parse(
                             break;
                         }
                         if (*parser->pending & VM_LOOKUP_META_DOES) {
-                            if (
-                                vm->lookup_cur + sizeof(uintptr_t) >=
-                                vm->lookup_end) {
-                                parser->status = PARSER_STATUS_END;
-                                return PARSER_STATUS_LOOKUP_OVERFLOW;
+                            if (!indirect) {
+                                if (
+                                    vm->lookup_cur + sizeof(uintptr_t) >=
+                                    vm->lookup_end) {
+                                    parser->status = PARSER_STATUS_END;
+                                    return PARSER_STATUS_LOOKUP_OVERFLOW;
+                                }
+                                memmove(
+                                    addr + 1,
+                                    addr,
+                                    vm->lookup_cur - (uint8_t*)addr
+                                );
                             }
-                            memmove(
-                                addr + 1,
-                                addr,
-                                vm->lookup_cur - (uint8_t*)addr
-                            );
                             *meta |=
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
                             vm->lookup_cur += sizeof(uintptr_t);
