@@ -88,7 +88,7 @@ ForthParserStatus parser_parse(
                             ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                             break;
                         }
-                        if (*parser->pending & VM_LOOKUP_META_DOES) {
+                        if (parser->state & PARSER_STATE_DOES) {
                             if (!indirect) {
                                 if (
                                     vm->lookup_cur + sizeof(uintptr_t) >=
@@ -107,6 +107,7 @@ ForthParserStatus parser_parse(
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
                             next_function(&parser->pending);
                             *(uint8_t**)(addr + 1) = parser->pending;
+                            parser->state ^= PARSER_STATE_DOES;
                         }
                         parser->pending = 0;
                     }
@@ -288,6 +289,16 @@ ForthParserStatus parser_parse(
             } else {
                 if (parser->state & PARSER_STATE_NAME) {
                     parser->pending = meta;
+                    if (*meta & VM_LOOKUP_META_INDIRECT) {
+                        puts("asdf");
+                        memmove(
+                            addr,
+                            addr + 1,
+                            vm->lookup_cur - (uint8_t*)(addr + 1)
+                        );
+                        vm->lookup_cur -= sizeof(uintptr_t);
+                    }
+                    *meta = VM_LOOKUP_META_CALL;
                     *addr = (uintptr_t)vm->compiled_cur;
                     parser->state ^= PARSER_STATE_NAME;
                 } else if (parser->state & PARSER_STATE_CREATE) {
@@ -325,7 +336,7 @@ ForthParserStatus parser_parse(
                             ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                             break;
                         }
-                        if (*parser->pending & VM_LOOKUP_META_DOES) {
+                        if (parser->state & PARSER_STATE_DOES) {
                             if (!indirect) {
                                 if (
                                     vm->lookup_cur + sizeof(uintptr_t) >=
@@ -344,8 +355,27 @@ ForthParserStatus parser_parse(
                                 VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
                             next_function(&parser->pending);
                             *(uint8_t**)(addr + 1) = parser->pending;
+                            parser->state ^= PARSER_STATE_DOES;
+                        } else {
+                            if (indirect) {
+                                memmove(
+                                    addr,
+                                    addr + 1,
+                                    vm->lookup_cur - (uint8_t*)(addr + 1)
+                                );
+                                vm->lookup_cur -= sizeof(uintptr_t);
+                            }
                         }
                         parser->pending = 0;
+                    } else {
+                        if (indirect) {
+                            memmove(
+                                addr,
+                                addr + 1,
+                                vm->lookup_cur - (uint8_t*)(addr + 1)
+                            );
+                            vm->lookup_cur -= sizeof(uintptr_t);
+                        }
                     }
                 } else {
                     if (meta == parser->pending) {
@@ -415,6 +445,9 @@ ForthParserStatus parser_parse(
                             }
                             *(vm->interpreted_cur++) = VM_INSTRUCTION_DEF;
                             parser->pending = (uint8_t*)*addr;
+                            if (*meta & VM_LOOKUP_META_DOES) {
+                                parser->state |= PARSER_STATE_DOES;
+                            }
                             continue;
                         }
                         if (parser->state & PARSER_STATE_INTERPRET) {
@@ -553,7 +586,7 @@ ForthParserStatus parser_parse(
                         ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
                         break;
                     }
-                    if (*parser->pending & VM_LOOKUP_META_DOES) {
+                    if (parser->state & PARSER_STATE_DOES) {
                         vm->lookup_cur[-1 - sizeof(uintptr_t)] |=
                             VM_LOOKUP_META_CALL | VM_LOOKUP_META_INDIRECT;
                         if (
@@ -565,6 +598,7 @@ ForthParserStatus parser_parse(
                         next_function(&parser->pending);
                         *(uint8_t**)vm->lookup_cur = parser->pending;
                         vm->lookup_cur += sizeof(uintptr_t);
+                        parser->state ^= PARSER_STATE_DOES;
                     }
                     parser->pending = 0;
                 }
