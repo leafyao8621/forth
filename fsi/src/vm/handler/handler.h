@@ -36,6 +36,7 @@ int vm_handler_multd(ForthVM *vm);
 int vm_handler_divd(ForthVM *vm);
 int vm_handler_modd(ForthVM *vm);
 int vm_handler_incd(ForthVM *vm);
+int vm_handler_inccd(ForthVM *vm);
 int vm_handler_decd(ForthVM *vm);
 int vm_handler_dubd(ForthVM *vm);
 int vm_handler_halfd(ForthVM *vm);

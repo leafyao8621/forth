@@ -233,26 +233,26 @@ void vm_log(ForthVM *vm) {
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_2PUSHR:
-            printf("%s", "2PUSHC");
+            printf("%s", "2PUSHR");
             break;
         case VM_INSTRUCTION_PEEKR:
-            printf("%s", "PEEKC");
+            printf("%s", "PEEKR");
             break;
         case VM_INSTRUCTION_2RMR:
-            printf("%s", "2RMC");
+            printf("%s", "2RMR");
             break;
         case VM_INSTRUCTION_JNER:
-            printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(iter + 1));
+            printf("%s 0x%016lX", "JNER", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
         case VM_INSTRUCTION_INCR:
-            printf("%s", "INCC");
+            printf("%s", "INCR");
             break;
         case VM_INSTRUCTION_ADDR:
-            printf("%s", "ADDC");
+            printf("%s", "ADDR");
             break;
         case VM_INSTRUCTION_3PEEKR:
-            printf("%s", "3PEEKC");
+            printf("%s", "3PEEKR");
             break;
         case VM_INSTRUCTION_ALLOC:
             printf("%s", "ALLOC");
@@ -298,6 +298,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_INCD:
             printf("%s", "INCD");
+            break;
+        case VM_INSTRUCTION_INCCD:
+            printf("%s", "INCCD");
             break;
         case VM_INSTRUCTION_DECD:
             printf("%s", "DECD");
@@ -440,6 +443,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_INCD:
             printf("%s", "INCD");
             break;
+        case VM_INSTRUCTION_INCCD:
+            printf("%s", "INCCD");
+            break;
         case VM_INSTRUCTION_DECD:
             printf("%s", "DECD");
             break;
@@ -545,25 +551,25 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm->ip + 1));
                 break;
             case VM_INSTRUCTION_2PUSHR:
-                printf("%s", "2PUSHC");
+                printf("%s", "2PUSHR");
                 break;
             case VM_INSTRUCTION_PEEKR:
-                printf("%s", "PEEKC");
+                printf("%s", "PEEKR");
                 break;
             case VM_INSTRUCTION_2RMR:
-                printf("%s", "2RMC");
+                printf("%s", "2RMR");
                 break;
             case VM_INSTRUCTION_JNER:
-                printf("%s 0x%016lX", "JNEC", *(uintptr_t*)(vm->ip + 1));
+                printf("%s 0x%016lX", "JNER", *(uintptr_t*)(vm->ip + 1));
                 break;
             case VM_INSTRUCTION_INCR:
-                printf("%s", "INCC");
+                printf("%s", "INCR");
                 break;
             case VM_INSTRUCTION_ADDR:
-                printf("%s", "ADDC");
+                printf("%s", "ADDR");
                 break;
             case VM_INSTRUCTION_3PEEKR:
-                printf("%s", "3PEEKC");
+                printf("%s", "3PEEKR");
                 break;
             case VM_INSTRUCTION_DEF:
                 printf("%s 0x%016lX", "DEF", *(uintptr_t*)(vm->ip + 1));
@@ -615,6 +621,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_INCD:
                 printf("%s", "INCD");
+                break;
+            case VM_INSTRUCTION_INCCD:
+                printf("%s", "INCCD");
                 break;
             case VM_INSTRUCTION_DECD:
                 printf("%s", "DECD");
@@ -773,11 +782,14 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
         case VM_INSTRUCTION_DIVD:
             ret = vm_handler_divd(vm);
             break;
+        case VM_INSTRUCTION_MODD:
+            ret = vm_handler_modd(vm);
+            break;
         case VM_INSTRUCTION_INCD:
             ret = vm_handler_incd(vm);
             break;
-        case VM_INSTRUCTION_MODD:
-            ret = vm_handler_modd(vm);
+        case VM_INSTRUCTION_INCCD:
+            ret = vm_handler_inccd(vm);
             break;
         case VM_INSTRUCTION_DECD:
             ret = vm_handler_decd(vm);

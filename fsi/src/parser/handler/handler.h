@@ -102,6 +102,7 @@ int parser_handler_asterisk(ForthParser *parser, ForthVM *vm);
 int parser_handler_slash(ForthParser *parser, ForthVM *vm);
 int parser_handler_mod(ForthParser *parser, ForthVM *vm);
 int parser_handler_one_plus(ForthParser *parser, ForthVM *vm);
+int parser_handler_cell_plus(ForthParser *parser, ForthVM *vm);
 int parser_handler_one_dash(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_asterisk(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_slash(ForthParser *parser, ForthVM *vm);

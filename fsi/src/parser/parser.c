@@ -227,6 +227,9 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_ONE_PLUS:
                         ret_int = parser_handler_one_plus(parser, vm);
                         break;
+                    case PARSER_HANDLER_CELL_PLUS:
+                        ret_int = parser_handler_cell_plus(parser, vm);
+                        break;
                     case PARSER_HANDLER_ONE_DASH:
                         ret_int = parser_handler_one_dash(parser, vm);
                         break;
