@@ -180,7 +180,7 @@ void next_function(uint8_t **addr) {
         case VM_INSTRUCTION_JZD:
         case VM_INSTRUCTION_JNZD:
         case VM_INSTRUCTION_JMP:
-        case VM_INSTRUCTION_JNEC:
+        case VM_INSTRUCTION_JNER:
             *addr += sizeof(uintptr_t);
         }
     }

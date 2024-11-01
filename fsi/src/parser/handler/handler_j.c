@@ -11,6 +11,6 @@ int parser_handler_j(ForthParser *parser, ForthVM *vm) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm->compiled_cur++) = VM_INSTRUCTION_3PEEKC;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_3PEEKR;
     return PARSER_STATUS_OK;
 }

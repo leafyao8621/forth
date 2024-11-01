@@ -24,13 +24,13 @@
 #define VM_INSTRUCTION_JZD 7
 #define VM_INSTRUCTION_JNZD 8
 #define VM_INSTRUCTION_JMP 9
-#define VM_INSTRUCTION_2PUSHC 10
-#define VM_INSTRUCTION_PEEKC 11
-#define VM_INSTRUCTION_2RMC 12
-#define VM_INSTRUCTION_JNEC 13
-#define VM_INSTRUCTION_INCC 14
-#define VM_INSTRUCTION_ADDC 15
-#define VM_INSTRUCTION_3PEEKC 16
+#define VM_INSTRUCTION_2PUSHR 10
+#define VM_INSTRUCTION_PEEKR 11
+#define VM_INSTRUCTION_2RMR 12
+#define VM_INSTRUCTION_JNER 13
+#define VM_INSTRUCTION_INCR 14
+#define VM_INSTRUCTION_ADDR 15
+#define VM_INSTRUCTION_3PEEKR 16
 #define VM_INSTRUCTION_DEF 17
 #define VM_INSTRUCTION_DEFA 18
 #define VM_INSTRUCTION_ALLOC 19
@@ -48,25 +48,26 @@
 #define VM_INSTRUCTION_DIVD 31
 #define VM_INSTRUCTION_MODD 32
 #define VM_INSTRUCTION_INCD 33
-#define VM_INSTRUCTION_DECD 34
-#define VM_INSTRUCTION_DUBD 35
-#define VM_INSTRUCTION_HALFD 36
-#define VM_INSTRUCTION_LSLD 37
-#define VM_INSTRUCTION_LSRD 38
-#define VM_INSTRUCTION_ANDD 39
-#define VM_INSTRUCTION_ORD 40
-#define VM_INSTRUCTION_XORD 41
-#define VM_INSTRUCTION_NOTD 42
-#define VM_INSTRUCTION_NEGD 43
-#define VM_INSTRUCTION_GTD 44
-#define VM_INSTRUCTION_LTD 45
-#define VM_INSTRUCTION_EQD 46
-#define VM_INSTRUCTION_ULTD 47
-#define VM_INSTRUCTION_LTZD 48
-#define VM_INSTRUCTION_EQZD 49
-#define VM_INSTRUCTION_DUPD 50
-#define VM_INSTRUCTION_DROPD 51
-#define VM_INSTRUCTION_SWAPD 52
+#define VM_INSTRUCTION_INCCD 34
+#define VM_INSTRUCTION_DECD 35
+#define VM_INSTRUCTION_DUBD 36
+#define VM_INSTRUCTION_HALFD 37
+#define VM_INSTRUCTION_LSLD 38
+#define VM_INSTRUCTION_LSRD 39
+#define VM_INSTRUCTION_ANDD 40
+#define VM_INSTRUCTION_ORD 41
+#define VM_INSTRUCTION_XORD 42
+#define VM_INSTRUCTION_NOTD 43
+#define VM_INSTRUCTION_NEGD 44
+#define VM_INSTRUCTION_GTD 45
+#define VM_INSTRUCTION_LTD 46
+#define VM_INSTRUCTION_EQD 47
+#define VM_INSTRUCTION_ULTD 48
+#define VM_INSTRUCTION_LTZD 49
+#define VM_INSTRUCTION_EQZD 50
+#define VM_INSTRUCTION_DUPD 51
+#define VM_INSTRUCTION_DROPD 52
+#define VM_INSTRUCTION_SWAPD 53
 
 typedef enum ForthVMState {
     VM_STATE_RUNNING,
@@ -87,9 +88,9 @@ typedef struct ForthVM {
     uint8_t *data_stack;
     uint8_t *data_stack_cur;
     uint8_t *data_stack_end;
-    uint8_t *control_stack;
-    uint8_t *control_stack_cur;
-    uint8_t *control_stack_end;
+    uint8_t *return_stack;
+    uint8_t *return_stack_cur;
+    uint8_t *return_stack_end;
     uint8_t *compiled;
     uint8_t *compiled_cur;
     uint8_t *compiled_end;
@@ -107,7 +108,7 @@ ForthVMStatus vm_initialize(
     size_t literal,
     size_t interpreted,
     size_t data_stack,
-    size_t control_stack,
+    size_t return_stack,
     size_t compiled);
 void vm_finalize(ForthVM *vm);
 void vm_log(ForthVM *vm);

@@ -34,12 +34,12 @@ int parser_handler_loop(ForthParser *parser, ForthVM *vm) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm->compiled_cur++) = VM_INSTRUCTION_INCC;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_INCR;
     if (vm->compiled_cur == vm->compiled_end) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm->compiled_cur++) = VM_INSTRUCTION_JNEC;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_JNER;
     *(uint8_t**)(vm->compiled_cur) =
         *(uint8_t**)(parser->loop_stack_cur + 1) - 1;
     if (vm->compiled_cur + sizeof(uintptr_t) > vm->compiled_end) {
@@ -51,6 +51,6 @@ int parser_handler_loop(ForthParser *parser, ForthVM *vm) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm->compiled_cur++) = VM_INSTRUCTION_2RMC;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_2RMR;
     return PARSER_STATUS_OK;
 }

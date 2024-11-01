@@ -11,7 +11,7 @@ int parser_handler_do(ForthParser *parser, ForthVM *vm) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_COMPILED_OVERFLOW;
     }
-    *(vm->compiled_cur++) = VM_INSTRUCTION_2PUSHC;
+    *(vm->compiled_cur++) = VM_INSTRUCTION_2PUSHR;
     if (parser->loop_stack_cur == parser->loop_stack_end) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_OVERFLOW;
