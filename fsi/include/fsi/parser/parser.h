@@ -29,6 +29,9 @@ typedef enum ForthParserInternalStatus {
 #define PARSER_CONTROL_DO_LEAVE 3
 #define PARSER_CONTROL_BEGIN 4
 #define PARSER_CONTROL_WHILE 5
+#define PARSER_CONTROL_CASE 6
+#define PARSER_CONTROL_OF 7
+#define PARSER_CONTROL_ENDOF 8
 
 typedef struct ForthParser {
     String buf;
@@ -38,6 +41,9 @@ typedef struct ForthParser {
     uint8_t conditional_stack[(sizeof(uintptr_t) + 1) * 20];
     uint8_t *conditional_stack_cur;
     uint8_t *conditional_stack_end;
+    uint8_t case_stack[(sizeof(uintptr_t) + 1) * 20];
+    uint8_t *case_stack_cur;
+    uint8_t *case_stack_end;
     uint8_t loop_stack[(sizeof(uintptr_t) + 1) * 20];
     uint8_t *loop_stack_cur;
     uint8_t *loop_stack_end;

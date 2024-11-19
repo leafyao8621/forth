@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 58
+#define BUILTIN_SIZE 62
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -28,6 +28,10 @@ ForthVMStatus vm_initialize(
             "if",
             "then",
             "else",
+            "case",
+            "of",
+            "endof",
+            "endcase",
             "do",
             "loop",
             "+loop",

@@ -14,6 +14,9 @@ ForthParserStatus parser_initialize(ForthParser *parser) {
     parser->conditional_stack_cur = parser->conditional_stack;
     parser->conditional_stack_end =
         parser->conditional_stack + (sizeof(uintptr_t) + 1) * 20;
+    parser->case_stack_cur = parser->case_stack;
+    parser->case_stack_end =
+        parser->case_stack + (sizeof(uintptr_t) + 1) * 20;
     parser->loop_stack_cur = parser->loop_stack;
     parser->loop_stack_end =
         parser->loop_stack + (sizeof(uintptr_t) + 1) * 20;
