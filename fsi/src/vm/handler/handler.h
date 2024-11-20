@@ -12,6 +12,7 @@ int vm_handler_call(ForthVM *vm);
 int vm_handler_jzd(ForthVM *vm);
 int vm_handler_jnzd(ForthVM *vm);
 int vm_handler_jmp(ForthVM *vm);
+int vm_handler_jned(ForthVM *vm);
 int vm_handler_2pushr(ForthVM *vm);
 int vm_handler_peekr(ForthVM *vm);
 int vm_handler_2rmr(ForthVM *vm);

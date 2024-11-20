@@ -1,15 +1,10 @@
-create arr 10 cells allot
-: main
-    arr
-    10 0 do
-        dup i swap !
-        cell+
-    loop
-    drop
-    arr
-    10 0 do
-        dup @ . cr
-        cell+
-    loop
-    drop
+: func
+    case
+        1 of 65 emit cr endof
+        2 of 66 emit cr endof
+        97 emit cr
+    endcase
 ;
+1 func . cr
+2 func . cr
+5 func . cr

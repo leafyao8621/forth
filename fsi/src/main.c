@@ -86,7 +86,11 @@ int main(int argc, char **argv) {
             }
             ret_vm = vm_run(&vm, debug);
             if (ret_vm) {
-                fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret]);
+                fprintf(
+                    stderr,
+                    "Error running\n%s\n",
+                    vm_status_lookup[ret_vm]
+                );
                 DArrayChar_finalize(&buf);
                 vm_finalize(&vm);
                 parser_finalize(&parser);
@@ -140,6 +144,7 @@ int main(int argc, char **argv) {
         ret_vm = vm_run(&vm, debug);
         if (ret_vm) {
             fprintf(stderr, "Error running\n%s\n", vm_status_lookup[ret_vm]);
+            continue;
         }
     }
     DArrayChar_finalize(&buf);

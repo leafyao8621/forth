@@ -140,6 +140,18 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_ELSE:
                         ret_int = parser_handler_else(parser, vm);
                         break;
+                    case PARSER_HANDLER_CASE:
+                        ret_int = parser_handler_case(parser, vm);
+                        break;
+                    case PARSER_HANDLER_OF:
+                        ret_int = parser_handler_of(parser, vm);
+                        break;
+                    case PARSER_HANDLER_ENDOF:
+                        ret_int = parser_handler_endof(parser, vm);
+                        break;
+                    case PARSER_HANDLER_ENDCASE:
+                        ret_int = parser_handler_endcase(parser, vm);
+                        break;
                     case PARSER_HANDLER_DO:
                         ret_int = parser_handler_do(parser, vm);
                         break;

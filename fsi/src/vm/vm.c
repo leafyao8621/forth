@@ -236,6 +236,10 @@ void vm_log(ForthVM *vm) {
             printf("%s 0x%016lX", "JMP", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_JNED:
+            printf("%s 0x%016lX", "JNED", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         case VM_INSTRUCTION_2PUSHR:
             printf("%s", "2PUSHR");
             break;
@@ -554,6 +558,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_JMP:
                 printf("%s 0x%016lX", "JMP", *(uintptr_t*)(vm->ip + 1));
                 break;
+            case VM_INSTRUCTION_JNED:
+                printf("%s 0x%016lX", "JNED", *(uintptr_t*)(vm->ip + 1));
+                break;
             case VM_INSTRUCTION_2PUSHR:
                 printf("%s", "2PUSHR");
                 break;
@@ -719,6 +726,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_JMP:
             ret = vm_handler_jmp(vm);
+            break;
+        case VM_INSTRUCTION_JNED:
+            ret = vm_handler_jned(vm);
             break;
         case VM_INSTRUCTION_2PUSHR:
             ret = vm_handler_2pushr(vm);

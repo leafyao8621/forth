@@ -9,6 +9,7 @@ int parser_handler_semi_colon(ForthParser *parser, ForthVM *vm) {
     }
     if (
         parser->conditional_stack_cur != parser->conditional_stack ||
+        parser->case_stack_cur != parser->case_stack ||
         parser->loop_stack_cur != parser->loop_stack) {
         parser->status = PARSER_STATUS_END;
         return PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH;
