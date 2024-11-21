@@ -302,6 +302,12 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_SWAP:
                         ret_int = parser_handler_swap(parser, vm);
                         break;
+                    case PARSER_HANDLER_OVER:
+                        ret_int = parser_handler_over(parser, vm);
+                        break;
+                    case PARSER_HANDLER_NIP:
+                        ret_int = parser_handler_nip(parser, vm);
+                        break;
                     }
                 }
             } else {

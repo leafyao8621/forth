@@ -66,6 +66,8 @@
 #define PARSER_HANDLER_DUP 59
 #define PARSER_HANDLER_DROP 60
 #define PARSER_HANDLER_SWAP 61
+#define PARSER_HANDLER_OVER 62
+#define PARSER_HANDLER_NIP 63
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -130,5 +132,7 @@ int parser_handler_zero_eq(ForthParser *parser, ForthVM *vm);
 int parser_handler_dup(ForthParser *parser, ForthVM *vm);
 int parser_handler_drop(ForthParser *parser, ForthVM *vm);
 int parser_handler_swap(ForthParser *parser, ForthVM *vm);
+int parser_handler_over(ForthParser *parser, ForthVM *vm);
+int parser_handler_nip(ForthParser *parser, ForthVM *vm);
 
 #endif

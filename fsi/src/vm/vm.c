@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 62
+#define BUILTIN_SIZE 64
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -81,7 +81,9 @@ ForthVMStatus vm_initialize(
             "0=",
             "dup",
             "drop",
-            "swap"
+            "swap",
+            "over",
+            "nip"
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
@@ -367,6 +369,12 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_SWAPD:
             printf("%s", "SWAPD");
             break;
+        case VM_INSTRUCTION_OVERD:
+            printf("%s", "OVERD");
+            break;
+        case VM_INSTRUCTION_NIPD:
+            printf("%s", "NIPD");
+            break;
         }
         putchar(10);
     }
@@ -510,6 +518,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_SWAPD:
             printf("%s", "SWAPD");
+            break;
+        case VM_INSTRUCTION_OVERD:
+            printf("%s", "OVERD");
+            break;
+        case VM_INSTRUCTION_NIPD:
+            printf("%s", "NIPD");
             break;
         }
         putchar(10);
@@ -693,6 +707,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_SWAPD:
                 printf("%s", "SWAPD");
                 break;
+            case VM_INSTRUCTION_OVERD:
+                printf("%s", "OVERD");
+                break;
+            case VM_INSTRUCTION_NIPD:
+                printf("%s", "NIPD");
+                break;
             }
             putchar(10);
         }
@@ -861,6 +881,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_SWAPD:
             ret = vm_handler_swapd(vm);
+            break;
+        case VM_INSTRUCTION_OVERD:
+            ret = vm_handler_overd(vm);
+            break;
+        case VM_INSTRUCTION_NIPD:
+            ret = vm_handler_nipd(vm);
             break;
         }
     }

@@ -57,5 +57,7 @@ int vm_handler_eqzd(ForthVM *vm);
 int vm_handler_dupd(ForthVM *vm);
 int vm_handler_dropd(ForthVM *vm);
 int vm_handler_swapd(ForthVM *vm);
+int vm_handler_overd(ForthVM *vm);
+int vm_handler_nipd(ForthVM *vm);
 
 #endif
