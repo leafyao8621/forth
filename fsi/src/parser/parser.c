@@ -308,6 +308,18 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_NIP:
                         ret_int = parser_handler_nip(parser, vm);
                         break;
+                    case PARSER_HANDLER_TWO_DUP:
+                        ret_int = parser_handler_two_dup(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_DROP:
+                        ret_int = parser_handler_two_drop(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_SWAP:
+                        ret_int = parser_handler_two_swap(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_OVER:
+                        ret_int = parser_handler_two_over(parser, vm);
+                        break;
                     }
                 }
             } else {

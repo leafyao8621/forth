@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 64
+#define BUILTIN_SIZE 68
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -83,7 +83,11 @@ ForthVMStatus vm_initialize(
             "drop",
             "swap",
             "over",
-            "nip"
+            "nip",
+            "2dup",
+            "2drop",
+            "2swap",
+            "2over",
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
@@ -375,6 +379,18 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_NIPD:
             printf("%s", "NIPD");
             break;
+        case VM_INSTRUCTION_2DUPD:
+            printf("%s", "2DUPD");
+            break;
+        case VM_INSTRUCTION_2DROPD:
+            printf("%s", "2DROPD");
+            break;
+        case VM_INSTRUCTION_2SWAPD:
+            printf("%s", "2SWAPD");
+            break;
+        case VM_INSTRUCTION_2OVERD:
+            printf("%s", "2OVERD");
+            break;
         }
         putchar(10);
     }
@@ -524,6 +540,18 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_NIPD:
             printf("%s", "NIPD");
+            break;
+        case VM_INSTRUCTION_2DUPD:
+            printf("%s", "2DUPD");
+            break;
+        case VM_INSTRUCTION_2DROPD:
+            printf("%s", "2DROPD");
+            break;
+        case VM_INSTRUCTION_2SWAPD:
+            printf("%s", "2SWAPD");
+            break;
+        case VM_INSTRUCTION_2OVERD:
+            printf("%s", "2OVERD");
             break;
         }
         putchar(10);
@@ -713,6 +741,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_NIPD:
                 printf("%s", "NIPD");
                 break;
+            case VM_INSTRUCTION_2DUPD:
+                printf("%s", "2DUPD");
+                break;
+            case VM_INSTRUCTION_2DROPD:
+                printf("%s", "2DROPD");
+                break;
+            case VM_INSTRUCTION_2SWAPD:
+                printf("%s", "2SWAPD");
+                break;
+            case VM_INSTRUCTION_2OVERD:
+                printf("%s", "2OVERD");
+                break;
             }
             putchar(10);
         }
@@ -887,6 +927,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_NIPD:
             ret = vm_handler_nipd(vm);
+            break;
+        case VM_INSTRUCTION_2DUPD:
+            ret = vm_handler_2dupd(vm);
+            break;
+        case VM_INSTRUCTION_2DROPD:
+            ret = vm_handler_2dropd(vm);
+            break;
+        case VM_INSTRUCTION_2SWAPD:
+            ret = vm_handler_2swapd(vm);
+            break;
+        case VM_INSTRUCTION_2OVERD:
+            ret = vm_handler_2overd(vm);
             break;
         }
     }
