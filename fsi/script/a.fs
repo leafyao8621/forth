@@ -1,11 +1,11 @@
-1 2 2dup . . . . cr
-1 2 3 4 2drop . . cr
-1 2 3 4 2swap . .  . . cr
-1 2 3 4 2over . . . . . . cr
+create arr 2 cells allot
+
+1 2 arr 2!
+arr 2@ . . cr
+
 : func
-    1 2 2dup . . . . cr
-    1 2 3 4 2drop . . cr
-    1 2 3 4 2swap . . . . cr
-    1 2 3 4 2over . . . . . . cr
+    1 2 arr 2!
+    arr 2@ . . cr
 ;
+
 func

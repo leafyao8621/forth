@@ -218,6 +218,12 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_CBANG:
                         ret_int = parser_handler_cbang(parser, vm);
                         break;
+                    case PARSER_HANDLER_TWO_AT:
+                        ret_int = parser_handler_two_at(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_BANG:
+                        ret_int = parser_handler_two_bang(parser, vm);
+                        break;
                     case PARSER_HANDLER_COMMA:
                         ret_int = parser_handler_comma(parser, vm);
                         break;

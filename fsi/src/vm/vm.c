@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 68
+#define BUILTIN_SIZE 70
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -54,6 +54,8 @@ ForthVMStatus vm_initialize(
             "!",
             "c@",
             "c!",
+            "2@",
+            "2!",
             ",",
             "c,",
             "+",
@@ -289,6 +291,12 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_STCD:
             printf("%s", "STCD");
             break;
+        case VM_INSTRUCTION_2LDD:
+            printf("%s", "2LDD");
+            break;
+        case VM_INSTRUCTION_2STD:
+            printf("%s", "2STD");
+            break;
         case VM_INSTRUCTION_PUSHM:
             printf("%s", "PUSHM");
             break;
@@ -450,6 +458,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_STCD:
             printf("%s", "STCD");
+            break;
+        case VM_INSTRUCTION_2LDD:
+            printf("%s", "2LDD");
+            break;
+        case VM_INSTRUCTION_2STD:
+            printf("%s", "2STD");
             break;
         case VM_INSTRUCTION_PUSHM:
             printf("%s", "PUSHM");
@@ -651,6 +665,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_STCD:
                 printf("%s", "STCD");
                 break;
+            case VM_INSTRUCTION_2LDD:
+                printf("%s", "2LDD");
+                break;
+            case VM_INSTRUCTION_2STD:
+                printf("%s", "2STD");
+                break;
             case VM_INSTRUCTION_PUSHM:
                 printf("%s", "PUSHM");
                 break;
@@ -837,6 +857,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_STCD:
             ret = vm_handler_stcd(vm);
+            break;
+        case VM_INSTRUCTION_2LDD:
+            ret = vm_handler_2ldd(vm);
+            break;
+        case VM_INSTRUCTION_2STD:
+            ret = vm_handler_2std(vm);
             break;
         case VM_INSTRUCTION_PUSHM:
             ret = vm_handler_pushm(vm);

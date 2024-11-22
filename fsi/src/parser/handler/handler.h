@@ -38,40 +38,42 @@
 #define PARSER_HANDLER_BANG 31
 #define PARSER_HANDLER_CAT 32
 #define PARSER_HANDLER_CBANG 33
-#define PARSER_HANDLER_COMMA 34
-#define PARSER_HANDLER_CCOMMA 35
-#define PARSER_HANDLER_PLUS 36
-#define PARSER_HANDLER_DASH 37
-#define PARSER_HANDLER_ASTERISK 38
-#define PARSER_HANDLER_SLASH 39
-#define PARSER_HANDLER_MOD 40
-#define PARSER_HANDLER_ONE_PLUS 41
-#define PARSER_HANDLER_CELL_PLUS 42
-#define PARSER_HANDLER_ONE_DASH 43
-#define PARSER_HANDLER_TWO_ASTERISK 44
-#define PARSER_HANDLER_TWO_SLASH 45
-#define PARSER_HANDLER_LSFHIFT 46
-#define PARSER_HANDLER_RSFHIFT 47
-#define PARSER_HANDLER_AND 48
-#define PARSER_HANDLER_OR 49
-#define PARSER_HANDLER_XOR 50
-#define PARSER_HANDLER_INVERT 51
-#define PARSER_HANDLER_NEGATE 52
-#define PARSER_HANDLER_GT 53
-#define PARSER_HANDLER_LT 54
-#define PARSER_HANDLER_EQ 55
-#define PARSER_HANDLER_ULT 56
-#define PARSER_HANDLER_ZERO_LT 57
-#define PARSER_HANDLER_ZERO_EQ 58
-#define PARSER_HANDLER_DUP 59
-#define PARSER_HANDLER_DROP 60
-#define PARSER_HANDLER_SWAP 61
-#define PARSER_HANDLER_OVER 62
-#define PARSER_HANDLER_NIP 63
-#define PARSER_HANDLER_TWO_DUP 64
-#define PARSER_HANDLER_TWO_DROP 65
-#define PARSER_HANDLER_TWO_SWAP 66
-#define PARSER_HANDLER_TWO_OVER 67
+#define PARSER_HANDLER_TWO_AT 34
+#define PARSER_HANDLER_TWO_BANG 35
+#define PARSER_HANDLER_COMMA 36
+#define PARSER_HANDLER_CCOMMA 37
+#define PARSER_HANDLER_PLUS 38
+#define PARSER_HANDLER_DASH 39
+#define PARSER_HANDLER_ASTERISK 40
+#define PARSER_HANDLER_SLASH 41
+#define PARSER_HANDLER_MOD 42
+#define PARSER_HANDLER_ONE_PLUS 43
+#define PARSER_HANDLER_CELL_PLUS 44
+#define PARSER_HANDLER_ONE_DASH 45
+#define PARSER_HANDLER_TWO_ASTERISK 46
+#define PARSER_HANDLER_TWO_SLASH 47
+#define PARSER_HANDLER_LSFHIFT 48
+#define PARSER_HANDLER_RSFHIFT 49
+#define PARSER_HANDLER_AND 50
+#define PARSER_HANDLER_OR 51
+#define PARSER_HANDLER_XOR 52
+#define PARSER_HANDLER_INVERT 53
+#define PARSER_HANDLER_NEGATE 54
+#define PARSER_HANDLER_GT 55
+#define PARSER_HANDLER_LT 56
+#define PARSER_HANDLER_EQ 57
+#define PARSER_HANDLER_ULT 58
+#define PARSER_HANDLER_ZERO_LT 59
+#define PARSER_HANDLER_ZERO_EQ 60
+#define PARSER_HANDLER_DUP 61
+#define PARSER_HANDLER_DROP 62
+#define PARSER_HANDLER_SWAP 63
+#define PARSER_HANDLER_OVER 64
+#define PARSER_HANDLER_NIP 65
+#define PARSER_HANDLER_TWO_DUP 66
+#define PARSER_HANDLER_TWO_DROP 67
+#define PARSER_HANDLER_TWO_SWAP 68
+#define PARSER_HANDLER_TWO_OVER 69
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -108,6 +110,8 @@ int parser_handler_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_at(ForthParser *parser, ForthVM *vm);
 int parser_handler_cat(ForthParser *parser, ForthVM *vm);
 int parser_handler_cbang(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_at(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_comma(ForthParser *parser, ForthVM *vm);
 int parser_handler_ccomma(ForthParser *parser, ForthVM *vm);
 int parser_handler_plus(ForthParser *parser, ForthVM *vm);

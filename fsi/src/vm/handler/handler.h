@@ -29,6 +29,8 @@ int vm_handler_ldd(ForthVM *vm);
 int vm_handler_std(ForthVM *vm);
 int vm_handler_ldcd(ForthVM *vm);
 int vm_handler_stcd(ForthVM *vm);
+int vm_handler_2ldd(ForthVM *vm);
+int vm_handler_2std(ForthVM *vm);
 int vm_handler_pushm(ForthVM *vm);
 int vm_handler_pushcm(ForthVM *vm);
 int vm_handler_addd(ForthVM *vm);
