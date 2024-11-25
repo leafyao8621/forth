@@ -155,5 +155,6 @@ int parser_handler_two_dup(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_drop(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_swap(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_over(ForthParser *parser, ForthVM *vm);
+int parser_handler_question_dup(ForthParser *parser, ForthVM *vm);
 
 #endif

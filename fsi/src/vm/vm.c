@@ -414,6 +414,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_2OVERD:
             printf("%s", "2OVERD");
             break;
+        case VM_INSTRUCTION_DUPNZD:
+            printf("%s", "DUPNZD");
+            break;
         }
         putchar(10);
     }
@@ -590,6 +593,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_2OVERD:
             printf("%s", "2OVERD");
+            break;
+        case VM_INSTRUCTION_DUPNZD:
+            printf("%s", "DUPNZD");
             break;
         }
         putchar(10);
@@ -806,6 +812,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_2OVERD:
                 printf("%s", "2OVERD");
                 break;
+            case VM_INSTRUCTION_DUPNZD:
+                printf("%s", "DUPNZD");
+                break;
             }
             putchar(10);
         }
@@ -1007,6 +1016,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_2OVERD:
             ret = vm_handler_2overd(vm);
+            break;
+        case VM_INSTRUCTION_DUPNZD:
+            ret = vm_handler_dupnzd(vm);
             break;
         }
     }
