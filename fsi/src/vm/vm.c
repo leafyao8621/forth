@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 70
+#define BUILTIN_SIZE 76
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -56,6 +56,7 @@ ForthVMStatus vm_initialize(
             "c!",
             "2@",
             "2!",
+            "+!",
             ",",
             "c,",
             "+",
@@ -81,6 +82,8 @@ ForthVMStatus vm_initialize(
             "u<",
             "0<",
             "0=",
+            "min",
+            "max",
             "dup",
             "drop",
             "swap",
@@ -90,6 +93,9 @@ ForthVMStatus vm_initialize(
             "2drop",
             "2swap",
             "2over",
+            "?dup",
+            "rot",
+            "pick"
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
@@ -297,6 +303,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_2STD:
             printf("%s", "2STD");
             break;
+        case VM_INSTRUCTION_INCMD:
+            printf("%s", "INCMD");
+            break;
         case VM_INSTRUCTION_PUSHM:
             printf("%s", "PUSHM");
             break;
@@ -371,6 +380,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_EQZD:
             printf("%s", "EQZD");
+            break;
+        case VM_INSTRUCTION_MIND:
+            printf("%s", "MIND");
+            break;
+        case VM_INSTRUCTION_MAXD:
+            printf("%s", "MAXD");
             break;
         case VM_INSTRUCTION_DUPD:
             printf("%s", "DUPD");
@@ -465,6 +480,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_2STD:
             printf("%s", "2STD");
             break;
+        case VM_INSTRUCTION_INCMD:
+            printf("%s", "INCMD");
+            break;
         case VM_INSTRUCTION_PUSHM:
             printf("%s", "PUSHM");
             break;
@@ -539,6 +557,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_EQZD:
             printf("%s", "EQZD");
+            break;
+        case VM_INSTRUCTION_MIND:
+            printf("%s", "MIND");
+            break;
+        case VM_INSTRUCTION_MAXD:
+            printf("%s", "MAXD");
             break;
         case VM_INSTRUCTION_DUPD:
             printf("%s", "DUPD");
@@ -671,6 +695,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_2STD:
                 printf("%s", "2STD");
                 break;
+            case VM_INSTRUCTION_INCMD:
+                printf("%s", "INCMD");
+                break;
             case VM_INSTRUCTION_PUSHM:
                 printf("%s", "PUSHM");
                 break;
@@ -745,6 +772,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_EQZD:
                 printf("%s", "EQZD");
+                break;
+            case VM_INSTRUCTION_MIND:
+                printf("%s", "MIND");
+                break;
+            case VM_INSTRUCTION_MAXD:
+                printf("%s", "MAXD");
                 break;
             case VM_INSTRUCTION_DUPD:
                 printf("%s", "DUPD");
@@ -864,6 +897,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
         case VM_INSTRUCTION_2STD:
             ret = vm_handler_2std(vm);
             break;
+        case VM_INSTRUCTION_INCMD:
+            ret = vm_handler_incmd(vm);
+            break;
         case VM_INSTRUCTION_PUSHM:
             ret = vm_handler_pushm(vm);
             break;
@@ -938,6 +974,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_EQZD:
             ret = vm_handler_eqzd(vm);
+            break;
+        case VM_INSTRUCTION_MIND:
+            ret = vm_handler_mind(vm);
+            break;
+        case VM_INSTRUCTION_MAXD:
+            ret = vm_handler_maxd(vm);
             break;
         case VM_INSTRUCTION_DUPD:
             ret = vm_handler_dupd(vm);

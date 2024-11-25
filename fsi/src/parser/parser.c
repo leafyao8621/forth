@@ -224,6 +224,9 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_TWO_BANG:
                         ret_int = parser_handler_two_bang(parser, vm);
                         break;
+                    case PARSER_HANDLER_PLUS_BANG:
+                        ret_int = parser_handler_plus_bang(parser, vm);
+                        break;
                     case PARSER_HANDLER_COMMA:
                         ret_int = parser_handler_comma(parser, vm);
                         break;
@@ -298,6 +301,12 @@ ForthParserStatus parser_parse(
                         break;
                     case PARSER_HANDLER_ZERO_EQ:
                         ret_int = parser_handler_zero_eq(parser, vm);
+                        break;
+                    case PARSER_HANDLER_MIN:
+                        ret_int = parser_handler_min(parser, vm);
+                        break;
+                    case PARSER_HANDLER_MAX:
+                        ret_int = parser_handler_max(parser, vm);
                         break;
                     case PARSER_HANDLER_DUP:
                         ret_int = parser_handler_dup(parser, vm);
