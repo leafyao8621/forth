@@ -420,6 +420,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_ROTD:
             printf("%s", "ROTD");
             break;
+        case VM_INSTRUCTION_PICKD:
+            printf("%s", "PICKD");
+            break;
         }
         putchar(10);
     }
@@ -602,6 +605,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_ROTD:
             printf("%s", "ROTD");
+            break;
+        case VM_INSTRUCTION_PICKD:
+            printf("%s", "PICKD");
             break;
         }
         putchar(10);
@@ -824,6 +830,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_ROTD:
                 printf("%s", "ROTD");
                 break;
+            case VM_INSTRUCTION_PICKD:
+                printf("%s", "PICKD");
+                break;
             }
             putchar(10);
         }
@@ -1031,6 +1040,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_ROTD:
             ret = vm_handler_rotd(vm);
+            break;
+        case VM_INSTRUCTION_PICKD:
+            ret = vm_handler_pickd(vm);
             break;
         }
     }
