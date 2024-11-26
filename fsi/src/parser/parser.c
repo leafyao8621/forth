@@ -338,6 +338,9 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_QUESTION_DUP:
                         ret_int = parser_handler_question_dup(parser, vm);
                         break;
+                    case PARSER_HANDLER_ROT:
+                        ret_int = parser_handler_rot(parser, vm);
+                        break;
                     }
                 }
             } else {

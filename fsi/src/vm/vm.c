@@ -417,6 +417,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_DUPNZD:
             printf("%s", "DUPNZD");
             break;
+        case VM_INSTRUCTION_ROTD:
+            printf("%s", "ROTD");
+            break;
         }
         putchar(10);
     }
@@ -596,6 +599,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_DUPNZD:
             printf("%s", "DUPNZD");
+            break;
+        case VM_INSTRUCTION_ROTD:
+            printf("%s", "ROTD");
             break;
         }
         putchar(10);
@@ -815,6 +821,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_DUPNZD:
                 printf("%s", "DUPNZD");
                 break;
+            case VM_INSTRUCTION_ROTD:
+                printf("%s", "ROTD");
+                break;
             }
             putchar(10);
         }
@@ -1019,6 +1028,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_DUPNZD:
             ret = vm_handler_dupnzd(vm);
+            break;
+        case VM_INSTRUCTION_ROTD:
+            ret = vm_handler_rotd(vm);
             break;
         }
     }
