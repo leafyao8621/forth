@@ -1,20 +1,9 @@
-1 2 3
-0 pick .
-1 pick .
-2 pick .
-cr drop drop drop
-
+: spc 0 do space loop ;
+1 . 5 spc 2 . cr
+1 . 5 spaces 2 . cr
 : func
-    4 1 do
-        i
-    loop
-    3 0 do
-        i pick .
-    loop
-    cr
-    3 0 do
-        drop
-    loop
+    1 . 5 spc 2 . cr
+    1 . 5 spaces 2 . cr
 ;
 
 func

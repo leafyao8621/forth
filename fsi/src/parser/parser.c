@@ -125,6 +125,15 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_CR:
                         ret_int = parser_handler_cr(parser, vm);
                         break;
+                    case PARSER_HANDLER_BL:
+                        ret_int = parser_handler_bl(parser, vm);
+                        break;
+                    case PARSER_HANDLER_SPACE:
+                        ret_int = parser_handler_space(parser, vm);
+                        break;
+                    case PARSER_HANDLER_SPACES:
+                        ret_int = parser_handler_spaces(parser, vm);
+                        break;
                     case PARSER_HANDLER_COLON:
                         ret_int = parser_handler_colon(parser);
                         break;
