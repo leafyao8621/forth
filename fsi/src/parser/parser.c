@@ -353,6 +353,9 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_PICK:
                         ret_int = parser_handler_pick(parser, vm);
                         break;
+                    case PARSER_HANDLER_DEPTH:
+                        ret_int = parser_handler_depth(parser, vm);
+                        break;
                     }
                 }
             } else {

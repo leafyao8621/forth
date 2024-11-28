@@ -71,5 +71,6 @@ int vm_handler_2overd(ForthVM *vm);
 int vm_handler_dupnzd(ForthVM *vm);
 int vm_handler_rotd(ForthVM *vm);
 int vm_handler_pickd(ForthVM *vm);
+int vm_handler_pushdd(ForthVM *vm);
 
 #endif

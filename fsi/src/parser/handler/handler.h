@@ -83,6 +83,7 @@
 #define PARSER_HANDLER_QUESTION_DUP 76
 #define PARSER_HANDLER_ROT 77
 #define PARSER_HANDLER_PICK 78
+#define PARSER_HANDLER_DEPTH 79
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -164,5 +165,6 @@ int parser_handler_two_over(ForthParser *parser, ForthVM *vm);
 int parser_handler_question_dup(ForthParser *parser, ForthVM *vm);
 int parser_handler_rot(ForthParser *parser, ForthVM *vm);
 int parser_handler_pick(ForthParser *parser, ForthVM *vm);
+int parser_handler_depth(ForthParser *parser, ForthVM *vm);
 
 #endif
