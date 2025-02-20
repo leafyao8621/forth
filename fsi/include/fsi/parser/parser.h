@@ -15,6 +15,7 @@
 #define PARSER_STATE_NAME 0x4
 #define PARSER_STATE_CREATE 0x8
 #define PARSER_STATE_DOES 0x10
+#define PARSER_STATE_CHAR 0x20
 
 typedef enum ForthParserInternalStatus {
     PARSER_STATUS_RUNNING,
