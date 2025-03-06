@@ -84,7 +84,11 @@
 #define PARSER_HANDLER_ROT 77
 #define PARSER_HANDLER_PICK 78
 #define PARSER_HANDLER_DEPTH 79
-#define PARSER_HANDLER_CHAR 80
+#define PARSER_HANDLER_GTR 80
+#define PARSER_HANDLER_RGT 81
+#define PARSER_HANDLER_TWO_GTR 82
+#define PARSER_HANDLER_TWO_RGT 83
+#define PARSER_HANDLER_CHAR 84
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
