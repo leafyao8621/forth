@@ -171,6 +171,10 @@ int parser_handler_question_dup(ForthParser *parser, ForthVM *vm);
 int parser_handler_rot(ForthParser *parser, ForthVM *vm);
 int parser_handler_pick(ForthParser *parser, ForthVM *vm);
 int parser_handler_depth(ForthParser *parser, ForthVM *vm);
+int parser_handler_gtr(ForthParser *parser, ForthVM *vm);
+int parser_handler_rgt(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_gtr(ForthParser *parser, ForthVM *vm);
+int parser_handler_two_rgt(ForthParser *parser, ForthVM *vm);
 int parser_handler_char(ForthParser *parser);
 
 #endif
