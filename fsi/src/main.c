@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
         if (ret_parser == PARSER_STATUS_END_REPL) {
             break;
         }
-        if (ret) {
+        if (ret_parser) {
             fprintf(
                 stderr,
                 "Error parsing\n%s\n",
