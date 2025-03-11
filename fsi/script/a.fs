@@ -1,14 +1,13 @@
 create arr char A c, char T c, char G c, char C c,
 
-: main
+: one
     0 do
-        3
-        16 0 do
-            dup j and i 2* rshift arr + c@ emit
-            2 lshift
-        loop
-        drop
-        cr
+        r> dup . cr >r
     loop
 ;
 
+: two
+    0 do
+        2r> 2dup . space . cr 2>r
+    loop
+;

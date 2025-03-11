@@ -435,6 +435,15 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_PUSHDD:
             printf("%s", "PUSHDD");
             break;
+        case VM_INSTRUCTION_PUSHR:
+            printf("%s", "PUSHR");
+            break;
+        case VM_INSTRUCTION_POPR:
+            printf("%s", "POPR");
+            break;
+        case VM_INSTRUCTION_2POPR:
+            printf("%s", "2POPR");
+            break;
         }
         putchar(10);
     }
@@ -623,6 +632,15 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_PUSHDD:
             printf("%s", "PUSHDD");
+            break;
+        case VM_INSTRUCTION_PUSHR:
+            printf("%s", "PUSHR");
+            break;
+        case VM_INSTRUCTION_POPR:
+            printf("%s", "POPR");
+            break;
+        case VM_INSTRUCTION_2POPR:
+            printf("%s", "2POPR");
             break;
         }
         putchar(10);
@@ -851,6 +869,15 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_PUSHDD:
                 printf("%s", "PUSHDD");
                 break;
+            case VM_INSTRUCTION_PUSHR:
+                printf("%s", "PUSHR");
+                break;
+            case VM_INSTRUCTION_POPR:
+                printf("%s", "POPR");
+                break;
+            case VM_INSTRUCTION_2POPR:
+                printf("%s", "2POPR");
+                break;
             }
             putchar(10);
         }
@@ -1064,6 +1091,15 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_PUSHDD:
             ret = vm_handler_pushdd(vm);
+            break;
+        case VM_INSTRUCTION_PUSHR:
+            ret = vm_handler_pushr(vm);
+            break;
+        case VM_INSTRUCTION_POPR:
+            ret = vm_handler_popr(vm);
+            break;
+        case VM_INSTRUCTION_2POPR:
+            ret = vm_handler_2popr(vm);
             break;
         }
     }

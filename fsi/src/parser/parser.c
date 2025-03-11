@@ -393,6 +393,18 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_DEPTH:
                         ret_int = parser_handler_depth(parser, vm);
                         break;
+                    case PARSER_HANDLER_GTR:
+                        ret_int = parser_handler_gtr(parser, vm);
+                        break;
+                    case PARSER_HANDLER_RGT:
+                        ret_int = parser_handler_rgt(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_GTR:
+                        ret_int = parser_handler_two_gtr(parser, vm);
+                        break;
+                    case PARSER_HANDLER_TWO_RGT:
+                        ret_int = parser_handler_two_rgt(parser, vm);
+                        break;
                     case PARSER_HANDLER_CHAR:
                         ret_int = parser_handler_char(parser);
                         break;
