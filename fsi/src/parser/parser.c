@@ -408,6 +408,11 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_CHAR:
                         ret_int = parser_handler_char(parser);
                         break;
+                    case PARSER_HANDLER_CHAR_PLUS:
+                        ret_int = parser_handler_char_plus(parser, vm);
+                        break;
+                    case PARSER_HANDLER_CHARS:
+                        break;
                     }
                 }
             } else {
