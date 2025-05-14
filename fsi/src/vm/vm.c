@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 87
+#define BUILTIN_SIZE 88
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -106,7 +106,8 @@ ForthVMStatus vm_initialize(
             "2r>",
             "char",
             "char+",
-            "chars"
+            "chars",
+            "type"
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {

@@ -91,6 +91,7 @@
 #define PARSER_HANDLER_CHAR 84
 #define PARSER_HANDLER_CHAR_PLUS 85
 #define PARSER_HANDLER_CHARS 86
+#define PARSER_HANDLER_TYPE 87
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -179,5 +180,6 @@ int parser_handler_two_gtr(ForthParser *parser, ForthVM *vm);
 int parser_handler_two_rgt(ForthParser *parser, ForthVM *vm);
 int parser_handler_char(ForthParser *parser);
 int parser_handler_char_plus(ForthParser *parser, ForthVM *vm);
+int parser_handler_type(ForthParser *parser, ForthVM *vm);
 
 #endif

@@ -1,2 +1,6 @@
-2 chars . cr
-1 char+ . cr
+create str char A c, char b c, char C c,
+
+: main str 3 type cr ;
+
+str 3 type cr
+main
