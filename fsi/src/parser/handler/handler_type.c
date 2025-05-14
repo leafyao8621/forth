@@ -3,8 +3,8 @@
 #include "handler.h"
 
 int parser_handler_type(ForthParser *parser, ForthVM *vm) {
-    // : type 0 dup c@ emit 1+ loop drop ;
-    // PUSHD 0 DUPD LDCD EMIT INCD INCR JNER (CUR - 7) 2RMR
+    // : type 0 do dup c@ emit 1+ loop drop ;
+    // PUSHD 0 2PUSHR DUPD LDCD EMIT INCD INCR JNER (CUR - 7) 2RMR
     // PUSHD
     if (
         (parser->state & PARSER_STATE_INTERPRET) &&
