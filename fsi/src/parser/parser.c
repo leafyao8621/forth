@@ -416,6 +416,10 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_TYPE:
                         ret_int = parser_handler_type(parser, vm);
                         break;
+                    case PARSER_HANDLER_S_DOUBLE_QUOTE:
+                        ret_int =
+                            parser_handler_s_double_quote(parser, &iter, vm);
+                        break;
                     }
                 }
             } else {

@@ -4,7 +4,7 @@
 
 int parser_handler_type(ForthParser *parser, ForthVM *vm) {
     // : type 0 do dup c@ emit 1+ loop drop ;
-    // PUSHD 0 2PUSHR DUPD LDCD EMIT INCD INCR JNER (CUR - 7) 2RMR
+    // PUSHD 0 2PUSHR DUPD LDCD EMIT INCD INCR JNER (CUR - 7) 2RMR DROPD
     // PUSHD
     if (
         (parser->state & PARSER_STATE_INTERPRET) &&
@@ -227,6 +227,26 @@ int parser_handler_type(ForthParser *parser, ForthVM *vm) {
     }
     if (parser->state & PARSER_STATE_COMPILE) {
         *(vm->compiled_cur++) = VM_INSTRUCTION_2RMR;
+    }
+
+    // DROPD
+    if (
+        (parser->state & PARSER_STATE_INTERPRET) &&
+        (vm->interpreted_cur == vm->interpreted_end)) {
+        parser->status = PARSER_STATUS_END;
+        return PARSER_STATUS_INTERPRETED_OVERFLOW;
+    }
+    if (parser->state & PARSER_STATE_INTERPRET) {
+        *(vm->interpreted_cur++) = VM_INSTRUCTION_DROPD;
+    }
+    if (
+        (parser->state & PARSER_STATE_COMPILE) &&
+        (vm->compiled_cur == vm->compiled_end)) {
+        parser->status = PARSER_STATUS_END;
+        return PARSER_STATUS_COMPILED_OVERFLOW;
+    }
+    if (parser->state & PARSER_STATE_COMPILE) {
+        *(vm->compiled_cur++) = VM_INSTRUCTION_DROPD;
     }
     return PARSER_STATUS_OK;
 }
