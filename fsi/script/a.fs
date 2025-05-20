@@ -1,1 +1,1 @@
-: main s" Foo" type cr ;
+: main ." Foo" cr ;

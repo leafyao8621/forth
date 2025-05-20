@@ -93,6 +93,7 @@
 #define PARSER_HANDLER_CHARS 86
 #define PARSER_HANDLER_TYPE 87
 #define PARSER_HANDLER_S_DOUBLE_QUOTE 88
+#define PARSER_HANDLER_DOT_DOUBLE_QUOTE 89
 
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
@@ -183,6 +184,8 @@ int parser_handler_char(ForthParser *parser);
 int parser_handler_char_plus(ForthParser *parser, ForthVM *vm);
 int parser_handler_type(ForthParser *parser, ForthVM *vm);
 int parser_handler_s_double_quote(
+    ForthParser *parser, char **iter, ForthVM *vm);
+int parser_handler_dot_double_quote(
     ForthParser *parser, char **iter, ForthVM *vm);
 
 #endif
