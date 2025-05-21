@@ -19,7 +19,8 @@ typedef enum ForthParserStatus {
     PARSER_STATUS_PARSER_CONTROL_STACK_UNDERFLOW,
     PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH,
     PARSER_STATUS_INCOMPLETE_STRING,
-    PARSER_STATUS_LITERAL_OVERFLOW
+    PARSER_STATUS_LITERAL_OVERFLOW,
+    PARSER_STATUS_COUNTED_STRING_OVERFLOW
 } ForthParserStatus;
 
 typedef enum ForthVMStatus {
@@ -36,7 +37,7 @@ typedef enum ForthVMStatus {
 } ForthVMStatus;
 
 
-extern const char *parser_status_lookup[16];
+extern const char *parser_status_lookup[19];
 extern const char *vm_status_lookup[10];
 
 #endif

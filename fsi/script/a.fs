@@ -1,1 +1,1 @@
-: main ." Foo" cr ;
+: main c" Foo" count type ;
