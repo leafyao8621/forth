@@ -246,6 +246,9 @@ ForthParserStatus parser_parse(
                     case PARSER_HANDLER_ALLOT:
                         ret_int = parser_handler_allot(parser, vm);
                         break;
+                    case PARSER_HANDLER_FILL:
+                        ret_int = parser_handler_fill(parser, vm);
+                        break;
                     case PARSER_HANDLER_CELLS:
                         ret_int = parser_handler_cells(parser, vm);
                         break;

@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 92
+#define BUILTIN_SIZE 93
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -51,6 +51,7 @@ ForthVMStatus vm_initialize(
             "create",
             "variable",
             "allot",
+            "fill",
             "cells",
             "does>",
             "@",
@@ -490,6 +491,19 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_CALL:
             printf("%s 0x%016lX", "CALL", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_2PUSHR:
+            printf("%s", "2PUSHR");
+            break;
+        case VM_INSTRUCTION_2RMR:
+            printf("%s", "2RMR");
+            break;
+        case VM_INSTRUCTION_JNER:
+            printf("%s 0x%016lX", "JNER", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_INCR:
+            printf("%s", "INCR");
             break;
         case VM_INSTRUCTION_DEF:
             printf("%s 0x%016lX", "DEF", *(uintptr_t*)(iter + 1));
