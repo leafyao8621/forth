@@ -16,6 +16,7 @@ ForthVMStatus vm_initialize(
     size_t literal,
     size_t interpreted,
     size_t data_stack,
+    size_t float_stack,
     size_t return_stack,
     size_t compiled) {
     static const char *builtin[BUILTIN_SIZE] =
@@ -140,7 +141,10 @@ ForthVMStatus vm_initialize(
     vm->data_stack = vm->interpreted_end;
     vm->data_stack_cur = vm->data_stack;
     vm->data_stack_end = vm->data_stack + data_stack;
-    vm->return_stack = vm->data_stack_end;
+    vm->float_stack = vm->data_stack_end;
+    vm->float_stack_cur = vm->float_stack;
+    vm->float_stack_end = vm->float_stack + float_stack;
+    vm->return_stack = vm->float_stack_end;
     vm->return_stack_cur = vm->return_stack;
     vm->return_stack_end = vm->return_stack + return_stack;
     vm->compiled = vm->return_stack_end;
@@ -174,7 +178,7 @@ ForthVMStatus vm_initialize(
             **(uintptr_t**)vm->memory_cur = *iter_memory_value;
         }
         vm->lookup_cur += sizeof(size_t);
-        *vm->memory_cur += sizeof(size_t);
+        *(uint8_t**)vm->memory_cur += sizeof(size_t);
         for (iter_str = *iter_memory; *iter_str; ++iter_str, ++vm->lookup_cur) {
             *vm->lookup_cur = *iter_str;
         }

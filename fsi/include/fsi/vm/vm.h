@@ -13,6 +13,7 @@
 #define VM_LOOKUP_META_CREATE 0x8
 #define VM_LOOKUP_META_DOES 0x10
 #define VM_LOOKUP_META_INDIRECT 0x20
+#define VM_LOOKUP_META_CALLEXT 0x40
 
 #define VM_INSTRUCTION_HALT 0
 #define VM_INSTRUCTION_RET 1
@@ -107,6 +108,9 @@ typedef struct ForthVM {
     uint8_t *data_stack;
     uint8_t *data_stack_cur;
     uint8_t *data_stack_end;
+    uint8_t *float_stack;
+    uint8_t *float_stack_cur;
+    uint8_t *float_stack_end;
     uint8_t *return_stack;
     uint8_t *return_stack_cur;
     uint8_t *return_stack_end;
@@ -127,6 +131,7 @@ ForthVMStatus vm_initialize(
     size_t literal,
     size_t interpreted,
     size_t data_stack,
+    size_t float_stack,
     size_t return_stack,
     size_t compiled);
 void vm_finalize(ForthVM *vm);

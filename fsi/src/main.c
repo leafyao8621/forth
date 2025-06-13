@@ -12,7 +12,8 @@ int main(int argc, char **argv) {
     size_t literal = 2000;
     size_t interpreted = 2000;
     size_t data_stack = 2000;
-    size_t control_stack = 2000;
+    size_t float_stack = 2000;
+    size_t return_stack = 2000;
     size_t compiled = 2000;
     ForthVM vm;
     ForthParser parser;
@@ -48,8 +49,10 @@ int main(int argc, char **argv) {
                 literal,
                 interpreted,
                 data_stack,
-                control_stack,
-                compiled);
+                float_stack,
+                return_stack,
+                compiled
+            );
         for (; i < argc; ++i) {
             vm_reset(&vm);
             fin = fopen(argv[i], "r");
@@ -106,8 +109,10 @@ int main(int argc, char **argv) {
                 literal,
                 interpreted,
                 data_stack,
-                control_stack,
-                compiled);
+                float_stack,
+                return_stack,
+                compiled
+            );
     }
     if (script) {
         return 0;
