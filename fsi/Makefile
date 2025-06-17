@@ -9,10 +9,10 @@ BIN = fsi
 	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
-	$(CC) -fPIC $(OBJ) -o $(LIB) -lcontainers -shared
+	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared
 
 $(BIN): $(LIB)
-	$(CC) -g src/main.c -o $(BIN) -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
+	$(CC) -g src/main.c -o $(BIN) -lm -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
 
 .PHONY: clean valgrind
 clean:

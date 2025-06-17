@@ -3,10 +3,13 @@
 
 #include <fsi/vm/vm.h>
 #include <fsi/util/status.h>
+
 #include "handler/handler.h"
+#include "ext/ext.h"
 
 
 #define BUILTIN_SIZE 98
+#define BUILTIN_CALLEXT_SIZE 1
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -121,6 +124,14 @@ ForthVMStatus vm_initialize(
             "f!",
             "floats"
         };
+    static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
+        {
+            "fabs"
+        };
+    static const Ext builtin_callext_value[BUILTIN_CALLEXT_SIZE] =
+        {
+            vm_ext_fabs
+        };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
             "base",
@@ -165,6 +176,8 @@ ForthVMStatus vm_initialize(
     vm->memory_end = vm->mem + memory;
     const char **iter_builtin = builtin;
     const char *iter_str = 0;
+    const char **iter_builtin_callext_symbol = builtin_callext_symbol;
+    const Ext *iter_builtin_callext_value = builtin_callext_value;
     const char **iter_memory = memory_symbol;
     const uintptr_t *iter_memory_value = memory_value;
     for (size_t i = 0; i < BUILTIN_SIZE; ++i, ++iter_builtin) {
@@ -173,6 +186,21 @@ ForthVMStatus vm_initialize(
         vm->lookup_cur += sizeof(size_t);
         for (
             iter_str = *iter_builtin; *iter_str; ++iter_str, ++vm->lookup_cur) {
+            *vm->lookup_cur = *iter_str;
+        }
+        *(vm->lookup_cur++) = 0;
+    }
+    for (
+        size_t i = 0;
+        i < BUILTIN_CALLEXT_SIZE;
+        ++i, ++iter_builtin_callext_symbol, ++iter_builtin_callext_value) {
+        *(vm->lookup_cur++) = VM_LOOKUP_META_BUILTIN | VM_LOOKUP_META_CALLEXT;
+        *(Ext*)(vm->lookup_cur) = *iter_builtin_callext_value;
+        vm->lookup_cur += sizeof(size_t);
+        for (
+            iter_str = *iter_builtin_callext_symbol;
+            *iter_str;
+            ++iter_str, ++vm->lookup_cur) {
             *vm->lookup_cur = *iter_str;
         }
         *(vm->lookup_cur++) = 0;
@@ -492,6 +520,10 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_MULTFSD:
             printf("%s", "MULTFSD");
             break;
+        case VM_INSTRUCTION_CALLEXT:
+            printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
+            break;
         }
         putchar(10);
     }
@@ -717,6 +749,10 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_MULTFSD:
             printf("%s", "MULTFSD");
+            break;
+        case VM_INSTRUCTION_CALLEXT:
+            printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
+            iter += sizeof(uintptr_t);
             break;
         }
         putchar(10);
@@ -969,6 +1005,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_MULTFSD:
                 printf("%s", "MULTFSD");
                 break;
+            case VM_INSTRUCTION_CALLEXT:
+                printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(vm->ip + 1));
+                break;
             }
             putchar(10);
         }
@@ -1206,6 +1245,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_MULTFSD:
             ret = vm_handler_multfsd(vm);
+            break;
+        case VM_INSTRUCTION_CALLEXT:
+            ret = vm_handler_callext(vm);
             break;
         }
     }

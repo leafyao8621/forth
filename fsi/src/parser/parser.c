@@ -153,7 +153,41 @@ ForthParserStatus parser_parse(
                     parser->state ^= PARSER_STATE_CHAR;
                 } else {
                     if (*meta & VM_LOOKUP_META_CALLEXT) {
-
+                        if (parser->state & PARSER_STATE_INTERPRET) {
+                            if (vm->interpreted_cur == vm->interpreted_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
+                            }
+                            *(vm->interpreted_cur++) = VM_INSTRUCTION_CALLEXT;
+                            if (
+                                vm->interpreted_cur + sizeof(uintptr_t) >=
+                                vm->interpreted_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
+                            }
+                            *(uintptr_t*)vm->interpreted_cur =
+                                *(uintptr_t*)addr;
+                            vm->interpreted_cur += sizeof(uintptr_t);
+                        } else {
+                            if (vm->compiled_cur == vm->compiled_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
+                            }
+                            *(vm->compiled_cur++) = VM_INSTRUCTION_CALLEXT;
+                            if (
+                                vm->compiled_cur + sizeof(uintptr_t) >=
+                                vm->compiled_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
+                            }
+                            *(uintptr_t*)vm->compiled_cur =
+                                *(uintptr_t*)addr;
+                            vm->compiled_cur += sizeof(uintptr_t);
+                        }
                     } else {
                         switch (*addr) {
                         case PARSER_HANDLER_DOT:

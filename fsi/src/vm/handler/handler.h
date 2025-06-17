@@ -80,5 +80,6 @@ int vm_handler_pfloat(ForthVM *vm);
 int vm_handler_ldf(ForthVM *vm);
 int vm_handler_stf(ForthVM *vm);
 int vm_handler_multfsd(ForthVM *vm);
+int vm_handler_callext(ForthVM *vm);
 
 #endif

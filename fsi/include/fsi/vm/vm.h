@@ -93,6 +93,7 @@
 #define VM_INSTRUCTION_LDF 75
 #define VM_INSTRUCTION_STF 76
 #define VM_INSTRUCTION_MULTFSD 77
+#define VM_INSTRUCTION_CALLEXT 78
 
 
 typedef enum ForthVMState {
