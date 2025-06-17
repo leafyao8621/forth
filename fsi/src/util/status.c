@@ -23,7 +23,7 @@ const char *parser_status_lookup[19] =
         "PARSER_STATUS_COUNTED_STRING_OVERFLOW"
     };
 
-const char *vm_status_lookup[10] =
+const char *vm_status_lookup[12] =
     {
         "VM_STATUS_OK",
         "VM_STATUS_OUT_OF_MEMORY",
@@ -34,5 +34,7 @@ const char *vm_status_lookup[10] =
         "VM_STATUS_CONTROL_STACK_UNDERFLOW",
         "VM_STATUS_INVALID_RETURN_ADDRESS",
         "VM_STATUS_INVALID_MEMORY_ADDRESS",
-        "VM_STATUS_INVALID_MEMORY_ALLOCATION"
+        "VM_STATUS_INVALID_MEMORY_ALLOCATION",
+        "VM_STATUS_FLOAT_STACK_OVERFLOW",
+        "VM_STATUS_FLOAT_STACK_UNDERFLOW"
     };

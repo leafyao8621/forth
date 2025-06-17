@@ -1,4 +1,9 @@
-create buf 10 allot
+create a 1 floats allot
+create b 1.1 ,
 
-: main buf 10 char F fill buf 10 type cr ;
-buf 10 char F fill buf 10 type cr
+1 floats . cr
+1E d>f a f!
+a f@ f. cr
+2E d>f a f!
+a f@ f. cr
+b f@ f. cr

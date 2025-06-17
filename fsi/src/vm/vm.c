@@ -6,7 +6,7 @@
 #include "handler/handler.h"
 
 
-#define BUILTIN_SIZE 93
+#define BUILTIN_SIZE 98
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -14,6 +14,7 @@ ForthVMStatus vm_initialize(
     size_t memory,
     size_t lookup,
     size_t literal,
+    size_t ext,
     size_t interpreted,
     size_t data_stack,
     size_t float_stack,
@@ -113,7 +114,12 @@ ForthVMStatus vm_initialize(
             "s\"",
             ".\"",
             "c\"",
-            "count"
+            "count",
+            "d>f",
+            "f.",
+            "f@",
+            "f!",
+            "floats"
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
@@ -135,7 +141,10 @@ ForthVMStatus vm_initialize(
     vm->literal = vm->lookup_end;
     vm->literal_cur = vm->literal;
     vm->literal_end = vm->literal + literal;
-    vm->interpreted = vm->literal_end;
+    vm->ext = vm->literal_end;
+    vm->ext_cur = vm->ext;
+    vm->ext_end = vm->ext + ext;
+    vm->interpreted = vm->ext_end;
     vm->interpreted_cur = vm->interpreted;
     vm->interpreted_end = vm->interpreted + interpreted;
     vm->data_stack = vm->interpreted_end;
@@ -212,6 +221,9 @@ void vm_log(ForthVM *vm) {
         }
         if (*iter & VM_LOOKUP_META_INDIRECT) {
             printf("%s ", "INDIRECT");
+        }
+        if (*iter & VM_LOOKUP_META_CALLEXT) {
+            printf("%s ", "CALLEXT");
         }
         printf("0x%016lX ", *(uintptr_t*)(++iter));
         iter += sizeof(uintptr_t);
@@ -465,6 +477,21 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_2POPR:
             printf("%s", "2POPR");
             break;
+        case VM_INSTRUCTION_PUSHF:
+            printf("%s", "PUSHF");
+            break;
+        case VM_INSTRUCTION_PFLOAT:
+            printf("%s", "PFLOAT");
+            break;
+        case VM_INSTRUCTION_LDF:
+            printf("%s", "LDF");
+            break;
+        case VM_INSTRUCTION_STF:
+            printf("%s", "STF");
+            break;
+        case VM_INSTRUCTION_MULTFSD:
+            printf("%s", "MULTFSD");
+            break;
         }
         putchar(10);
     }
@@ -675,6 +702,21 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_2POPR:
             printf("%s", "2POPR");
+            break;
+        case VM_INSTRUCTION_PUSHF:
+            printf("%s", "PUSHF");
+            break;
+        case VM_INSTRUCTION_PFLOAT:
+            printf("%s", "PFLOAT");
+            break;
+        case VM_INSTRUCTION_LDF:
+            printf("%s", "LDF");
+            break;
+        case VM_INSTRUCTION_STF:
+            printf("%s", "STF");
+            break;
+        case VM_INSTRUCTION_MULTFSD:
+            printf("%s", "MULTFSD");
             break;
         }
         putchar(10);
@@ -912,6 +954,21 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_2POPR:
                 printf("%s", "2POPR");
                 break;
+            case VM_INSTRUCTION_PUSHF:
+                printf("%s", "PUSHF");
+                break;
+            case VM_INSTRUCTION_PFLOAT:
+                printf("%s", "PFLOAT");
+                break;
+            case VM_INSTRUCTION_LDF:
+                printf("%s", "LDF");
+                break;
+            case VM_INSTRUCTION_STF:
+                printf("%s", "STF");
+                break;
+            case VM_INSTRUCTION_MULTFSD:
+                printf("%s", "MULTFSD");
+                break;
             }
             putchar(10);
         }
@@ -1134,6 +1191,21 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_2POPR:
             ret = vm_handler_2popr(vm);
+            break;
+        case VM_INSTRUCTION_PUSHF:
+            ret = vm_handler_pushf(vm);
+            break;
+        case VM_INSTRUCTION_PFLOAT:
+            ret = vm_handler_pfloat(vm);
+            break;
+        case VM_INSTRUCTION_LDF:
+            ret = vm_handler_ldf(vm);
+            break;
+        case VM_INSTRUCTION_STF:
+            ret = vm_handler_stf(vm);
+            break;
+        case VM_INSTRUCTION_MULTFSD:
+            ret = vm_handler_multfsd(vm);
             break;
         }
     }

@@ -33,11 +33,13 @@ typedef enum ForthVMStatus {
     VM_STATUS_CONTROL_STACK_UNDERFLOW,
     VM_STATUS_INVALID_RETURN_ADDRESS,
     VM_STATUS_INVALID_MEMORY_ADDRESS,
-    VM_STATUS_INVALID_MEMORY_ALLOCATION
+    VM_STATUS_INVALID_MEMORY_ALLOCATION,
+    VM_STATUS_FLOAT_STACK_OVERFLOW,
+    VM_STATUS_FLOAT_STACK_UNDERFLOW
 } ForthVMStatus;
 
 
 extern const char *parser_status_lookup[19];
-extern const char *vm_status_lookup[10];
+extern const char *vm_status_lookup[12];
 
 #endif

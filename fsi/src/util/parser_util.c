@@ -134,6 +134,41 @@ bool lookup_token(ForthVM *vm, char *buf, uint8_t **meta, uintptr_t **addr) {
     return false;
 }
 
+static bool parser_double(char *buf, double *out) {
+    char *iter = buf;
+    bool decimal = false;
+    bool e = false;
+    for (; *iter; ++iter) {
+        if (*iter >= '0' && *iter <= '9') {
+            continue;
+        }
+        switch (*iter) {
+        case '.':
+            if (decimal) {
+                return false;
+            }
+            decimal = true;
+            break;
+        case 'E':
+            if (e) {
+                return false;
+            }
+            e = true;
+            break;
+        case '+':
+        case '-':
+            if ((iter == buf) || (iter[-1] == 'E')) {
+                continue;
+            }
+            return false;
+        default:
+            return false;
+        }
+    }
+    sscanf(buf, "%lf", out);
+    return true;
+}
+
 bool parser_int10(char *buf, uintptr_t *out) {
     char *iter = buf;
     bool neg = false;
@@ -144,7 +179,13 @@ bool parser_int10(char *buf, uintptr_t *out) {
             continue;
         }
         if (*iter < '0' || *iter > '9') {
-            return false;
+            switch (*iter) {
+            case '.':
+            case 'E':
+                return parser_double(buf, (double*)out);
+            default:
+                return false;
+            }
         }
         *out *= 10;
         *out += *iter - '0';

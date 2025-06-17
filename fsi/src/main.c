@@ -10,6 +10,7 @@ int main(int argc, char **argv) {
     size_t memory = 65536;
     size_t lookup = 9500;
     size_t literal = 2000;
+    size_t ext = 2000;
     size_t interpreted = 2000;
     size_t data_stack = 2000;
     size_t float_stack = 2000;
@@ -47,6 +48,7 @@ int main(int argc, char **argv) {
                 memory,
                 lookup,
                 literal,
+                ext,
                 interpreted,
                 data_stack,
                 float_stack,
@@ -107,6 +109,7 @@ int main(int argc, char **argv) {
                 memory,
                 lookup,
                 literal,
+                ext,
                 interpreted,
                 data_stack,
                 float_stack,

@@ -88,6 +88,12 @@
 #define VM_INSTRUCTION_PUSHR 70
 #define VM_INSTRUCTION_POPR 71
 #define VM_INSTRUCTION_2POPR 72
+#define VM_INSTRUCTION_PUSHF 73
+#define VM_INSTRUCTION_PFLOAT 74
+#define VM_INSTRUCTION_LDF 75
+#define VM_INSTRUCTION_STF 76
+#define VM_INSTRUCTION_MULTFSD 77
+
 
 typedef enum ForthVMState {
     VM_STATE_RUNNING,
@@ -102,6 +108,9 @@ typedef struct ForthVM {
     uint8_t *literal;
     uint8_t *literal_cur;
     uint8_t *literal_end;
+    uint8_t *ext;
+    uint8_t *ext_cur;
+    uint8_t *ext_end;
     uint8_t *interpreted;
     uint8_t *interpreted_cur;
     uint8_t *interpreted_end;
@@ -129,6 +138,7 @@ ForthVMStatus vm_initialize(
     size_t memory,
     size_t lookup,
     size_t literal,
+    size_t ext,
     size_t interpreted,
     size_t data_stack,
     size_t float_stack,
