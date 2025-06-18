@@ -488,6 +488,18 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_FLOATS:
                             ret_int = parser_handler_floats(parser, vm);
                             break;
+                        case PARSER_HANDLER_F_PLUS:
+                            ret_int = parser_handler_f_plus(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_DASH:
+                            ret_int = parser_handler_f_dash(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_ASTERISK:
+                            ret_int = parser_handler_f_asterisk(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_SLASH:
+                            ret_int = parser_handler_f_slash(parser, vm);
+                            break;
                         }
                     }
                 }

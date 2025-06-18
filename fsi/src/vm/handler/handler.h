@@ -81,5 +81,9 @@ int vm_handler_ldf(ForthVM *vm);
 int vm_handler_stf(ForthVM *vm);
 int vm_handler_multfsd(ForthVM *vm);
 int vm_handler_callext(ForthVM *vm);
+int vm_handler_addf(ForthVM *vm);
+int vm_handler_subf(ForthVM *vm);
+int vm_handler_multf(ForthVM *vm);
+int vm_handler_divf(ForthVM *vm);
 
 #endif

@@ -102,6 +102,10 @@
 #define PARSER_HANDLER_F_AT 95
 #define PARSER_HANDLER_F_BANG 96
 #define PARSER_HANDLER_FLOATS 97
+#define PARSER_HANDLER_F_PLUS 98
+#define PARSER_HANDLER_F_DASH 99
+#define PARSER_HANDLER_F_ASTERISK 100
+#define PARSER_HANDLER_F_SLASH 101
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_emit(ForthParser *parser, ForthVM *vm);
@@ -203,5 +207,9 @@ int parser_handler_f_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_at(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_floats(ForthParser *parser, ForthVM *vm);
+int parser_handler_f_plus(ForthParser *parser, ForthVM *vm);
+int parser_handler_f_dash(ForthParser *parser, ForthVM *vm);
+int parser_handler_f_asterisk(ForthParser *parser, ForthVM *vm);
+int parser_handler_f_slash(ForthParser *parser, ForthVM *vm);
 
 #endif

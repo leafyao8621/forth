@@ -8,7 +8,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 98
+#define BUILTIN_SIZE 102
 #define BUILTIN_CALLEXT_SIZE 1
 #define MEMORY_SIZE 2
 
@@ -122,7 +122,11 @@ ForthVMStatus vm_initialize(
             "f.",
             "f@",
             "f!",
-            "floats"
+            "floats",
+            "f+",
+            "f-",
+            "f*",
+            "f/"
         };
     static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
         {
@@ -524,6 +528,18 @@ void vm_log(ForthVM *vm) {
             printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
             break;
+        case VM_INSTRUCTION_ADDF:
+            printf("%s", "ADDF");
+            break;
+        case VM_INSTRUCTION_SUBF:
+            printf("%s", "SUBF");
+            break;
+        case VM_INSTRUCTION_MULTF:
+            printf("%s", "MULTF");
+            break;
+        case VM_INSTRUCTION_DIVF:
+            printf("%s", "DIVF");
+            break;
         }
         putchar(10);
     }
@@ -753,6 +769,18 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_CALLEXT:
             printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
             iter += sizeof(uintptr_t);
+            break;
+        case VM_INSTRUCTION_ADDF:
+            printf("%s", "ADDF");
+            break;
+        case VM_INSTRUCTION_SUBF:
+            printf("%s", "SUBF");
+            break;
+        case VM_INSTRUCTION_MULTF:
+            printf("%s", "MULTF");
+            break;
+        case VM_INSTRUCTION_DIVF:
+            printf("%s", "DIVF");
             break;
         }
         putchar(10);
@@ -1008,6 +1036,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_CALLEXT:
                 printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(vm->ip + 1));
                 break;
+            case VM_INSTRUCTION_ADDF:
+                printf("%s", "ADDF");
+                break;
+            case VM_INSTRUCTION_SUBF:
+                printf("%s", "SUBF");
+                break;
+            case VM_INSTRUCTION_MULTF:
+                printf("%s", "MULTF");
+                break;
+            case VM_INSTRUCTION_DIVF:
+                printf("%s", "DIVF");
+                break;
             }
             putchar(10);
         }
@@ -1248,6 +1288,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_CALLEXT:
             ret = vm_handler_callext(vm);
+            break;
+        case VM_INSTRUCTION_ADDF:
+            ret = vm_handler_addf(vm);
+            break;
+        case VM_INSTRUCTION_SUBF:
+            ret = vm_handler_subf(vm);
+            break;
+        case VM_INSTRUCTION_MULTF:
+            ret = vm_handler_multf(vm);
+            break;
+        case VM_INSTRUCTION_DIVF:
+            ret = vm_handler_divf(vm);
             break;
         }
     }
