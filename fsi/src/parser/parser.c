@@ -500,6 +500,21 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_F_SLASH:
                             ret_int = parser_handler_f_slash(parser, vm);
                             break;
+                        case PARSER_HANDLER_FDUP:
+                            ret_int = parser_handler_fdup(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FDROP:
+                            ret_int = parser_handler_fdrop(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FSWAP:
+                            ret_int = parser_handler_fswap(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FOVER:
+                            ret_int = parser_handler_fover(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FROT:
+                            ret_int = parser_handler_frot(parser, vm);
+                            break;
                         }
                     }
                 }
@@ -507,7 +522,6 @@ ForthParserStatus parser_parse(
                 if (parser->state & PARSER_STATE_NAME) {
                     parser->pending = meta;
                     if (*meta & VM_LOOKUP_META_INDIRECT) {
-                        puts("asdf");
                         memmove(
                             addr,
                             addr + 1,

@@ -221,6 +221,6 @@ int parser_handler_fdup(ForthParser *parser, ForthVM *vm);
 int parser_handler_fdrop(ForthParser *parser, ForthVM *vm);
 int parser_handler_fswap(ForthParser *parser, ForthVM *vm);
 int parser_handler_fover(ForthParser *parser, ForthVM *vm);
-int parser_handler_rot(ForthParser *parser, ForthVM *vm);
+int parser_handler_frot(ForthParser *parser, ForthVM *vm);
 
 #endif
