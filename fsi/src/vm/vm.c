@@ -546,6 +546,24 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_DIVF:
             printf("%s", "DIVF");
             break;
+        case VM_INSTRUCTION_DUPF:
+            printf("%s", "DUPF");
+            break;
+        case VM_INSTRUCTION_DROPF:
+            printf("%s", "DROPF");
+            break;
+        case VM_INSTRUCTION_SWAPF:
+            printf("%s", "SWAPF");
+            break;
+        case VM_INSTRUCTION_OVERF:
+            printf("%s", "OVERF");
+            break;
+        case VM_INSTRUCTION_ROTF:
+            printf("%s", "ROTF");
+            break;
+        case VM_INSTRUCTION_PUSHDFD:
+            printf("%s", "PUSHDFD");
+            break;
         }
         putchar(10);
     }
@@ -787,6 +805,24 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_DIVF:
             printf("%s", "DIVF");
+            break;
+        case VM_INSTRUCTION_DUPF:
+            printf("%s", "DUPF");
+            break;
+        case VM_INSTRUCTION_DROPF:
+            printf("%s", "DROPF");
+            break;
+        case VM_INSTRUCTION_SWAPF:
+            printf("%s", "SWAPF");
+            break;
+        case VM_INSTRUCTION_OVERF:
+            printf("%s", "OVERF");
+            break;
+        case VM_INSTRUCTION_ROTF:
+            printf("%s", "ROTF");
+            break;
+        case VM_INSTRUCTION_PUSHDFD:
+            printf("%s", "PUSHDFD");
             break;
         }
         putchar(10);
@@ -1054,6 +1090,24 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_DIVF:
                 printf("%s", "DIVF");
                 break;
+            case VM_INSTRUCTION_DUPF:
+                printf("%s", "DUPF");
+                break;
+            case VM_INSTRUCTION_DROPF:
+                printf("%s", "DROPF");
+                break;
+            case VM_INSTRUCTION_SWAPF:
+                printf("%s", "SWAPF");
+                break;
+            case VM_INSTRUCTION_OVERF:
+                printf("%s", "OVERF");
+                break;
+            case VM_INSTRUCTION_ROTF:
+                printf("%s", "ROTF");
+                break;
+            case VM_INSTRUCTION_PUSHDFD:
+                printf("%s", "PUSHDFD");
+                break;
             }
             putchar(10);
         }
@@ -1306,6 +1360,24 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_DIVF:
             ret = vm_handler_divf(vm);
+            break;
+        case VM_INSTRUCTION_DUPF:
+            ret = vm_handler_dupf(vm);
+            break;
+        case VM_INSTRUCTION_DROPF:
+            ret = vm_handler_dropf(vm);
+            break;
+        case VM_INSTRUCTION_SWAPF:
+            ret = vm_handler_swapf(vm);
+            break;
+        case VM_INSTRUCTION_OVERF:
+            ret = vm_handler_overf(vm);
+            break;
+        case VM_INSTRUCTION_ROTF:
+            ret = vm_handler_rotf(vm);
+            break;
+        case VM_INSTRUCTION_PUSHDFD:
+            ret = vm_handler_pushdfd(vm);
             break;
         }
     }
