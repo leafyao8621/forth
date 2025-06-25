@@ -2,20 +2,21 @@
 
 #include "handler.h"
 
-int parser_handler_cell_plus(ForthParser *parser, ForthVM *vm) {
+int parser_handler_fvariable(ForthParser *parser, ForthVM *vm) {
     if (parser->state & PARSER_STATE_INTERPRET) {
+        parser->state |= PARSER_STATE_CREATE;
         if (vm->interpreted_cur == vm->interpreted_end) {
             parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(vm->interpreted_cur++) = VM_INSTRUCTION_INCCD;
-    }
-    if (parser->state & PARSER_STATE_COMPILE) {
+        *(vm->interpreted_cur++) = VM_INSTRUCTION_DEFAF;
+    } else {
+        *parser->pending |= VM_LOOKUP_META_CREATE;
         if (vm->compiled_cur == vm->compiled_end) {
             parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_COMPILED_OVERFLOW;
         }
-        *(vm->compiled_cur++) = VM_INSTRUCTION_INCCD;
+        *(vm->compiled_cur++) = VM_INSTRUCTION_ALLOCF;
     }
     return PARSER_STATUS_OK;
 }

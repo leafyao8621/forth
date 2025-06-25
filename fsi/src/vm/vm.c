@@ -8,7 +8,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 108
+#define BUILTIN_SIZE 118
 #define BUILTIN_CALLEXT_SIZE 1
 #define MEMORY_SIZE 2
 
@@ -119,20 +119,30 @@ ForthVMStatus vm_initialize(
             "c\"",
             "count",
             "d>f",
+            "f>d",
             "f.",
             "f@",
             "f!",
             "floats",
+            "float+",
             "f+",
             "f-",
             "f*",
             "f/",
+            "fnegate",
+            "f0<",
+            "f0=",
+            "f<",
+            "floor",
+            "fmin",
+            "fmax",
             "fdup",
             "fdrop",
             "fswap",
             "fover",
             "frot",
-            "fdepth"
+            "fdepth",
+            "fvariable"
         };
     static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
         {
@@ -518,6 +528,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_PUSHF:
             printf("%s", "PUSHF");
             break;
+        case VM_INSTRUCTION_POPF:
+            printf("%s", "POPF");
+            break;
         case VM_INSTRUCTION_PFLOAT:
             printf("%s", "PFLOAT");
             break;
@@ -529,6 +542,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_MULTFSD:
             printf("%s", "MULTFSD");
+            break;
+        case VM_INSTRUCTION_INCFD:
+            printf("%s", "INCFD");
             break;
         case VM_INSTRUCTION_CALLEXT:
             printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
@@ -545,6 +561,27 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_DIVF:
             printf("%s", "DIVF");
+            break;
+        case VM_INSTRUCTION_NEGF:
+            printf("%s", "NEGF");
+            break;
+        case VM_INSTRUCTION_LTZF:
+            printf("%s", "LTZF");
+            break;
+        case VM_INSTRUCTION_EQZF:
+            printf("%s", "EQZF");
+            break;
+        case VM_INSTRUCTION_LTF:
+            printf("%s", "LTF");
+            break;
+        case VM_INSTRUCTION_FLOORF:
+            printf("%s", "FLOORF");
+            break;
+        case VM_INSTRUCTION_MINF:
+            printf("%s", "MINF");
+            break;
+        case VM_INSTRUCTION_MAXF:
+            printf("%s", "MAXF");
             break;
         case VM_INSTRUCTION_DUPF:
             printf("%s", "DUPF");
@@ -563,6 +600,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_PUSHDFD:
             printf("%s", "PUSHDFD");
+            break;
+        case VM_INSTRUCTION_DEFAF:
+            printf("%s", "DEFAF");
+            break;
+        case VM_INSTRUCTION_ALLOCF:
+            printf("%s", "ALLOCF");
             break;
         }
         putchar(10);
@@ -778,6 +821,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_PUSHF:
             printf("%s", "PUSHF");
             break;
+        case VM_INSTRUCTION_POPF:
+            printf("%s", "POPF");
+            break;
         case VM_INSTRUCTION_PFLOAT:
             printf("%s", "PFLOAT");
             break;
@@ -789,6 +835,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_MULTFSD:
             printf("%s", "MULTFSD");
+            break;
+        case VM_INSTRUCTION_INCFD:
+            printf("%s", "INCFD");
             break;
         case VM_INSTRUCTION_CALLEXT:
             printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(iter + 1));
@@ -805,6 +854,27 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_DIVF:
             printf("%s", "DIVF");
+            break;
+        case VM_INSTRUCTION_NEGF:
+            printf("%s", "NEGF");
+            break;
+        case VM_INSTRUCTION_LTZF:
+            printf("%s", "LTZF");
+            break;
+        case VM_INSTRUCTION_EQZF:
+            printf("%s", "EQZF");
+            break;
+        case VM_INSTRUCTION_LTF:
+            printf("%s", "LTF");
+            break;
+        case VM_INSTRUCTION_FLOORF:
+            printf("%s", "FLOORF");
+            break;
+        case VM_INSTRUCTION_MINF:
+            printf("%s", "MINF");
+            break;
+        case VM_INSTRUCTION_MAXF:
+            printf("%s", "MAXF");
             break;
         case VM_INSTRUCTION_DUPF:
             printf("%s", "DUPF");
@@ -823,6 +893,12 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_PUSHDFD:
             printf("%s", "PUSHDFD");
+            break;
+        case VM_INSTRUCTION_DEFAF:
+            printf("%s", "DEFAF");
+            break;
+        case VM_INSTRUCTION_ALLOCF:
+            printf("%s", "ALLOCF");
             break;
         }
         putchar(10);
@@ -1063,6 +1139,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_PUSHF:
                 printf("%s", "PUSHF");
                 break;
+            case VM_INSTRUCTION_POPF:
+                printf("%s", "POPF");
+                break;
             case VM_INSTRUCTION_PFLOAT:
                 printf("%s", "PFLOAT");
                 break;
@@ -1074,6 +1153,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_MULTFSD:
                 printf("%s", "MULTFSD");
+                break;
+            case VM_INSTRUCTION_INCFD:
+                printf("%s", "INCFD");
                 break;
             case VM_INSTRUCTION_CALLEXT:
                 printf("%s 0x%016lX", "CALLEXT", *(uintptr_t*)(vm->ip + 1));
@@ -1089,6 +1171,27 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_DIVF:
                 printf("%s", "DIVF");
+                break;
+            case VM_INSTRUCTION_NEGF:
+                printf("%s", "NEGF");
+                break;
+            case VM_INSTRUCTION_LTZF:
+                printf("%s", "LTZF");
+                break;
+            case VM_INSTRUCTION_EQZF:
+                printf("%s", "EQZF");
+                break;
+            case VM_INSTRUCTION_LTF:
+                printf("%s", "LTF");
+                break;
+            case VM_INSTRUCTION_FLOORF:
+                printf("%s", "FLOORF");
+                break;
+            case VM_INSTRUCTION_MINF:
+                printf("%s", "MINF");
+                break;
+            case VM_INSTRUCTION_MAXF:
+                printf("%s", "MAXF");
                 break;
             case VM_INSTRUCTION_DUPF:
                 printf("%s", "DUPF");
@@ -1107,6 +1210,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
                 break;
             case VM_INSTRUCTION_PUSHDFD:
                 printf("%s", "PUSHDFD");
+                break;
+            case VM_INSTRUCTION_DEFAF:
+                printf("%s", "DEFAF");
+                break;
+            case VM_INSTRUCTION_ALLOCF:
+                printf("%s", "ALLOCF");
                 break;
             }
             putchar(10);
@@ -1334,6 +1443,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
         case VM_INSTRUCTION_PUSHF:
             ret = vm_handler_pushf(vm);
             break;
+        case VM_INSTRUCTION_POPF:
+            ret = vm_handler_popf(vm);
+            break;
         case VM_INSTRUCTION_PFLOAT:
             ret = vm_handler_pfloat(vm);
             break;
@@ -1345,6 +1457,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_MULTFSD:
             ret = vm_handler_multfsd(vm);
+            break;
+        case VM_INSTRUCTION_INCFD:
+            ret = vm_handler_incfd(vm);
             break;
         case VM_INSTRUCTION_CALLEXT:
             ret = vm_handler_callext(vm);
@@ -1360,6 +1475,27 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_DIVF:
             ret = vm_handler_divf(vm);
+            break;
+        case VM_INSTRUCTION_NEGF:
+            ret = vm_handler_negf(vm);
+            break;
+        case VM_INSTRUCTION_LTZF:
+            ret = vm_handler_ltzf(vm);
+            break;
+        case VM_INSTRUCTION_EQZF:
+            ret = vm_handler_eqzf(vm);
+            break;
+        case VM_INSTRUCTION_LTF:
+            ret = vm_handler_ltf(vm);
+            break;
+        case VM_INSTRUCTION_FLOORF:
+            ret = vm_handler_floor(vm);
+            break;
+        case VM_INSTRUCTION_MINF:
+            ret = vm_handler_minf(vm);
+            break;
+        case VM_INSTRUCTION_MAXF:
+            ret = vm_handler_maxf(vm);
             break;
         case VM_INSTRUCTION_DUPF:
             ret = vm_handler_dupf(vm);
@@ -1378,6 +1514,12 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_PUSHDFD:
             ret = vm_handler_pushdfd(vm);
+            break;
+        case VM_INSTRUCTION_DEFAF:
+            ret = vm_handler_defaf(vm);
+            break;
+        case VM_INSTRUCTION_ALLOCF:
+            ret = vm_handler_allocf(vm);
             break;
         }
     }

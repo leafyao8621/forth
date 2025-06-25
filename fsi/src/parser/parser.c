@@ -475,6 +475,10 @@ ForthParserStatus parser_parse(
                             ret_int =
                                 parser_handler_d_gt_f(parser, vm);
                             break;
+                        case PARSER_HANDLER_F_GT_D:
+                            ret_int =
+                                parser_handler_f_gt_d(parser, vm);
+                            break;
                         case PARSER_HANDLER_F_DOT:
                             ret_int = parser_handler_f_dot(parser, vm);
                             break;
@@ -488,6 +492,9 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_FLOATS:
                             ret_int = parser_handler_floats(parser, vm);
                             break;
+                        case PARSER_HANDLER_FLOAT_PLUS:
+                            ret_int = parser_handler_float_plus(parser, vm);
+                            break;
                         case PARSER_HANDLER_F_PLUS:
                             ret_int = parser_handler_f_plus(parser, vm);
                             break;
@@ -499,6 +506,27 @@ ForthParserStatus parser_parse(
                             break;
                         case PARSER_HANDLER_F_SLASH:
                             ret_int = parser_handler_f_slash(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FNEGATE:
+                            ret_int = parser_handler_fnegate(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_ZERO_LT:
+                            ret_int = parser_handler_f_zero_lt(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_ZERO_EQ:
+                            ret_int = parser_handler_f_zero_eq(parser, vm);
+                            break;
+                        case PARSER_HANDLER_F_LT:
+                            ret_int = parser_handler_f_lt(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FLOOR:
+                            ret_int = parser_handler_floor(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FMIN:
+                            ret_int = parser_handler_fmin(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FMAX:
+                            ret_int = parser_handler_fmax(parser, vm);
                             break;
                         case PARSER_HANDLER_FDUP:
                             ret_int = parser_handler_fdup(parser, vm);
@@ -517,6 +545,9 @@ ForthParserStatus parser_parse(
                             break;
                         case PARSER_HANDLER_FDEPTH:
                             ret_int = parser_handler_fdepth(parser, vm);
+                            break;
+                        case PARSER_HANDLER_FVARIABLE:
+                            ret_int = parser_handler_fvariable(parser, vm);
                             break;
                         }
                     }
