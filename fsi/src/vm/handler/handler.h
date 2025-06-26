@@ -91,7 +91,6 @@ int vm_handler_negf(ForthVM *vm);
 int vm_handler_ltzf(ForthVM *vm);
 int vm_handler_eqzf(ForthVM *vm);
 int vm_handler_ltf(ForthVM *vm);
-int vm_handler_floor(ForthVM *vm);
 int vm_handler_minf(ForthVM *vm);
 int vm_handler_maxf(ForthVM *vm);
 int vm_handler_dupf(ForthVM *vm);

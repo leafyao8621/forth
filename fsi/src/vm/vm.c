@@ -8,7 +8,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 118
+#define BUILTIN_SIZE 117
 #define BUILTIN_CALLEXT_SIZE 1
 #define MEMORY_SIZE 2
 
@@ -133,7 +133,6 @@ ForthVMStatus vm_initialize(
             "f0<",
             "f0=",
             "f<",
-            "floor",
             "fmin",
             "fmax",
             "fdup",
@@ -574,9 +573,6 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_LTF:
             printf("%s", "LTF");
             break;
-        case VM_INSTRUCTION_FLOORF:
-            printf("%s", "FLOORF");
-            break;
         case VM_INSTRUCTION_MINF:
             printf("%s", "MINF");
             break;
@@ -866,9 +862,6 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_LTF:
             printf("%s", "LTF");
-            break;
-        case VM_INSTRUCTION_FLOORF:
-            printf("%s", "FLOORF");
             break;
         case VM_INSTRUCTION_MINF:
             printf("%s", "MINF");
@@ -1184,9 +1177,6 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_LTF:
                 printf("%s", "LTF");
                 break;
-            case VM_INSTRUCTION_FLOORF:
-                printf("%s", "FLOORF");
-                break;
             case VM_INSTRUCTION_MINF:
                 printf("%s", "MINF");
                 break;
@@ -1487,9 +1477,6 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_LTF:
             ret = vm_handler_ltf(vm);
-            break;
-        case VM_INSTRUCTION_FLOORF:
-            ret = vm_handler_floor(vm);
             break;
         case VM_INSTRUCTION_MINF:
             ret = vm_handler_minf(vm);

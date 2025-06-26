@@ -112,16 +112,15 @@
 #define PARSER_HANDLER_F_ZERO_LT 105
 #define PARSER_HANDLER_F_ZERO_EQ 106
 #define PARSER_HANDLER_F_LT 107
-#define PARSER_HANDLER_FLOOR 108
-#define PARSER_HANDLER_FMIN 109
-#define PARSER_HANDLER_FMAX 110
-#define PARSER_HANDLER_FDUP 111
-#define PARSER_HANDLER_FDROP 112
-#define PARSER_HANDLER_FSWAP 113
-#define PARSER_HANDLER_FOVER 114
-#define PARSER_HANDLER_FROT 115
-#define PARSER_HANDLER_FDEPTH 116
-#define PARSER_HANDLER_FVARIABLE 117
+#define PARSER_HANDLER_FMIN 108
+#define PARSER_HANDLER_FMAX 109
+#define PARSER_HANDLER_FDUP 110
+#define PARSER_HANDLER_FDROP 111
+#define PARSER_HANDLER_FSWAP 112
+#define PARSER_HANDLER_FOVER 113
+#define PARSER_HANDLER_FROT 114
+#define PARSER_HANDLER_FDEPTH 115
+#define PARSER_HANDLER_FVARIABLE 116
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_emit(ForthParser *parser, ForthVM *vm);
@@ -233,7 +232,6 @@ int parser_handler_fnegate(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_zero_lt(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_zero_eq(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_lt(ForthParser *parser, ForthVM *vm);
-int parser_handler_floor(ForthParser *parser, ForthVM *vm);
 int parser_handler_fmin(ForthParser *parser, ForthVM *vm);
 int parser_handler_fmax(ForthParser *parser, ForthVM *vm);
 int parser_handler_fdup(ForthParser *parser, ForthVM *vm);

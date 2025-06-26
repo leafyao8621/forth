@@ -11,6 +11,7 @@ int vm_handler_ltzf(ForthVM *vm) {
     }
     *(intptr_t*)vm->data_stack_cur =
         *(double*)(vm->float_stack_cur - sizeof(double)) < 0 ? -1 : 0;
+    vm->float_stack_cur -= sizeof(double);
     vm->data_stack_cur += sizeof(uintptr_t);
     return VM_STATUS_OK;
 }

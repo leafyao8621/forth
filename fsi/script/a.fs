@@ -1,32 +1,5 @@
-1E d>f 2E d>f 3E d>f
-
-fdup
-fdepth . cr
-f. cr
-
-fswap
-fdup f. cr
-fswap
-
-fover
-f. cr
-
-frot
-fdup f. cr
-
-frot
-fdup f. cr
-
-frot
-fdup f. cr
-
-fdrop
-fdepth . cr
-fdup f. cr
-
-fdrop
-fdepth . cr
-fdup f. cr
-
-fdrop
-fdepth . cr
+fvariable a
+1E d>f a f!
+a f@ f. cr
+a f@ 2E d>f f* fdup f. cr a f!
+a f@ f. cr

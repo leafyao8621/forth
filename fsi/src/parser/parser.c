@@ -519,9 +519,6 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_F_LT:
                             ret_int = parser_handler_f_lt(parser, vm);
                             break;
-                        case PARSER_HANDLER_FLOOR:
-                            ret_int = parser_handler_floor(parser, vm);
-                            break;
                         case PARSER_HANDLER_FMIN:
                             ret_int = parser_handler_fmin(parser, vm);
                             break;
