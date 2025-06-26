@@ -9,9 +9,10 @@ int vm_handler_ltf(ForthVM *vm) {
         vm->state = VM_STATE_HALTED;
         return VM_STATUS_FLOAT_STACK_UNDERFLOW;
     }
-    *(intptr_t*)(vm->data_stack_cur - sizeof(uintptr_t)) =
-        *(double*)(vm->float_stack_cur - (sizeof(double) << 1)) <
-        *(double*)(vm->float_stack_cur - sizeof(double)) ? -1 : 0;
+    *(intptr_t*)vm->data_stack_cur =
+        *(double*)(vm->float_stack_cur - sizeof(double)) <
+        *(double*)(vm->float_stack_cur - (sizeof(double) << 1)) ?
+        -1 : 0;
     vm->data_stack_cur += sizeof(uintptr_t);
     return VM_STATUS_OK;
 }
