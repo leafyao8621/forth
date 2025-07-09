@@ -8,7 +8,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 117
+#define BUILTIN_SIZE 118
 #define BUILTIN_CALLEXT_SIZE 11
 #define MEMORY_SIZE 2
 
@@ -121,6 +121,7 @@ ForthVMStatus vm_initialize(
             "d>f",
             "f>d",
             "f.",
+            "fs.",
             "f@",
             "f!",
             "floats",
@@ -553,6 +554,9 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_PFLOAT:
             printf("%s", "PFLOAT");
             break;
+        case VM_INSTRUCTION_PFLOATS:
+            printf("%s", "PFLOATS");
+            break;
         case VM_INSTRUCTION_LDF:
             printf("%s", "LDF");
             break;
@@ -842,6 +846,9 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_PFLOAT:
             printf("%s", "PFLOAT");
+            break;
+        case VM_INSTRUCTION_PFLOATS:
+            printf("%s", "PFLOATS");
             break;
         case VM_INSTRUCTION_LDF:
             printf("%s", "LDF");
@@ -1158,6 +1165,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_PFLOAT:
                 printf("%s", "PFLOAT");
                 break;
+            case VM_INSTRUCTION_PFLOATS:
+                printf("%s", "PFLOATS");
+                break;
             case VM_INSTRUCTION_LDF:
                 printf("%s", "LDF");
                 break;
@@ -1458,6 +1468,9 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_PFLOAT:
             ret = vm_handler_pfloat(vm);
+            break;
+        case VM_INSTRUCTION_PFLOATS:
+            ret = vm_handler_pfloats(vm);
             break;
         case VM_INSTRUCTION_LDF:
             ret = vm_handler_ldf(vm);

@@ -482,6 +482,9 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_F_DOT:
                             ret_int = parser_handler_f_dot(parser, vm);
                             break;
+                        case PARSER_HANDLER_FS_DOT:
+                            ret_int = parser_handler_fs_dot(parser, vm);
+                            break;
                         case PARSER_HANDLER_F_AT:
                             ret_int =
                                 parser_handler_f_at(parser, vm);

@@ -100,27 +100,28 @@
 #define PARSER_HANDLER_D_GT_F 93
 #define PARSER_HANDLER_F_GT_D 94
 #define PARSER_HANDLER_F_DOT 95
-#define PARSER_HANDLER_F_AT 96
-#define PARSER_HANDLER_F_BANG 97
-#define PARSER_HANDLER_FLOATS 98
-#define PARSER_HANDLER_FLOAT_PLUS 99
-#define PARSER_HANDLER_F_PLUS 100
-#define PARSER_HANDLER_F_DASH 101
-#define PARSER_HANDLER_F_ASTERISK 102
-#define PARSER_HANDLER_F_SLASH 103
-#define PARSER_HANDLER_FNEGATE 104
-#define PARSER_HANDLER_F_ZERO_LT 105
-#define PARSER_HANDLER_F_ZERO_EQ 106
-#define PARSER_HANDLER_F_LT 107
-#define PARSER_HANDLER_FMIN 108
-#define PARSER_HANDLER_FMAX 109
-#define PARSER_HANDLER_FDUP 110
-#define PARSER_HANDLER_FDROP 111
-#define PARSER_HANDLER_FSWAP 112
-#define PARSER_HANDLER_FOVER 113
-#define PARSER_HANDLER_FROT 114
-#define PARSER_HANDLER_FDEPTH 115
-#define PARSER_HANDLER_FVARIABLE 116
+#define PARSER_HANDLER_FS_DOT 96
+#define PARSER_HANDLER_F_AT 97
+#define PARSER_HANDLER_F_BANG 98
+#define PARSER_HANDLER_FLOATS 99
+#define PARSER_HANDLER_FLOAT_PLUS 100
+#define PARSER_HANDLER_F_PLUS 101
+#define PARSER_HANDLER_F_DASH 102
+#define PARSER_HANDLER_F_ASTERISK 103
+#define PARSER_HANDLER_F_SLASH 104
+#define PARSER_HANDLER_FNEGATE 105
+#define PARSER_HANDLER_F_ZERO_LT 106
+#define PARSER_HANDLER_F_ZERO_EQ 107
+#define PARSER_HANDLER_F_LT 108
+#define PARSER_HANDLER_FMIN 109
+#define PARSER_HANDLER_FMAX 110
+#define PARSER_HANDLER_FDUP 111
+#define PARSER_HANDLER_FDROP 112
+#define PARSER_HANDLER_FSWAP 113
+#define PARSER_HANDLER_FOVER 114
+#define PARSER_HANDLER_FROT 115
+#define PARSER_HANDLER_FDEPTH 116
+#define PARSER_HANDLER_FVARIABLE 117
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_emit(ForthParser *parser, ForthVM *vm);
@@ -220,6 +221,7 @@ int parser_handler_count(ForthParser *parser, ForthVM *vm);
 int parser_handler_d_gt_f(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_gt_d(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_dot(ForthParser *parser, ForthVM *vm);
+int parser_handler_fs_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_at(ForthParser *parser, ForthVM *vm);
 int parser_handler_f_bang(ForthParser *parser, ForthVM *vm);
 int parser_handler_floats(ForthParser *parser, ForthVM *vm);

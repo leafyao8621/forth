@@ -78,6 +78,7 @@ int vm_handler_2popr(ForthVM *vm);
 int vm_handler_pushf(ForthVM *vm);
 int vm_handler_popf(ForthVM *vm);
 int vm_handler_pfloat(ForthVM *vm);
+int vm_handler_pfloats(ForthVM *vm);
 int vm_handler_ldf(ForthVM *vm);
 int vm_handler_stf(ForthVM *vm);
 int vm_handler_multfsd(ForthVM *vm);
