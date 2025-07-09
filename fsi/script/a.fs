@@ -3,11 +3,11 @@
     100 0 do
         fdup f.
         space
-        fdup fsin f.
+        fdup fsinh f.
         space
-        fdup fcos f.
+        fdup fcosh f.
         space
-        fdup ftan f.
+        fdup ftanh f.
         cr
         0.1256 d>f f+
     loop

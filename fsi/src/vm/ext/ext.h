@@ -18,5 +18,8 @@ int vm_ext_flog(ForthVM *vm);
 int vm_ext_fsin(ForthVM *vm);
 int vm_ext_fcos(ForthVM *vm);
 int vm_ext_ftan(ForthVM *vm);
+int vm_ext_fsinh(ForthVM *vm);
+int vm_ext_fcosh(ForthVM *vm);
+int vm_ext_ftanh(ForthVM *vm);
 
 #endif
