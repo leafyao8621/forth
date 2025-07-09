@@ -3,11 +3,11 @@
     100 0 do
         fdup f.
         space
-        fdup fasin f.
+        fdup fasinh f.
         space
-        fdup facos f.
+        fdup 100E d>f f* fabs facosh f.
         space
-        fdup fatan f.
+        fdup fatanh f.
         cr
         0.02 d>f f+
     loop

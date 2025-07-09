@@ -9,7 +9,7 @@
 
 
 #define BUILTIN_SIZE 118
-#define BUILTIN_CALLEXT_SIZE 20
+#define BUILTIN_CALLEXT_SIZE 23
 #define MEMORY_SIZE 2
 
 ForthVMStatus vm_initialize(
@@ -166,6 +166,9 @@ ForthVMStatus vm_initialize(
             "fasin",
             "facos",
             "fatan",
+            "fasinh",
+            "facosh",
+            "fatanh"
         };
     static const Ext builtin_callext_value[BUILTIN_CALLEXT_SIZE] =
         {
@@ -188,7 +191,10 @@ ForthVMStatus vm_initialize(
             vm_ext_ftanh,
             vm_ext_fasin,
             vm_ext_facos,
-            vm_ext_fatan
+            vm_ext_fatan,
+            vm_ext_fasinh,
+            vm_ext_facosh,
+            vm_ext_fatanh
         };
     static const char *memory_symbol[MEMORY_SIZE] =
         {
