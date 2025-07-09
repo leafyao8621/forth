@@ -21,5 +21,8 @@ int vm_ext_ftan(ForthVM *vm);
 int vm_ext_fsinh(ForthVM *vm);
 int vm_ext_fcosh(ForthVM *vm);
 int vm_ext_ftanh(ForthVM *vm);
+int vm_ext_fasin(ForthVM *vm);
+int vm_ext_facos(ForthVM *vm);
+int vm_ext_fatan(ForthVM *vm);
 
 #endif

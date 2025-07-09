@@ -1,15 +1,15 @@
 : main
-    -6.28 d>f
+    -1E d>f
     100 0 do
         fdup f.
         space
-        fdup fsinh f.
+        fdup fasin f.
         space
-        fdup fcosh f.
+        fdup facos f.
         space
-        fdup ftanh f.
+        fdup fatan f.
         cr
-        0.1256 d>f f+
+        0.02 d>f f+
     loop
     fdrop
 ;
