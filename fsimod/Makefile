@@ -1,12 +1,11 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic
-SRC = $(wildcard src/vm/*.c) $(wildcard src/vm/*/*.c) $(wildcard src/parser/*.c) $(wildcard src/parser/*/*.c) $(wildcard src/util/*.c)
+SRC = $(wildcard src/util/*.c)
 OBJ = $(SRC:.c=.o)
-LIB = lib/libfsi.so
-BIN = fsi
+BIN = fsimod
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared
@@ -14,14 +13,10 @@ $(LIB): $(OBJ)
 $(BIN): $(LIB)
 	$(CC) -g src/main.c -o $(BIN) -lm -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
 
-.PHONY: clean valgrind install
+.PHONY: clean valgrind
 clean:
 	@rm $(OBJ)
 	@rm $(LIB)
 	@rm $(BIN)
 valgrind: $(BIN)
 	@valgrind -s --leak-check=full ./$(BIN) -d script/a.fs
-install: $(BIN)
-	@cp $(BIN) ~/.local/bin
-	@cp -r include/fsi ~/.local/include
-	@cp -r $(LIB) ~/.local/lib
