@@ -1,22 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -pedantic
-SRC = $(wildcard src/util/*.c)
+SRC = $(wildcard src/*.c) $(wildcard src/*/*.c)
 OBJ = $(SRC:.c=.o)
 BIN = fsimod
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -g -c $< -o $@ -Iinclude
 
-$(LIB): $(OBJ)
-	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared
+$(BIN): $(OBJ)
+	$(CC) $(OBJ) -o $(BIN)
 
-$(BIN): $(LIB)
-	$(CC) -g src/main.c -o $(BIN) -lm -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
-
-.PHONY: clean valgrind
+.PHONY: clean install
 clean:
 	@rm $(OBJ)
 	@rm $(LIB)
 	@rm $(BIN)
-valgrind: $(BIN)
-	@valgrind -s --leak-check=full ./$(BIN) -d script/a.fs
+install: $(BIN)
+	@cp $(BIN) ~/.local/bin
