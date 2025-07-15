@@ -8,7 +8,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 118
+#define BUILTIN_SIZE 119
 #define BUILTIN_CALLEXT_SIZE 23
 #define MEMORY_SIZE 2
 
@@ -18,6 +18,7 @@ ForthVMStatus vm_initialize(
     size_t lookup,
     size_t literal,
     size_t ext,
+    size_t mod,
     size_t interpreted,
     size_t data_stack,
     size_t float_stack,
@@ -142,7 +143,8 @@ ForthVMStatus vm_initialize(
             "fover",
             "frot",
             "fdepth",
-            "fvariable"
+            "fvariable",
+            "mload"
         };
     static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
         {
@@ -219,6 +221,9 @@ ForthVMStatus vm_initialize(
     vm->ext = vm->literal_end;
     vm->ext_cur = vm->ext;
     vm->ext_end = vm->ext + ext;
+    vm->mod = vm->ext_end;
+    vm->mod_cur = vm->mod;
+    vm->mod_end = vm->mod + mod;
     vm->interpreted = vm->ext_end;
     vm->interpreted_cur = vm->interpreted;
     vm->interpreted_end = vm->interpreted + interpreted;

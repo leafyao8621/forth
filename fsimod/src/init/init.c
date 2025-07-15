@@ -9,8 +9,8 @@
 const char *hello_parse =
     "#include <fsi/vm/vm.h>\n"
     "#include <fsi/parser/parser.h>\n\n"
-    "int parser_handler_hello(ForthParser *parser, ForthVM *vm) {\n"
-    "    if (!parser || !vm) {\n"
+    "int parser_handler_hello(ForthParser *parser, char **iter, ForthVM *vm) {\n"
+    "    if (!parser || !vm || !iter) {\n"
     "        return PARSER_STATUS_OK;\n"
     "    }\n"
     "    puts(\"Parsing hello\");\n"
@@ -52,6 +52,23 @@ const char *moddef =
     "hello\n"
     "parser_handler_hello\n"
     "vm_ext_hello\n";
+
+const char *makefile =
+    "CC = gcc\n"
+    "CFLAGS = -Wall -Wextra -Werror -pedantic\n"
+    "SRC = $(wildcard src/*.c)\n"
+    "OBJ = $(SRC:.c=.o)\n"
+    "LIB = lib/mod.so\n\n"
+    "%.o: %.c\n"
+    "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude\n\n"
+    "$(LIB): $(OBJ)\n"
+    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n\n"
+    ".PHONY: clean install\n"
+    "clean:\n"
+    "\t@rm $(OBJ)\n"
+    "\t@rm $(LIB)\n\n"
+    "install: $(LIB)\n"
+    "\t@cp -r . ~/.local/lib/fsi\n";
 
 ErrInit init(void) {
     if (mkdir("src", 0755)) {
@@ -123,6 +140,16 @@ ErrInit init(void) {
         return ERR_INIT_CREATE;
     }
     sz = write(fd, moddef, strlen(moddef));
+    if (sz == -1) {
+        close(fd);
+        return ERR_INIT_WRITE;
+    }
+    close(fd);
+    fd = creat("Makefile", 0755);
+    if (!fd) {
+        return ERR_INIT_CREATE;
+    }
+    sz = write(fd, makefile, strlen(makefile));
     if (sz == -1) {
         close(fd);
         return ERR_INIT_WRITE;

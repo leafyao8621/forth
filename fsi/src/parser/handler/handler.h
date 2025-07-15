@@ -243,5 +243,7 @@ int parser_handler_fover(ForthParser *parser, ForthVM *vm);
 int parser_handler_frot(ForthParser *parser, ForthVM *vm);
 int parser_handler_fdepth(ForthParser *parser, ForthVM *vm);
 int parser_handler_fvariable(ForthParser *parser, ForthVM *vm);
+int parser_handler_mload(
+    ForthParser *parser, char **iter, ForthVM *vm);
 
 #endif

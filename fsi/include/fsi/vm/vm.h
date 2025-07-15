@@ -132,6 +132,9 @@ typedef struct ForthVM {
     uint8_t *ext;
     uint8_t *ext_cur;
     uint8_t *ext_end;
+    uint8_t *mod;
+    uint8_t *mod_cur;
+    uint8_t *mod_end;
     uint8_t *interpreted;
     uint8_t *interpreted_cur;
     uint8_t *interpreted_end;
@@ -160,6 +163,7 @@ ForthVMStatus vm_initialize(
     size_t lookup,
     size_t literal,
     size_t ext,
+    size_t mod,
     size_t interpreted,
     size_t data_stack,
     size_t float_stack,
