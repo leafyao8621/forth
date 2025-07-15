@@ -62,12 +62,14 @@ const char *makefile =
     "%.o: %.c\n"
     "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude\n\n"
     "$(LIB): $(OBJ)\n"
-    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n\n"
+    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n"
+    "\tfsimod compile\n\n"
     ".PHONY: clean install\n"
     "clean:\n"
     "\t@rm $(OBJ)\n"
     "\t@rm $(LIB)\n\n"
     "install: $(LIB)\n"
+
     "\t@cp -r . ~/.local/lib/fsi\n";
 
 ErrInit init(void) {

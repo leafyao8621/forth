@@ -9,6 +9,7 @@ LIB = lib/mod.so
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -shared
+	fsimod compile
 
 .PHONY: clean install
 clean:

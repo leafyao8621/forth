@@ -122,6 +122,7 @@
 #define PARSER_HANDLER_FROT 115
 #define PARSER_HANDLER_FDEPTH 116
 #define PARSER_HANDLER_FVARIABLE 117
+#define PARSER_HANDLER_MLOAD_DOUBLE_QUOTE 118
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_emit(ForthParser *parser, ForthVM *vm);
@@ -243,7 +244,7 @@ int parser_handler_fover(ForthParser *parser, ForthVM *vm);
 int parser_handler_frot(ForthParser *parser, ForthVM *vm);
 int parser_handler_fdepth(ForthParser *parser, ForthVM *vm);
 int parser_handler_fvariable(ForthParser *parser, ForthVM *vm);
-int parser_handler_mload(
+int parser_handler_mload_double_quote(
     ForthParser *parser, char **iter, ForthVM *vm);
 
 #endif

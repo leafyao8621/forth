@@ -144,7 +144,7 @@ ForthVMStatus vm_initialize(
             "frot",
             "fdepth",
             "fvariable",
-            "mload"
+            "mload\""
         };
     static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
         {
