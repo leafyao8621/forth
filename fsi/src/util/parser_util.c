@@ -110,7 +110,12 @@ void next_token(ForthParser *parser, bool line, char **str) {
 bool lookup_token(ForthVM *vm, char *buf, uint8_t **meta, uintptr_t **addr) {
     uint8_t *iter = vm->lookup;
     for (; iter < vm->lookup_cur; ++iter) {
-        if (*iter & VM_LOOKUP_META_INDIRECT) {
+        if (
+            (*iter & VM_LOOKUP_META_INDIRECT) ||
+            (
+                (*iter & VM_LOOKUP_META_PARSEEXT) &&
+                (*iter & VM_LOOKUP_META_CALLEXT)
+            )) {
             if (
                 !strcmp(
                     buf,
