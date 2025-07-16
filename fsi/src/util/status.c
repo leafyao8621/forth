@@ -1,6 +1,6 @@
 #include <fsi/util/status.h>
 
-const char *parser_status_lookup[19] =
+const char *parser_status_lookup[22] =
     {
         "PARSER_STATUS_OK",
         "PARSER_STATUS_END_REPL",
@@ -20,7 +20,10 @@ const char *parser_status_lookup[19] =
         "PARSER_STATUS_PARSER_CONTROL_STACK_MISMATCH",
         "PARSER_STATUS_INCOMPLETE_STRING",
         "PARSER_STATUS_LITERAL_OVERFLOW",
-        "PARSER_STATUS_COUNTED_STRING_OVERFLOW"
+        "PARSER_STATUS_COUNTED_STRING_OVERFLOW",
+        "PARSER_STATUS_MODULE_NAME_OVERFLOW",
+        "PARSER_STATUS_MOD_OVERFLOW",
+        "PARSER_STATUS_MOD_LOAD"
     };
 
 const char *vm_status_lookup[12] =

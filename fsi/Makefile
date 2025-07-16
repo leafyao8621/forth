@@ -12,7 +12,7 @@ $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared
 
 $(BIN): $(LIB)
-	$(CC) -g src/main.c -o $(BIN) -lm -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
+	$(CC) -g src/main.c -o $(BIN) -lm -ldl -lcontainers -Llib -lfsi -Iinclude -Wl,-rpath,lib
 
 .PHONY: clean valgrind install
 clean:

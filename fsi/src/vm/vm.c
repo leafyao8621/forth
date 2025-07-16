@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <dlfcn.h>
+
 #include <fsi/vm/vm.h>
 #include <fsi/util/status.h>
 
@@ -19,6 +21,7 @@ ForthVMStatus vm_initialize(
     size_t literal,
     size_t ext,
     size_t mod,
+    size_t mod_so,
     size_t interpreted,
     size_t data_stack,
     size_t float_stack,
@@ -224,7 +227,10 @@ ForthVMStatus vm_initialize(
     vm->mod = vm->ext_end;
     vm->mod_cur = vm->mod;
     vm->mod_end = vm->mod + mod;
-    vm->interpreted = vm->ext_end;
+    vm->mod_so = vm->mod_end;
+    vm->mod_so_cur = vm->mod_so;
+    vm->mod_so_end = vm->mod_so + mod_so;
+    vm->interpreted = vm->mod_so_end;
     vm->interpreted_cur = vm->interpreted;
     vm->interpreted_end = vm->interpreted + interpreted;
     vm->data_stack = vm->interpreted_end;
@@ -294,6 +300,9 @@ ForthVMStatus vm_initialize(
 }
 
 void vm_finalize(ForthVM *vm) {
+    for (uint8_t *i = vm->mod; i < vm->mod_cur; i += sizeof(uintptr_t)) {
+        dlclose(*(void**)i);
+    }
     free(vm->mem);
 }
 

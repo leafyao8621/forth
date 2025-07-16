@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
     size_t literal = 2000;
     size_t ext = 2000;
     size_t mod = 2000;
+    size_t mod_so = 2000;
     size_t interpreted = 2000;
     size_t data_stack = 2000;
     size_t float_stack = 2000;
@@ -51,6 +52,7 @@ int main(int argc, char **argv) {
                 literal,
                 ext,
                 mod,
+                mod_so,
                 interpreted,
                 data_stack,
                 float_stack,
@@ -113,6 +115,7 @@ int main(int argc, char **argv) {
                 literal,
                 ext,
                 mod,
+                mod_so,
                 interpreted,
                 data_stack,
                 float_stack,
