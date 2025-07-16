@@ -86,6 +86,39 @@ ErrCompile compile(void) {
     }
     fclose(fin);
     fclose(fout);
+    fin = fopen("load_order.txt", "r");
+    if (!fin) {
+        return ERR_COMPILE_OPEN;
+    }
+    fout = fopen("load_order", "w");
+    if (!fout) {
+        fclose(fin);
+        return ERR_COMPILE_OPEN;
+    }
+    for (; !feof(fin);) {
+        for (char in = fgetc(fin); in != '\n' && !feof(fin); in = fgetc(fin)) {
+            if (DArrayChar_push_back(&buf, &in)) {
+                fclose(fin);
+                fclose(fout);
+                DArrayChar_finalize(&buf);
+                return ERR_COMPILE_OUT_OF_MEMORY;
+            }
+        }
+        if (!buf.size) {
+            break;
+        }
+        if (DArrayChar_push_back(&buf, &zero)) {
+            fclose(fin);
+            fclose(fout);
+            DArrayChar_finalize(&buf);
+            return ERR_COMPILE_OUT_OF_MEMORY;
+        }
+        fwrite(&buf.size, sizeof(size_t), 1, fout);
+        fwrite(buf.data, buf.size, 1, fout);
+        DArrayChar_clear(&buf);
+    }
+    fclose(fin);
+    fclose(fout);
     DArrayChar_finalize(&buf);
     return ERR_COMPILE_OK;
 }

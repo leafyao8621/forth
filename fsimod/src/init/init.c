@@ -41,7 +41,7 @@ const char *gitignore =
     "*.o\n"
     "*.so\n"
     "moddef\n"
-    ".vscode\n";
+    "load_order\n";
 
 const char *load_order =
     "hello_2.fs\n"

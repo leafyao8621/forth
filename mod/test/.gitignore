@@ -1,4 +1,4 @@
 *.o
 *.so
 moddef
-.vscode
+load_order
