@@ -43,7 +43,7 @@ ErrCompile compile(void) {
         }
         switch (state) {
         case COMPILE_STATE_MODE:
-            if (!strcmp(buf.data, "pr")) {
+            if (!strcmp(buf.data, "rp")) {
                 mode = COMPILE_MODE_PARSE | COMPILE_MODE_RUN;
             } else if (!strcmp(buf.data, "p")) {
                 mode = COMPILE_MODE_PARSE;

@@ -48,10 +48,10 @@ const char *load_order =
     "hello_1.fs\n";
 
 const char *moddef =
-    "pr\n"
+    "rp\n"
     "hello\n"
-    "parser_handler_hello\n"
-    "vm_ext_hello\n";
+    "vm_ext_hello\n"
+    "parser_handler_hello\n";
 
 const char *makefile =
     "CC = gcc\n"
