@@ -135,8 +135,8 @@ int parser_handler_mload_double_quote(
     size_t buf_func_size = 1000;
     for (; !feof(fin);) {
         uint8_t mode = 0;
-        fread(&mode, sizeof(uint8_t), 1, fin);
-        if (feof(fin)) {
+        size_t read = fread(&mode, sizeof(uint8_t), 1, fin);
+        if (feof(fin) || read != sizeof(uint8_t)) {
             break;
         }
         if (vm->lookup_cur == vm->lookup_end) {
@@ -150,7 +150,10 @@ int parser_handler_mload_double_quote(
         }
         *(vm->lookup_cur++) = mode;
         size_t sz_name = 0;
-        fread(&sz_name, sizeof(size_t), 1, fin);
+        read = fread(&sz_name, sizeof(size_t), 1, fin);
+        if (feof(fin) || read != sizeof(size_t)) {
+            break;
+        }
         if (sz_name > buf_name_size) {
             buf_name_size = sz_name;
             buf_name = realloc(buf_name, buf_name_size);
@@ -163,9 +166,15 @@ int parser_handler_mload_double_quote(
                 return PARSER_STATUS_OUT_OF_MEMORY;
             }
         }
-        fread(buf_name, 1, sz_name, fin);
+        read = fread(buf_name, 1, sz_name, fin);
+        if (feof(fin) || read != sz_name) {
+            break;
+        }
         size_t sz = 0;
-        fread(&sz, sizeof(size_t), 1, fin);
+        read = fread(&sz, sizeof(size_t), 1, fin);
+        if (feof(fin) || read != sizeof(uint8_t)) {
+            break;
+        }
         if (sz > buf_func_size) {
             buf_func_size = sz;
             buf_func = realloc(buf_func, buf_func_size);
@@ -178,7 +187,10 @@ int parser_handler_mload_double_quote(
                 return PARSER_STATUS_OUT_OF_MEMORY;
             }
         }
-        fread(buf_func, 1, sz, fin);
+        read = fread(buf_func, 1, sz, fin);
+        if (feof(fin) || read != sz) {
+            break;
+        }
         if (mode & VM_LOOKUP_META_CALLEXT) {
             if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
                 parser->status = PARSER_STATUS_END;
@@ -203,7 +215,10 @@ int parser_handler_mload_double_quote(
             vm->lookup_cur += sizeof(uintptr_t);
             if (mode & VM_LOOKUP_META_PARSEEXT) {
                 sz = 0;
-                fread(&sz, sizeof(size_t), 1, fin);
+                read = fread(&sz, sizeof(size_t), 1, fin);
+                if (feof(fin) || read != sizeof(size_t)) {
+                    break;
+                }
                 if (sz > buf_func_size) {
                     buf_func_size = sz;
                     buf_func = realloc(buf_func, buf_func_size);
@@ -216,7 +231,10 @@ int parser_handler_mload_double_quote(
                         return PARSER_STATUS_OUT_OF_MEMORY;
                     }
                 }
-                fread(buf_func, 1, sz, fin);
+                read = fread(buf_func, 1, sz, fin);
+                if (feof(fin) || read != sizeof(sz)) {
+                    break;
+                }
                 if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
                     parser->status = PARSER_STATUS_END;
                     DArrayChar_finalize(&path);
