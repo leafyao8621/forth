@@ -648,7 +648,7 @@ ForthParserStatus parser_parse(
                         }
                         parser->pending = 0;
                     } else {
-                        if (indirect) {
+                        if (indirect || parseext) {
                             memmove(
                                 addr,
                                 addr + 1,

@@ -51,6 +51,12 @@ const char *moddef =
     "rp\n"
     "hello\n"
     "vm_ext_hello\n"
+    "parser_handler_hello\n"
+    "r\n"
+    "hello.r\n"
+    "vm_ext_hello\n"
+    "p\n"
+    "hello.p\n"
     "parser_handler_hello\n";
 
 const char *makefile =
@@ -70,7 +76,7 @@ const char *makefile =
     "\t@rm $(LIB)\n\n"
     "install: $(LIB)\n"
 
-    "\t@cp -r . ~/.local/lib/fsi\n";
+    "\t@cp -r `pwd` ~/.local/lib/fsi\n";
 
 ErrInit init(void) {
     if (mkdir("src", 0755)) {
