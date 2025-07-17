@@ -87,7 +87,208 @@ int parser_handler_mload_double_quote(
         DArrayChar_finalize(&path);
         return PARSER_STATUS_MOD_LOAD;
     }
+    String path_buf;
+    if (DArrayChar_initialize(&path_buf, 1000)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    if (DArrayChar_push_back_batch(&path_buf, path.data, path.size)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    char *moddef_raw = "moddef";
+    if (
+        DArrayChar_push_back_batch(
+            &path_buf, moddef_raw, strlen(moddef_raw) + 1)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    FILE *fin = fopen(path_buf.data, "r");
+    if (!fin) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        return PARSER_STATUS_MOD_LOAD;
+    }
+    uint8_t *buf_name = malloc(1000);
+    if (!buf_name) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        fclose(fin);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    size_t buf_name_size = 1000;
+    uint8_t *buf_func = malloc(1000);
+    if (!buf_func) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        fclose(fin);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    size_t buf_func_size = 1000;
+    for (; !feof(fin);) {
+        uint8_t mode = 0;
+        fread(&mode, sizeof(uint8_t), 1, fin);
+        if (feof(fin)) {
+            break;
+        }
+        if (vm->lookup_cur == vm->lookup_end) {
+            parser->status = PARSER_STATUS_END;
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            free(buf_func);
+            return PARSER_STATUS_LOOKUP_OVERFLOW;
+        }
+        *(vm->lookup_cur++) = mode;
+        size_t sz_name = 0;
+        fread(&sz_name, sizeof(size_t), 1, fin);
+        if (sz_name > buf_name_size) {
+            buf_name_size = sz_name;
+            buf_name = realloc(buf_name, buf_name_size);
+            if (!buf_name) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_func);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+        }
+        fread(buf_name, 1, sz_name, fin);
+        size_t sz = 0;
+        fread(&sz, sizeof(size_t), 1, fin);
+        if (sz > buf_func_size) {
+            buf_func_size = sz;
+            buf_func = realloc(buf_func, buf_func_size);
+            if (!buf_name) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+        }
+        fread(buf_func, 1, sz, fin);
+        if (mode & VM_LOOKUP_META_CALLEXT) {
+            if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                free(buf_func);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+            *(void**)vm->lookup_cur =
+                dlsym(*(void**)vm->mod_cur, (const char*)buf_func);
+            if (!vm->lookup_cur) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                free(buf_func);
+                return PARSER_STATUS_MOD_LOAD;
+            }
+            vm->lookup_cur += sizeof(uintptr_t);
+            if (mode & VM_LOOKUP_META_PARSEEXT) {
+                sz = 0;
+                fread(&sz, sizeof(size_t), 1, fin);
+                if (sz > buf_func_size) {
+                    buf_func_size = sz;
+                    buf_func = realloc(buf_func, buf_func_size);
+                    if (!buf_name) {
+                        parser->status = PARSER_STATUS_END;
+                        DArrayChar_finalize(&path);
+                        DArrayChar_finalize(&path_buf);
+                        fclose(fin);
+                        free(buf_name);
+                        return PARSER_STATUS_OUT_OF_MEMORY;
+                    }
+                }
+                fread(buf_func, 1, sz, fin);
+                if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
+                    parser->status = PARSER_STATUS_END;
+                    DArrayChar_finalize(&path);
+                    DArrayChar_finalize(&path_buf);
+                    fclose(fin);
+                    free(buf_name);
+                    free(buf_func);
+                    return PARSER_STATUS_OUT_OF_MEMORY;
+                }
+                *(void**)vm->lookup_cur =
+                    dlsym(*(void**)vm->mod_cur, (const char*)buf_func);
+                if (!vm->lookup_cur) {
+                    parser->status = PARSER_STATUS_END;
+                    DArrayChar_finalize(&path);
+                    DArrayChar_finalize(&path_buf);
+                    fclose(fin);
+                    free(buf_name);
+                    free(buf_func);
+                    return PARSER_STATUS_MOD_LOAD;
+                }
+                vm->lookup_cur += sizeof(uintptr_t);
+            }
+        } else {
+            if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                free(buf_func);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+            vm->lookup_cur += sizeof(uintptr_t);
+            if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                free(buf_func);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+            *(void**)vm->lookup_cur =
+                dlsym(*(void**)vm->mod_cur, (const char*)buf_func);
+            if (!vm->lookup_cur) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                free(buf_func);
+                return PARSER_STATUS_MOD_LOAD;
+            }
+            vm->lookup_cur += sizeof(uintptr_t);
+        }
+        if (vm->lookup_cur + sz_name > vm->lookup_end) {
+            parser->status = PARSER_STATUS_END;
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            free(buf_func);
+            return PARSER_STATUS_OUT_OF_MEMORY;
+        }
+        memcpy(vm->lookup_cur, buf_name, sz_name);
+        vm->lookup_cur += sz_name;
+    }
     vm->mod_cur += sizeof(uintptr_t);
     DArrayChar_finalize(&path);
+    DArrayChar_finalize(&path_buf);
+    free(buf_name);
+    free(buf_func);
+    fclose(fin);
     return PARSER_STATUS_OK;
 }

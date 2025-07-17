@@ -20,7 +20,7 @@ clean:
 	@rm $(LIB)
 	@rm $(BIN)
 valgrind: $(BIN)
-	@valgrind -s --leak-check=full ./$(BIN) -d script/a.fs
+	@valgrind -s --leak-check=full --show-leak-kinds=all ./$(BIN) -d script/a.fs
 install: $(BIN)
 	@cp $(BIN) ~/.local/bin
 	@cp -r include/fsi ~/.local/include

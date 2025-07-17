@@ -17,4 +17,4 @@ clean:
 	@rm $(LIB)
 
 install: $(LIB)
-	@cp -r . ~/.local/lib/fsi
+	@cp -r `pwd` ~/.local/lib/fsi

@@ -112,10 +112,7 @@ bool lookup_token(ForthVM *vm, char *buf, uint8_t **meta, uintptr_t **addr) {
     for (; iter < vm->lookup_cur; ++iter) {
         if (
             (*iter & VM_LOOKUP_META_INDIRECT) ||
-            (
-                (*iter & VM_LOOKUP_META_PARSEEXT) &&
-                (*iter & VM_LOOKUP_META_CALLEXT)
-            )) {
+            (*iter & VM_LOOKUP_META_PARSEEXT)) {
             if (
                 !strcmp(
                     buf,

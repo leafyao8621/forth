@@ -4,6 +4,8 @@
 
 #include "handler/handler.h"
 
+typedef int (*ParserExt)(ForthParser*, char**, ForthVM*);
+
 ForthParserStatus parser_initialize(ForthParser *parser) {
     if (DArrayChar_initialize(&parser->buf, 100)) {
         return PARSER_STATUS_OUT_OF_MEMORY;
@@ -36,6 +38,7 @@ ForthParserStatus parser_parse(
     uintptr_t num = 0;
     char *iter = str;
     bool indirect = false;
+    bool parseext = false;
     parser->status = PARSER_STATUS_RUNNING;
     for (
         next_token(parser, line, &iter);
@@ -65,6 +68,7 @@ ForthParserStatus parser_parse(
                         break;
                     }
                     indirect = *meta & VM_LOOKUP_META_INDIRECT;
+                    parseext = *meta & VM_LOOKUP_META_PARSEEXT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
@@ -92,7 +96,7 @@ ForthParserStatus parser_parse(
                             break;
                         }
                         if (parser->state & PARSER_STATE_DOES) {
-                            if (!indirect) {
+                            if (!indirect && !parseext) {
                                 if (
                                     vm->lookup_cur + sizeof(uintptr_t) >=
                                     vm->lookup_end) {
@@ -458,15 +462,18 @@ ForthParserStatus parser_parse(
                             break;
                         case PARSER_HANDLER_S_DOUBLE_QUOTE:
                             ret_int =
-                                parser_handler_s_double_quote(parser, &iter, vm);
+                                parser_handler_s_double_quote(
+                                    parser, &iter, vm);
                             break;
                         case PARSER_HANDLER_DOT_DOUBLE_QUOTE:
                             ret_int =
-                                parser_handler_dot_double_quote(parser, &iter, vm);
+                                parser_handler_dot_double_quote(
+                                    parser, &iter, vm);
                             break;
                         case PARSER_HANDLER_C_DOUBLE_QUOTE:
                             ret_int =
-                                parser_handler_c_double_quote(parser, &iter, vm);
+                                parser_handler_c_double_quote(
+                                    parser, &iter, vm);
                             break;
                         case PARSER_HANDLER_COUNT:
                             ret_int = parser_handler_count(parser, vm);
@@ -560,7 +567,9 @@ ForthParserStatus parser_parse(
             } else {
                 if (parser->state & PARSER_STATE_NAME) {
                     parser->pending = meta;
-                    if (*meta & VM_LOOKUP_META_INDIRECT) {
+                    if (
+                        (*meta & VM_LOOKUP_META_INDIRECT) ||
+                        (*meta & VM_LOOKUP_META_PARSEEXT)) {
                         memmove(
                             addr,
                             addr + 1,
@@ -580,6 +589,7 @@ ForthParserStatus parser_parse(
                         break;
                     }
                     indirect = *meta & VM_LOOKUP_META_INDIRECT;
+                    parseext = *meta & VM_LOOKUP_META_PARSEEXT;
                     *meta = VM_LOOKUP_META_MEMORY;
                     *(uintptr_t*)vm->interpreted_cur = (uintptr_t)addr;
                     vm->interpreted_cur += sizeof(uintptr_t);
@@ -607,7 +617,7 @@ ForthParserStatus parser_parse(
                             break;
                         }
                         if (parser->state & PARSER_STATE_DOES) {
-                            if (!indirect) {
+                            if (!indirect && !parseext) {
                                 if (
                                     vm->lookup_cur + sizeof(uintptr_t) >=
                                     vm->lookup_end) {
@@ -627,7 +637,7 @@ ForthParserStatus parser_parse(
                             *(uint8_t**)(addr + 1) = parser->pending;
                             parser->state ^= PARSER_STATE_DOES;
                         } else {
-                            if (indirect) {
+                            if (indirect || parseext) {
                                 memmove(
                                     addr,
                                     addr + 1,
@@ -718,7 +728,7 @@ ForthParserStatus parser_parse(
                         if (parser->state & PARSER_STATE_COMPILE) {
                             if (vm->compiled_cur == vm->interpreted_end) {
                                 parser->status = PARSER_STATUS_END;
-                                ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
                             *(vm->compiled_cur++) = VM_INSTRUCTION_PUSHID;
@@ -733,9 +743,53 @@ ForthParserStatus parser_parse(
                             vm->compiled_cur += sizeof(uintptr_t);
                             if (vm->compiled_cur == vm->compiled_end) {
                                 parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
+                            }
+                        }
+                    }
+                    if (*meta & VM_LOOKUP_META_PARSEEXT) {
+                        ParserExt ext = *(ParserExt*)(addr + 1);
+                        ret_int = ext(parser, &iter, vm);
+                        if (ret_int) {
+                            break;
+                        }
+                    }
+                    if (*meta & VM_LOOKUP_META_CALLEXT) {
+                        if (parser->state & PARSER_STATE_INTERPRET) {
+                            if (vm->interpreted_cur == vm->interpreted_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
+                            }
+                            *(vm->interpreted_cur++) = VM_INSTRUCTION_CALLEXT;
+                            if (
+                                vm->interpreted_cur + sizeof(uintptr_t) >=
+                                vm->interpreted_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int =  PARSER_STATUS_INTERPRETED_OVERFLOW;
+                                break;
+                            }
+                            *(uintptr_t*)vm->interpreted_cur =
+                                *(uintptr_t*)addr;
+                            vm->interpreted_cur += sizeof(uintptr_t);
+                        } else {
+                            if (vm->compiled_cur == vm->compiled_end) {
+                                parser->status = PARSER_STATUS_END;
+                                ret_int = PARSER_STATUS_COMPILED_OVERFLOW;
+                                break;
+                            }
+                            *(vm->compiled_cur++) = VM_INSTRUCTION_CALLEXT;
+                            if (
+                                vm->compiled_cur + sizeof(uintptr_t) >=
+                                vm->compiled_end) {
+                                parser->status = PARSER_STATUS_END;
                                 ret_int =  PARSER_STATUS_COMPILED_OVERFLOW;
                                 break;
                             }
+                            *(uintptr_t*)vm->compiled_cur =
+                                *(uintptr_t*)addr;
+                            vm->compiled_cur += sizeof(uintptr_t);
                         }
                     }
                     if (*meta & VM_LOOKUP_META_CALL) {
