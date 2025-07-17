@@ -136,7 +136,7 @@ int parser_handler_mload_double_quote(
     for (; !feof(fin);) {
         uint8_t mode = 0;
         size_t read = fread(&mode, sizeof(uint8_t), 1, fin);
-        if (feof(fin) || read != sizeof(uint8_t)) {
+        if (feof(fin) || read != 1) {
             break;
         }
         if (vm->lookup_cur == vm->lookup_end) {
@@ -151,7 +151,7 @@ int parser_handler_mload_double_quote(
         *(vm->lookup_cur++) = mode;
         size_t sz_name = 0;
         read = fread(&sz_name, sizeof(size_t), 1, fin);
-        if (feof(fin) || read != sizeof(size_t)) {
+        if (feof(fin) || read != 1) {
             break;
         }
         if (sz_name > buf_name_size) {
@@ -172,7 +172,7 @@ int parser_handler_mload_double_quote(
         }
         size_t sz = 0;
         read = fread(&sz, sizeof(size_t), 1, fin);
-        if (feof(fin) || read != sizeof(uint8_t)) {
+        if (feof(fin) || read != 1) {
             break;
         }
         if (sz > buf_func_size) {
@@ -216,7 +216,7 @@ int parser_handler_mload_double_quote(
             if (mode & VM_LOOKUP_META_PARSEEXT) {
                 sz = 0;
                 read = fread(&sz, sizeof(size_t), 1, fin);
-                if (feof(fin) || read != sizeof(size_t)) {
+                if (feof(fin) || read != 1) {
                     break;
                 }
                 if (sz > buf_func_size) {
@@ -232,7 +232,7 @@ int parser_handler_mload_double_quote(
                     }
                 }
                 read = fread(buf_func, 1, sz, fin);
-                if (feof(fin) || read != sizeof(sz)) {
+                if (feof(fin) || read != sz) {
                     break;
                 }
                 if (vm->lookup_cur + sizeof(uintptr_t) > vm->lookup_end) {
