@@ -561,6 +561,11 @@ ForthParserStatus parser_parse(
                                 parser_handler_mload_double_quote(
                                     parser, &iter, vm);
                             break;
+                        case PARSER_HANDLER_Z_DOUBLE_QUOTE:
+                            ret_int =
+                                parser_handler_z_double_quote(
+                                    parser, &iter, vm);
+                            break;
                         }
                     }
                 }
