@@ -6,7 +6,7 @@ LIB = lib/libfsi.so
 BIN = fsi
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared

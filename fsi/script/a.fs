@@ -1,8 +1,6 @@
-: main
-    z" blah"
-    5 0 do
-        dup c@ . cr
-        1+
-    loop
-    drop
-;
+: init ." Before load" cr ;
+init
+mload" test"
+hello
+hello.1
+hello.2

@@ -29,11 +29,11 @@ const char *hello_run =
     "}\n";
 
 const char *hello1 =
-    ": init .\"Hello 1 Loaded\" cr ;\n"
+    ": init .\" Hello 1 Loaded\" cr ;\n"
     "init\n"
     ": hello.1 .\" Hello 1\" cr ;\n";
 const char *hello2 =
-    ": init .\"Hello 2 Loaded\" cr ;\n"
+    ": init .\" Hello 2 Loaded\" cr ;\n"
     "init\n"
     ": hello.2 .\" Hello 2\" cr ;\n";
 

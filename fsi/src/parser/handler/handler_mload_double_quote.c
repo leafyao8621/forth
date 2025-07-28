@@ -1,6 +1,8 @@
 #include <dlfcn.h>
 
 #include <fsi/util/status.h>
+#include <fsi/util/parser_util.h>
+#include <fsi/parser/parser.h>
 
 #include "handler.h"
 
@@ -303,10 +305,203 @@ int parser_handler_mload_double_quote(
         vm->lookup_cur += sz_name;
     }
     vm->mod_cur += sizeof(uintptr_t);
+    fclose(fin);
+    free(buf_func);
+
+    DArrayChar_clear(&path_buf);
+    if (DArrayChar_push_back_batch(&path_buf, path.data, path.size)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        free(buf_name);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    char *load_order_raw = "load_order";
+    if (
+        DArrayChar_push_back_batch(
+            &path_buf, load_order_raw, strlen(load_order_raw) + 1)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        free(buf_name);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    String path_buf_script;
+    if (DArrayChar_initialize(&path_buf_script, 1000)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        free(buf_name);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    fin = fopen(path_buf.data, "r");
+    if (!fin) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        DArrayChar_finalize(&path_buf_script);
+        free(buf_name);
+        return PARSER_STATUS_MOD_LOAD;
+    }
+    String script_buf;
+    if (DArrayChar_initialize(&script_buf, 1000)) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        DArrayChar_finalize(&path_buf_script);
+        free(buf_name);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    ForthParser parser_script;
+    ForthParserStatus ret_parser = PARSER_STATUS_OK;
+    ret_parser = parser_initialize(&parser_script);
+    if (ret_parser) {
+        parser->status = PARSER_STATUS_END;
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        DArrayChar_finalize(&path_buf_script);
+        free(buf_name);
+        return PARSER_STATUS_OUT_OF_MEMORY;
+    }
+    ForthVMStatus ret_vm = vm_run(vm, false);
+    if (ret_vm) {
+        fprintf(
+            stderr,
+            "Error running\n%s\n",
+            vm_status_lookup[ret_vm]
+        );
+        DArrayChar_finalize(&path);
+        DArrayChar_finalize(&path_buf);
+        DArrayChar_finalize(&path_buf_script);
+        fclose(fin);
+        free(buf_name);
+        DArrayChar_finalize(&script_buf);
+        parser_finalize(&parser_script);
+        return 1;
+    }
+    for (; !feof(fin);) {
+        size_t sz_name = 0;
+        size_t read = fread(&sz_name, sizeof(size_t), 1, fin);
+        if (feof(fin) || read != 1) {
+            break;
+        }
+        if (sz_name > buf_name_size) {
+            buf_name_size = sz_name;
+            buf_name = realloc(buf_name, buf_name_size);
+            if (!buf_name) {
+                parser->status = PARSER_STATUS_END;
+                DArrayChar_finalize(&path);
+                DArrayChar_finalize(&path_buf);
+                fclose(fin);
+                free(buf_name);
+                parser_finalize(&parser_script);
+                return PARSER_STATUS_OUT_OF_MEMORY;
+            }
+        }
+        read = fread(buf_name, 1, sz_name, fin);
+        if (feof(fin) || read != sz_name) {
+            break;
+        }
+        DArrayChar_clear(&path_buf_script);
+        if (DArrayChar_push_back_batch(
+            &path_buf_script, path.data, path.size)) {
+            parser->status = PARSER_STATUS_END;
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            parser_finalize(&parser_script);
+            return PARSER_STATUS_OUT_OF_MEMORY;
+        }
+        char *script_base = "script/";
+        if (
+            DArrayChar_push_back_batch(
+                &path_buf_script, script_base, strlen(script_base))) {
+            parser->status = PARSER_STATUS_END;
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            parser_finalize(&parser_script);
+            return PARSER_STATUS_OUT_OF_MEMORY;
+        }
+        if (
+            DArrayChar_push_back_batch(
+                &path_buf_script, (char*)buf_name, buf_name_size)) {
+            parser->status = PARSER_STATUS_END;
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            parser_finalize(&parser_script);
+            return PARSER_STATUS_OUT_OF_MEMORY;
+        }
+        vm_reset(vm);
+        FILE *fin_script = fopen(path_buf_script.data, "r");
+        if (!fin_script) {
+            fprintf(stderr, "Cannot open %s\n", path_buf_script.data);
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            fclose(fin);
+            free(buf_name);
+            DArrayChar_finalize(&script_buf);
+            parser_finalize(&parser_script);
+            return PARSER_STATUS_MOD_LOAD;
+        }
+        int success = read_file(fin_script, &script_buf);
+        fclose(fin_script);
+        if (!success) {
+            fprintf(stderr, "%s\n", "Out of memory");
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            DArrayChar_finalize(&path_buf_script);
+            fclose(fin);
+            free(buf_name);
+            DArrayChar_finalize(&script_buf);
+            parser_finalize(&parser_script);
+            return 1;
+        }
+        ForthParserStatus ret =
+            parser_parse(vm, &parser_script, false, false, script_buf.data);
+        if (ret) {
+            fprintf(
+                stderr,
+                "Error parsing\n%s\n",
+                parser_status_lookup[ret]
+            );
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            DArrayChar_finalize(&path_buf_script);
+            fclose(fin);
+            free(buf_name);
+            DArrayChar_finalize(&script_buf);
+            parser_finalize(&parser_script);
+            return 1;
+        }
+        ForthVMStatus ret_vm = vm_run(vm, false);
+        if (ret_vm) {
+            fprintf(
+                stderr,
+                "Error running\n%s\n",
+                vm_status_lookup[ret_vm]
+            );
+            DArrayChar_finalize(&path);
+            DArrayChar_finalize(&path_buf);
+            DArrayChar_finalize(&path_buf_script);
+            fclose(fin);
+            free(buf_name);
+            DArrayChar_finalize(&script_buf);
+            parser_finalize(&parser_script);
+            return 1;
+        }
+    }
+
+    fclose(fin);
     DArrayChar_finalize(&path);
     DArrayChar_finalize(&path_buf);
+    DArrayChar_finalize(&path_buf_script);
+    DArrayChar_finalize(&script_buf);
     free(buf_name);
-    free(buf_func);
-    fclose(fin);
+    parser_finalize(&parser_script);
     return PARSER_STATUS_OK;
 }
