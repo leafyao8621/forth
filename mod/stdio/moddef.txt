@@ -1,0 +1,6 @@
+r
+puts
+vm_ext_puts
+r
+printf.d
+vm_ext_printf_dot_d
