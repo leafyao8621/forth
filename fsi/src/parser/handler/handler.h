@@ -124,6 +124,10 @@
 #define PARSER_HANDLER_FVARIABLE 117
 #define PARSER_HANDLER_MLOAD_DOUBLE_QUOTE 118
 #define PARSER_HANDLER_Z_DOUBLE_QUOTE 119
+#define PARSER_HANDLER_U_AT 120
+#define PARSER_HANDLER_U_BANG 121
+#define PARSER_HANDLER_UF_AT 122
+#define PARSER_HANDLER_UF_BANG 123
 
 int parser_handler_dot(ForthParser *parser, ForthVM *vm);
 int parser_handler_emit(ForthParser *parser, ForthVM *vm);
@@ -249,5 +253,9 @@ int parser_handler_mload_double_quote(
     ForthParser *parser, char **iter, ForthVM *vm);
 int parser_handler_z_double_quote(
     ForthParser *parser, char **iter, ForthVM *vm);
+int parser_handler_u_at(ForthParser *parser, ForthVM *vm);
+int parser_handler_u_bang(ForthParser *parser, ForthVM *vm);
+int parser_handler_uf_at(ForthParser *parser, ForthVM *vm);
+int parser_handler_uf_bang(ForthParser *parser, ForthVM *vm);
 
 #endif

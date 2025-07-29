@@ -102,5 +102,9 @@ int vm_handler_rotf(ForthVM *vm);
 int vm_handler_pushdfd(ForthVM *vm);
 int vm_handler_defaf(ForthVM *vm);
 int vm_handler_allocf(ForthVM *vm);
+int vm_handler_uldd(ForthVM *vm);
+int vm_handler_ustd(ForthVM *vm);
+int vm_handler_uldf(ForthVM *vm);
+int vm_handler_ustf(ForthVM *vm);
 
 #endif

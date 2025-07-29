@@ -566,6 +566,18 @@ ForthParserStatus parser_parse(
                                 parser_handler_z_double_quote(
                                     parser, &iter, vm);
                             break;
+                        case PARSER_HANDLER_U_AT:
+                            ret_int = parser_handler_u_at(parser, vm);
+                            break;
+                        case PARSER_HANDLER_U_BANG:
+                            ret_int = parser_handler_u_bang(parser, vm);
+                            break;
+                        case PARSER_HANDLER_UF_AT:
+                            ret_int = parser_handler_uf_at(parser, vm);
+                            break;
+                        case PARSER_HANDLER_UF_BANG:
+                            ret_int = parser_handler_uf_bang(parser, vm);
+                            break;
                         }
                     }
                 }

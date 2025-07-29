@@ -10,7 +10,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 120
+#define BUILTIN_SIZE 124
 #define BUILTIN_CALLEXT_SIZE 23
 #define MEMORY_SIZE 2
 
@@ -148,7 +148,11 @@ ForthVMStatus vm_initialize(
             "fdepth",
             "fvariable",
             "mload\"",
-            "z\""
+            "z\"",
+            "u@",
+            "u!",
+            "uf@",
+            "uf!"
         };
     static const char *builtin_callext_symbol[BUILTIN_CALLEXT_SIZE] =
         {
@@ -671,6 +675,18 @@ void vm_log(ForthVM *vm) {
         case VM_INSTRUCTION_ALLOCF:
             printf("%s", "ALLOCF");
             break;
+        case VM_INSTRUCTION_ULDD:
+            printf("%s", "ULDD");
+            break;
+        case VM_INSTRUCTION_USTD:
+            printf("%s", "USTD");
+            break;
+        case VM_INSTRUCTION_ULDF:
+            printf("%s", "ULDF");
+            break;
+        case VM_INSTRUCTION_USTF:
+            printf("%s", "USTF");
+            break;
         }
         putchar(10);
     }
@@ -963,6 +979,18 @@ void vm_log(ForthVM *vm) {
             break;
         case VM_INSTRUCTION_ALLOCF:
             printf("%s", "ALLOCF");
+            break;
+        case VM_INSTRUCTION_ULDD:
+            printf("%s", "ULDD");
+            break;
+        case VM_INSTRUCTION_USTD:
+            printf("%s", "USTD");
+            break;
+        case VM_INSTRUCTION_ULDF:
+            printf("%s", "ULDF");
+            break;
+        case VM_INSTRUCTION_USTF:
+            printf("%s", "USTF");
             break;
         }
         putchar(10);
@@ -1281,6 +1309,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             case VM_INSTRUCTION_ALLOCF:
                 printf("%s", "ALLOCF");
                 break;
+            case VM_INSTRUCTION_ULDD:
+                printf("%s", "ULDD");
+                break;
+            case VM_INSTRUCTION_USTD:
+                printf("%s", "USTD");
+                break;
+            case VM_INSTRUCTION_ULDF:
+                printf("%s", "ULDF");
+                break;
+            case VM_INSTRUCTION_USTF:
+                printf("%s", "USTF");
+                break;
             }
             putchar(10);
         }
@@ -1584,6 +1624,18 @@ ForthVMStatus vm_run(ForthVM *vm, bool debug) {
             break;
         case VM_INSTRUCTION_ALLOCF:
             ret = vm_handler_allocf(vm);
+            break;
+        case VM_INSTRUCTION_ULDD:
+            ret = vm_handler_uldd(vm);
+            break;
+        case VM_INSTRUCTION_USTD:
+            ret = vm_handler_ustd(vm);
+            break;
+        case VM_INSTRUCTION_ULDF:
+            ret = vm_handler_uldf(vm);
+            break;
+        case VM_INSTRUCTION_USTF:
+            ret = vm_handler_ustf(vm);
             break;
         }
     }
