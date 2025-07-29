@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 LIB = lib/mod.so
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -shared
@@ -20,5 +20,5 @@ install: $(LIB)
 	@cp -r `pwd` ~/.local/lib/fsi
 
 test: install
-	@valgrind -s --leak-check=full --show-leak-kinds=all fsi -d test/puts.fs
-	@valgrind -s --leak-check=full --show-leak-kinds=all fsi -d test/printf.fs
+	@valgrind -s --leak-check=full --show-leak-kinds=all fsi -d test/character_io.fs
+	@valgrind -s --leak-check=full --show-leak-kinds=all fsi -d test/formatted_io.fs
