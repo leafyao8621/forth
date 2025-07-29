@@ -9,6 +9,5 @@ mload" stdio"
     z" blah" swap fputs
     dup
     char A swap fputc
-    depth . cr
     fclose
 ;
