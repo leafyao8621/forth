@@ -22,3 +22,9 @@ vm_ext_fopen
 r
 fclose
 vm_ext_fclose
+r
+stdin
+vm_ext_stdin
+r
+stdout
+vm_ext_stdout

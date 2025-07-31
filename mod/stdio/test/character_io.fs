@@ -10,4 +10,6 @@ mload" stdio"
     dup
     char A swap fputc
     fclose
+    z" blah" stdout fputs
+    char A stdout fputc
 ;

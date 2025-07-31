@@ -24,3 +24,23 @@ int vm_ext_fclose(ForthVM *vm) {
     fclose(*(FILE**)vm->data_stack_cur);
     return VM_STATUS_OK;
 }
+
+int vm_ext_stdin(ForthVM *vm) {
+    if (vm->data_stack_cur == vm->data_stack_end) {
+        vm->state = VM_STATE_HALTED;
+        return VM_STATUS_DATA_STACK_OVERFLOW;
+    }
+    *(FILE**)vm->data_stack_cur = stdin;
+    vm->data_stack_cur += sizeof(uintptr_t);
+    return VM_STATUS_OK;
+}
+
+int vm_ext_stdout(ForthVM *vm) {
+    if (vm->data_stack_cur == vm->data_stack_end) {
+        vm->state = VM_STATE_HALTED;
+        return VM_STATUS_DATA_STACK_OVERFLOW;
+    }
+    *(FILE**)vm->data_stack_cur = stdout;
+    vm->data_stack_cur += sizeof(uintptr_t);
+    return VM_STATUS_OK;
+}
