@@ -17,6 +17,12 @@ r
 printf.f
 vm_ext_printf_dot_f
 r
+fprintf.d
+vm_ext_fprintf_dot_d
+r
+fprintf.f
+vm_ext_fprintf_dot_f
+r
 fopen
 vm_ext_fopen
 r
