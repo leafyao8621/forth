@@ -1,0 +1,9 @@
+r
+mt19937.initialize
+vm_ext_mt19937_initialize
+r
+mt19937.gen
+vm_ext_mt19937_gen
+p
+mt19937.size
+parser_handler_mt19937_size
