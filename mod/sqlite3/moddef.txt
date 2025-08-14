@@ -1,0 +1,6 @@
+r
+sqlite3.open
+vm_ext_sqlite3_open
+r
+sqlite3.close
+vm_ext_sqlite3_close

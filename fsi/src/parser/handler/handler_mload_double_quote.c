@@ -503,5 +503,6 @@ int parser_handler_mload_double_quote(
     DArrayChar_finalize(&script_buf);
     free(buf_name);
     parser_finalize(&parser_script);
+    vm_reset(vm);
     return PARSER_STATUS_OK;
 }
