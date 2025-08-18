@@ -16,7 +16,7 @@ variable stmt
         ." Iter " i . cr
         stmt @ 1 i 1+ 2* sqlite3.bind.int
         drop
-        stmt @ 2 fdup 1.5 d>f f* fdup f. cr sqlite3.bind.float
+        stmt @ 2 fdup 1.5 d>f f* sqlite3.bind.float
         1E d>f f+
         drop
         stmt @ 3
