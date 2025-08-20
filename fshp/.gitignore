@@ -1,0 +1,5 @@
+*.o
+*.so
+fshp
+!include/fshp
+.vscode
