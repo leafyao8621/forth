@@ -6,7 +6,7 @@ LIB = lib/libfshp.so
 BIN = fshp
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -lm -lcontainers -shared
@@ -23,5 +23,5 @@ valgrind: $(BIN)
 	@valgrind -s --leak-check=full --show-leak-kinds=all ./$(BIN) script/a.fshp
 install: $(BIN)
 	@cp $(BIN) ~/.local/bin
-	@cp -r include/fsi ~/.local/include
+	@cp -r include/fshp ~/.local/include
 	@cp -r $(LIB) ~/.local/lib
