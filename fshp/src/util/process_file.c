@@ -113,6 +113,9 @@ FSHPStatus fshp_process_file(
     }
     DArrayChar_clear(buf);
     FILE *fin = fopen(fn, "r");
+    if (!fin) {
+        return FSHP_STATUS_FILE_OPEN;
+    }
     size_t idx = 0;
     FSHPStatus status = FSHP_STATUS_OK;
     for (char i = fgetc(fin); !feof(fin); i = fgetc(fin)) {
