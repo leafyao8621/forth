@@ -24,10 +24,10 @@ const char *route =
     "src/index.fshp\n";
 
 ErrInit init(void) {
-    if (mkdir("src", 0755)) {
+    if (mkdir("script", 0755)) {
         return ERR_INIT_MKDIR;
     }
-    int fd = creat("src/index.fshp", 0755);
+    int fd = creat("script/index.fshp", 0755);
     ssize_t sz = write(fd, index_fshp, strlen(index_fshp));
     if (sz == -1) {
         close(fd);
