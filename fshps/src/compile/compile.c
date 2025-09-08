@@ -24,6 +24,7 @@ ErrCompile compile(void) {
     bool is_header = true;
     char header = 0;
     for (; !feof(fin); is_header = !is_header) {
+        DArrayChar_clear(&buf);
         for (char in = fgetc(fin); in != '\n' && !feof(fin); in = fgetc(fin)) {
             if (DArrayChar_push_back(&buf, &in)) {
                 fclose(fin);
