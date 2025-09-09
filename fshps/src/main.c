@@ -1,12 +1,14 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "init/init.h"
 #include "compile/compile.h"
+#include "serve/serve.h"
 
 int main(int argc, char *argv[]) {
     if (argc < 2) {
-        puts("Usage: fshps <action> {init, compile, serve} <ip>");
+        puts("Usage: fshps <action> {init, compile, serve} <port>");
         return 1;
     }
     if (!strcmp(argv[1], "init")) {
@@ -43,6 +45,8 @@ int main(int argc, char *argv[]) {
                 break;
             }
         }
+    } else if (!strcmp(argv[1], "serve")) {
+        serve(atoi(argv[2]));
     } else {
         puts("Usage: fshps <action> {init, compile, serve} <ip>");
         return 1;

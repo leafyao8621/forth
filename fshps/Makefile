@@ -6,7 +6,7 @@ BIN = fshps
 	$(CC) $(CFLAGS) -g -c $< -o $@ -Iinclude
 
 $(BIN): $(OBJ)
-	$(CC) $(OBJ) -o $(BIN) -lcontainers
+	$(CC) $(OBJ) -o $(BIN) -lcontainers -lhttpserver -lhttputil -lfshp -lfsi -lm -lpthread
 
 .PHONY: clean install
 clean:
