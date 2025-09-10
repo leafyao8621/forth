@@ -14,3 +14,4 @@ clean:
 	@rm $(BIN)
 install: $(BIN)
 	@cp $(BIN) ~/.local/bin
+	@cp -r include/fshps ~/.local/include

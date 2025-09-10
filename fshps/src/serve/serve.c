@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <signal.h>
-#include <stdlib.h>
 
-#include <unistd.h>
-#include <fcntl.h>
-
-#include <http_server/errcode.h>
-#include <http_server/server.h>
-#include <containers/eq.h>
-#include <containers/hash.h>
-#include <fshp/fshp.h>
+#include <fshps/fshps.h>
 
 HTTPServer server;
+
+size_t memory;
+size_t lookup;
+size_t literal;
+size_t ext;
+size_t mod;
+size_t mod_so;
+size_t interpreted;
+size_t data_stack;
+size_t float_stack;
+size_t return_stack;
+size_t compiled;
 
 int index_get(HTTPRequest *request, HTTPResponse *response) {
     int ret =
@@ -23,17 +27,7 @@ int index_get(HTTPRequest *request, HTTPResponse *response) {
     if (ret) {
         return 1;
     }
-    size_t memory = 65536;
-    size_t lookup = 9500;
-    size_t literal = 2000;
-    size_t ext = 2000;
-    size_t mod = 2000;
-    size_t mod_so = 2000;
-    size_t interpreted = 2000;
-    size_t data_stack = 2000;
-    size_t float_stack = 2000;
-    size_t return_stack = 2000;
-    size_t compiled = 2000;
+
     ForthVM vm;
     ForthParser parser;
     ForthVMStatus ret_vm = VM_STATUS_OK;
@@ -142,7 +136,31 @@ void sig_handler(int sig) {
     exit(0);
 }
 
-void serve(int port) {
+void serve(
+    int port,
+    size_t memory_in,
+    size_t lookup_in,
+    size_t literal_in,
+    size_t ext_in,
+    size_t mod_in,
+    size_t mod_so_in,
+    size_t interpreted_in,
+    size_t data_stack_in,
+    size_t float_stack_in,
+    size_t return_stack_in,
+    size_t compiled_in) {
+    memory = memory_in;
+    lookup = lookup_in;
+    literal = literal_in;
+    ext = ext_in;
+    mod = mod_in;
+    mod_so = mod_so_in;
+    interpreted = interpreted_in;
+    data_stack = data_stack_in;
+    float_stack = float_stack_in;
+    return_stack = return_stack_in;
+    compiled = compiled_in;
+
     int ret = HTTPServer_initialize(&server, 8000);
     printf("retcode: %d\nmsg: %s\n", ret, http_server_errcode_lookup[ret]);
     ret =

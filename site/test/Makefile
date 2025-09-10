@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 LIB = lib/handler.so
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -shared

@@ -30,7 +30,7 @@ const char *makefile =
     "OBJ = $(SRC:.c=.o)\n"
     "LIB = lib/handler.so\n\n"
     "%.o: %.c\n"
-    "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude\n\n"
+    "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@\n\n"
     "$(LIB): $(OBJ)\n"
     "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n"
     ".PHONY: clean\n"
