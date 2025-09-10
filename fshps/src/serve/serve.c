@@ -18,6 +18,9 @@ size_t return_stack;
 size_t compiled;
 
 int index_get(HTTPRequest *request, HTTPResponse *response) {
+    if (!request) {
+        return 1;
+    }
     int ret =
         HTTPResponse_initialize(
             response,
@@ -33,14 +36,15 @@ int index_get(HTTPRequest *request, HTTPResponse *response) {
     ForthVMStatus ret_vm = VM_STATUS_OK;
     ForthParserStatus ret_parser = PARSER_STATUS_OK;
     ret_parser = parser_initialize(&parser);
+    if (ret_parser) {
+        fputs("Parser Init\n", stderr);
+    }
     String buf;
     ret = DArrayChar_initialize(&buf, 1000);
     if (ret) {
         fprintf(stderr, "%s\n", "Out of memory");
         return 1;
     }
-    bool success = false;
-    FILE *fin = 0;
     ret_vm =
         vm_initialize(
             &vm,
@@ -56,6 +60,9 @@ int index_get(HTTPRequest *request, HTTPResponse *response) {
             return_stack,
             compiled
         );
+    if (ret_vm) {
+        fputs("VM Init\n", stderr);
+    }
     vm_reset(&vm);
     char template[] = "/tmp/fshps_XXXXXXXX";
     int ofd = mkstemp(template);
@@ -104,7 +111,7 @@ int index_get(HTTPRequest *request, HTTPResponse *response) {
     char buf_in[1000];
     ssize_t sz = 0;
     lseek(ofd, 0, SEEK_SET);
-    for (; sz = read(ofd, buf_in, 1000);) {
+    for (; (sz = read(ofd, buf_in, 1000));) {
         ret = DArrayChar_push_back_batch(&response->body.text, buf_in, sz);
         if (ret) {
             DArrayChar_finalize(&buf);
@@ -161,7 +168,7 @@ void serve(
     return_stack = return_stack_in;
     compiled = compiled_in;
 
-    int ret = HTTPServer_initialize(&server, 8000);
+    int ret = HTTPServer_initialize(&server, port);
     printf("retcode: %d\nmsg: %s\n", ret, http_server_errcode_lookup[ret]);
     ret =
         HTTPServer_set_route(

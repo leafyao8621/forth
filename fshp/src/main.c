@@ -3,7 +3,7 @@
 
 #include <fshp/fshp.h>
 
-const static char *msg =
+static const char *msg =
     "Usage: fsi [OPTIONS] <FILE(S)>\n"
     "Arguments:\n"
     "<FILE(S)>\n"
@@ -37,14 +37,15 @@ int main(int argc, char **argv) {
     ForthVMStatus ret_vm = VM_STATUS_OK;
     ForthParserStatus ret_parser = PARSER_STATUS_OK;
     ret_parser = parser_initialize(&parser);
+    if (ret_parser) {
+        fputs("Parser Init\n", stderr);
+    }
     String buf;
     int ret = DArrayChar_initialize(&buf, 1000);
     if (ret) {
         fprintf(stderr, "%s\n", "Out of memory");
         return 1;
     }
-    bool success = false;
-    FILE *fin = 0;
     ret = 0;
     for (; (ret = getopt(argc, argv, "dsm:l:i:e:o:d:n:a:f:r:c:")) != -1;) {
         switch (ret) {
@@ -104,6 +105,9 @@ int main(int argc, char **argv) {
             return_stack,
             compiled
         );
+    if (ret_vm) {
+        fputs("VM Init\n", stderr);
+    }
     for (int i = optind; i < argc; ++i) {
         vm_reset(&vm);
         FSHPStatus status = fshp_process_file(argv[i], &vm, &parser, &buf);

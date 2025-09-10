@@ -1,4 +1,5 @@
 SRC = $(wildcard src/*.c) $(wildcard src/*/*.c)
+CFLAGS = -Wall -Wextra -Werror -pedantic
 OBJ = $(SRC:.c=.o)
 BIN = fshps
 
