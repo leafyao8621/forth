@@ -15,9 +15,11 @@ const char *index_fshp =
     "    </body>\n"
     "</html>\n";
 
-const char *gitignore = "route\n";
+const char *gitignore = "route\n*.c\n*.o\n*.so\n";
 
 const char *route =
+    "KEY\n"
+    "index\n"
     "URL\n"
     "/ \n"
     "GET\n"

@@ -4,6 +4,126 @@
 
 #include "compile.h"
 
+const char *get_1 =
+    "#include <fshps/fshps.h>\n\n"
+    "int ";
+
+const char *get_2 =
+    "_get(HTTPRequest *request, HTTPResponse *response) {\n"
+    "    int ret =\n"
+    "        HTTPResponse_initialize(\n"
+    "            response,\n"
+    "            HTTP_RESPONSE_200,\n"
+    "            BODY_TYPE_TEXT\n"
+    "        );\n"
+    "    if (ret) {\n"
+    "        return 1;\n"
+    "    }\n"
+    "\n"
+    "    ForthVM vm;\n"
+    "    ForthParser parser;\n"
+    "    ForthVMStatus ret_vm = VM_STATUS_OK;\n"
+    "    ForthParserStatus ret_parser = PARSER_STATUS_OK;\n"
+    "    ret_parser = parser_initialize(&parser);\n"
+    "    String buf;\n"
+    "    ret = DArrayChar_initialize(&buf, 1000);\n"
+    "    if (ret) {\n"
+    "        fprintf(stderr, \"%s\\n\", \"Out of memory\");\n"
+    "        return 1;\n"
+    "    }\n"
+    "    bool success = false;\n"
+    "    FILE *fin = 0;\n"
+    "    ret_vm =\n"
+    "        vm_initialize(\n"
+    "            &vm,\n"
+    "            memory,\n"
+    "            lookup,\n"
+    "            literal,\n"
+    "            ext,\n"
+    "            mod,\n"
+    "            mod_so,\n"
+    "            interpreted,\n"
+    "            data_stack,\n"
+    "            float_stack,\n"
+    "            return_stack,\n"
+    "            compiled\n"
+    "        );\n"
+    "    vm_reset(&vm);\n"
+    "    char template[] = \"/tmp/fshps_XXXXXXXX\";\n"
+    "    int ofd = mkstemp(template);\n"
+    "    if (ofd == -1) {\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        return 1;\n"
+    "    }\n"
+    "    int stdout_backup = dup(STDOUT_FILENO);\n"
+    "    if (stdout_backup == -1) {\n"
+    "        close(ofd);\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        return 1;\n"
+    "    }\n"
+    "    if (dup2(ofd, STDOUT_FILENO) == -1) {\n"
+    "        close(ofd);\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        return 1;\n"
+    "    }\n"
+    "    FSHPStatus status =\n"
+    "        fshp_process_file(\"";
+
+const char *get_3 =
+    "\", &vm, &parser, &buf);\n"
+    "    fflush(stdout);\n"
+    "    if (dup2(stdout_backup, STDOUT_FILENO) == -1) {\n"
+    "        close(ofd);\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        return 1;\n"
+    "    }\n"
+    "    if (status) {\n"
+    "        ret = DArrayChar_push_back_batch(&response->body.text, \"Invalid!\", 9);\n"
+    "        close(ofd);\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        if (ret) {\n"
+    "            return 1;\n"
+    "        }\n"
+    "        return 0;\n"
+    "    }\n"
+    "    char buf_in[1000];\n"
+    "    ssize_t sz = 0;\n"
+    "    lseek(ofd, 0, SEEK_SET);\n"
+    "    for (; sz = read(ofd, buf_in, 1000);) {\n"
+    "        ret = DArrayChar_push_back_batch(&response->body.text, buf_in, sz);\n"
+    "        if (ret) {\n"
+    "            DArrayChar_finalize(&buf);\n"
+    "            vm_finalize(&vm);\n"
+    "            parser_finalize(&parser);\n"
+    "            close(ofd);\n"
+    "            return 1;\n"
+    "        }\n"
+    "    }\n"
+    "    close(ofd);\n"
+    "    char chr = 0;\n"
+    "    ret = DArrayChar_push_back(&response->body.text, &chr);\n"
+    "    if (ret) {\n"
+    "        DArrayChar_finalize(&buf);\n"
+    "        vm_finalize(&vm);\n"
+    "        parser_finalize(&parser);\n"
+    "        return 1;\n"
+    "    }\n"
+    "    DArrayChar_finalize(&buf);\n"
+    "    vm_finalize(&vm);\n"
+    "    parser_finalize(&parser);\n"
+    "    return 0;\n"
+    "}\n";
+
 ErrCompile compile(void) {
     FILE *fin = fopen("route.txt", "r");
     if (!fin) {
@@ -20,6 +140,21 @@ ErrCompile compile(void) {
         fclose(fout);
         return ERR_COMPILE_OUT_OF_MEMORY;
     }
+    String header_buf;
+    if (DArrayChar_initialize(&header_buf, 80)) {
+        fclose(fin);
+        fclose(fout);
+        DArrayChar_finalize(&buf);
+        return ERR_COMPILE_OUT_OF_MEMORY;
+    }
+    String fn;
+    if (DArrayChar_initialize(&fn, 80)) {
+        fclose(fin);
+        fclose(fout);
+        DArrayChar_finalize(&buf);
+        DArrayChar_finalize(&header_buf);
+        return ERR_COMPILE_OUT_OF_MEMORY;
+    }
     char zero = 0;
     bool is_header = true;
     char header = 0;
@@ -30,6 +165,8 @@ ErrCompile compile(void) {
                 fclose(fin);
                 fclose(fout);
                 DArrayChar_finalize(&buf);
+                DArrayChar_finalize(&header_buf);
+                DArrayChar_finalize(&fn);
                 return ERR_COMPILE_OUT_OF_MEMORY;
             }
         }
@@ -40,10 +177,15 @@ ErrCompile compile(void) {
             fclose(fin);
             fclose(fout);
             DArrayChar_finalize(&buf);
+            DArrayChar_finalize(&header_buf);
+            DArrayChar_finalize(&fn);
             return ERR_COMPILE_OUT_OF_MEMORY;
         }
         if (is_header) {
-            if (!strcmp(buf.data, "URL")) {
+            if (!strcmp(buf.data, "KEY")) {
+                header = HEADER_KEY;
+                fwrite(&header, 1, 1, fout);
+            } else if (!strcmp(buf.data, "URL")) {
                 header = HEADER_URL;
                 fwrite(&header, 1, 1, fout);
             } else if (!strcmp(buf.data, "GET")) {
@@ -77,15 +219,82 @@ ErrCompile compile(void) {
                 fclose(fin);
                 fclose(fout);
                 DArrayChar_finalize(&buf);
+                DArrayChar_finalize(&header_buf);
+                DArrayChar_finalize(&fn);
                 return ERR_COMPILE_INVALID_HEADER;
             }
         } else {
             fwrite(&buf.size, sizeof(size_t), 1, fout);
             fwrite(buf.data, buf.size, 1, fout);
+            switch (header) {
+            case HEADER_KEY:
+                DArrayChar_clear(&header_buf);
+                if (
+                    DArrayChar_push_back_batch(
+                        &header_buf, buf.data, buf.size)) {
+                    fclose(fin);
+                    fclose(fout);
+                    DArrayChar_finalize(&buf);
+                    DArrayChar_finalize(&header_buf);
+                    DArrayChar_finalize(&fn);
+                    return ERR_COMPILE_OUT_OF_MEMORY;
+                }
+                break;
+            case HEADER_GET:
+                DArrayChar_clear(&fn);
+                if (
+                    DArrayChar_push_back_batch(
+                        &fn, "src/", 4)) {
+                    fclose(fin);
+                    fclose(fout);
+                    DArrayChar_finalize(&buf);
+                    DArrayChar_finalize(&header_buf);
+                    DArrayChar_finalize(&fn);
+                    return ERR_COMPILE_OUT_OF_MEMORY;
+                }
+                if (
+                    DArrayChar_push_back_batch(
+                        &fn, header_buf.data, header_buf.size - 1)) {
+                    fclose(fin);
+                    fclose(fout);
+                    DArrayChar_finalize(&buf);
+                    DArrayChar_finalize(&header_buf);
+                    DArrayChar_finalize(&fn);
+                    return ERR_COMPILE_OUT_OF_MEMORY;
+                }
+                if (
+                    DArrayChar_push_back_batch(
+                        &fn, "_get.c", 7)) {
+                    fclose(fin);
+                    fclose(fout);
+                    DArrayChar_finalize(&buf);
+                    DArrayChar_finalize(&header_buf);
+                    DArrayChar_finalize(&fn);
+                    return ERR_COMPILE_OUT_OF_MEMORY;
+                }
+                FILE *fout_temp = fopen(fn.data, "w");
+                if (!fout_temp) {
+                    fclose(fin);
+                    fclose(fout);
+                    DArrayChar_finalize(&buf);
+                    DArrayChar_finalize(&header_buf);
+                    DArrayChar_finalize(&fn);
+                    return ERR_COMPILE_OPEN;
+                }
+                fputs(get_1, fout_temp);
+                fputs(header_buf.data, fout_temp);
+                fputs(get_2, fout_temp);
+                fputs(buf.data, fout_temp);
+                fputs(get_3, fout_temp);
+                fclose(fout_temp);
+                break;
+            }
         }
     }
     fclose(fin);
     fclose(fout);
     DArrayChar_finalize(&buf);
+    DArrayChar_finalize(&header_buf);
+    DArrayChar_finalize(&fn);
     return ERR_COMPILE_OK;
 }

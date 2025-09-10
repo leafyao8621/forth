@@ -1,16 +1,17 @@
 #ifndef COMPILE_COMPILE_H_
 #define COMPILE_COMPILE_H_
 
-#define HEADER_URL 0
-#define HEADER_GET 1
-#define HEADER_HEAD 2
-#define HEADER_POST 3
-#define HEADER_PUT 4
-#define HEADER_DELETE 5
-#define HEADER_CONNECT 6
-#define HEADER_OPTIONS 7
-#define HEADER_TRACE 8
-#define HEADER_PATCH 9
+#define HEADER_KEY 0
+#define HEADER_URL 1
+#define HEADER_GET 2
+#define HEADER_HEAD 3
+#define HEADER_POST 4
+#define HEADER_PUT 5
+#define HEADER_DELETE 6
+#define HEADER_CONNECT 7
+#define HEADER_OPTIONS 8
+#define HEADER_TRACE 9
+#define HEADER_PATCH 10
 
 typedef enum ErrCompile {
     ERR_COMPILE_OK,
