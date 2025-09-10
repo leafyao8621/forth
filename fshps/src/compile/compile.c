@@ -10,9 +10,9 @@ const char *get_1 =
 
 const char *get_2 =
     "_get(HTTPRequest *request, HTTPResponse *response) {\n"
-    "if (!request) {\n"
-    "    return 1;\n"
-    "}\n"
+    "    if (!request) {\n"
+    "        return 1;\n"
+    "    }\n"
     "    int ret =\n"
     "        HTTPResponse_initialize(\n"
     "            response,\n"
