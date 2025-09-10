@@ -23,6 +23,21 @@ const char *route =
     "GET\n"
     "src/index.fshp\n";
 
+const char *makefile =
+    "CC = gcc\n"
+    "CFLAGS = -Wall -Wextra -Werror -pedantic\n"
+    "SRC = $(wildcard src/*.c)\n"
+    "OBJ = $(SRC:.c=.o)\n"
+    "LIB = lib/handler.so\n\n"
+    "%.o: %.c\n"
+    "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude\n\n"
+    "$(LIB): $(OBJ)\n"
+    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n"
+    ".PHONY: clean\n"
+    "clean:\n"
+    "\t@rm $(OBJ)\n"
+    "\t@rm $(LIB)\n\n";
+
 ErrInit init(void) {
     if (mkdir("script", 0755)) {
         return ERR_INIT_MKDIR;
@@ -51,4 +66,31 @@ ErrInit init(void) {
         return ERR_INIT_WRITE;
     }
     close(fd);
+    if (mkdir("src", 0755)) {
+        return ERR_INIT_MKDIR;
+    }
+    fd = creat("src/.gitkeep", 0755);
+    if (!fd) {
+        return ERR_INIT_CREATE;
+    }
+    close(fd);
+    if (mkdir("lib", 0755)) {
+        return ERR_INIT_MKDIR;
+    }
+    fd = creat("lib/.gitkeep", 0755);
+    if (!fd) {
+        return ERR_INIT_CREATE;
+    }
+    close(fd);
+    fd = creat("Makefile", 0755);
+    if (!fd) {
+        return ERR_INIT_CREATE;
+    }
+    sz = write(fd, makefile, strlen(makefile));
+    if (sz == -1) {
+        close(fd);
+        return ERR_INIT_WRITE;
+    }
+    close(fd);
+    return ERR_INIT_OK;
 }
