@@ -101,11 +101,11 @@ void fshps_serve(
     printf("Library loaded at %p\n", lib);
     for (; !feof(fin);) {
         char header = 0;
-        fread(&header, 1, 1, fin);
+        ret = fread(&header, 1, 1, fin);
         size_t sz = 0;
         switch (header) {
         case HEADER_KEY:
-            fread(&sz, sizeof(size_t), 1, fin);
+            ret = fread(&sz, sizeof(size_t), 1, fin);
             DArrayChar_clear(&key);
             if (DArrayChar_expand(&key, sz, false)) {
                 puts("Out of memory");
@@ -116,10 +116,10 @@ void fshps_serve(
                 DArrayChar_finalize(&fn);
                 return;
             }
-            fread(key.data, 1, sz, fin);
+            ret = fread(key.data, 1, sz, fin);
             break;
         case HEADER_URL:
-            fread(&sz, sizeof(size_t), 1, fin);
+            ret = fread(&sz, sizeof(size_t), 1, fin);
             DArrayChar_clear(&url);
             if (DArrayChar_expand(&url, sz, false)) {
                 puts("Out of memory");
@@ -130,7 +130,7 @@ void fshps_serve(
                 DArrayChar_finalize(&fn);
                 return;
             }
-            fread(url.data, 1, sz, fin);
+            ret = fread(url.data, 1, sz, fin);
             break;
         case HEADER_GET:
             DArrayChar_clear(&fn);
