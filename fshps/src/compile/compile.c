@@ -93,6 +93,7 @@ const char *get_3 =
     "        return 1;\n"
     "    }\n"
     "    if (status) {\n"
+    "        printf(\"FSHP Status: %d %s\\n\", status, fshp_status_lookup[status]);\n"
     "        ret = DArrayChar_push_back_batch(&response->body.text, \"Invalid!\", 9);\n"
     "        close(ofd);\n"
     "        DArrayChar_finalize(&buf);\n"

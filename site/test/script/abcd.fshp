@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head><head>
+    <body>
+        <h1><?fshp : main ." FSHP" ; main ?></h1>
+        <p>
+            <?fshp
+                : body1
+                    97
+                    4 0 do
+                        dup emit 1+
+                    loop
+                ;
+                body1
+            ?>
+        </p>
+        <p>
+            <?fshp
+                : body2
+                    97
+                    4 0 do
+                        dup emit 1+
+                    loop
+                ;
+                body2
+            ?>
+        </p>
+    </body>
+</html>

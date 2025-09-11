@@ -1,6 +1,12 @@
 KEY
 index
 URL
-/ 
+/
 GET
-src/index.fshp
+script/index.fshp
+KEY
+abcd
+URL
+/abcd
+GET
+script/abcd.fshp

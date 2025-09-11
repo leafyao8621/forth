@@ -23,7 +23,7 @@ const char *route =
     "URL\n"
     "/ \n"
     "GET\n"
-    "src/index.fshp\n";
+    "script/index.fshp\n";
 
 const char *makefile =
     "CC = gcc\n"

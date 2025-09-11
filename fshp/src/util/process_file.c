@@ -125,17 +125,21 @@ FSHPStatus fshp_process_file(
             return FSHP_STATUS_OUT_OF_MEMORY;
         }
         if (buf->size > 5) {
-            if (!memcmp(buf->data + buf->size - 6, "<?fshp", 6)) {
+            if (!memcmp(buf->data + idx, "<?fshp", 6)) {
                 status = run_code(fin, parser, vm, buf, idx + 6);
                 if (status) {
                     break;
                 }
-                idx = buf->size;
+                idx = buf->size - 5;
+                memset(buf->data + idx, 0, 5);
                 if (feof(fin)) {
                     break;
                 }
             } else {
-                putchar(buf->data[idx++]);
+                if (buf->data[idx]) {
+                    putchar(buf->data[idx]);
+                }
+                ++idx;
             }
         }
     }

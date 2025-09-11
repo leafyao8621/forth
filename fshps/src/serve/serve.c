@@ -89,7 +89,16 @@ void fshps_serve(
         return;
     }
     lib = dlopen("./lib/handler.so", RTLD_LAZY);
-    printf("%s %p\n", dlerror(), lib);
+    if (!lib) {
+        printf("Cannot open library: %s\n", dlerror());
+        HTTPServer_finalize(&server);
+        fclose(fin);
+        DArrayChar_finalize(&key);
+        DArrayChar_finalize(&url);
+        DArrayChar_finalize(&fn);
+        return;
+    }
+    printf("Library loaded at %p\n", lib);
     for (; !feof(fin);) {
         char header = 0;
         fread(&header, 1, 1, fin);
