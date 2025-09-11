@@ -6,7 +6,7 @@ LIB = lib/libfshps.so
 BIN = fshps
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@
+	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -shared -lcontainers -lhttpserver -lhttputil -ljson -lfshp -lfsi -lm -lpthread -ldl
