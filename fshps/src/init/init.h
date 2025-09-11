@@ -8,6 +8,6 @@ typedef enum ErrInit {
     ERR_INIT_WRITE
 } ErrInit;
 
-ErrInit init(void);
+ErrInit fshps_init(void);
 
 #endif

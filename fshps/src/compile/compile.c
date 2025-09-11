@@ -131,7 +131,7 @@ const char *get_3 =
     "    return 0;\n"
     "}\n";
 
-ErrCompile compile(void) {
+ErrCompile fshps_compile(void) {
     FILE *fin = fopen("route.txt", "r");
     if (!fin) {
         return ERR_COMPILE_OPEN;
@@ -231,10 +231,10 @@ ErrCompile compile(void) {
                 return ERR_COMPILE_INVALID_HEADER;
             }
         } else {
-            fwrite(&buf.size, sizeof(size_t), 1, fout);
-            fwrite(buf.data, buf.size, 1, fout);
             switch (header) {
             case HEADER_KEY:
+                fwrite(&buf.size, sizeof(size_t), 1, fout);
+                fwrite(buf.data, buf.size, 1, fout);
                 DArrayChar_clear(&header_buf);
                 if (
                     DArrayChar_push_back_batch(
@@ -246,6 +246,21 @@ ErrCompile compile(void) {
                     DArrayChar_finalize(&fn);
                     return ERR_COMPILE_OUT_OF_MEMORY;
                 }
+                break;
+            case HEADER_URL:
+                if (buf.size >= 2 && buf.data[buf.size - 2] != ' ') {
+                    buf.data[buf.size - 1] = ' ';
+                    if (DArrayChar_push_back(&buf, &zero)) {
+                        fclose(fin);
+                        fclose(fout);
+                        DArrayChar_finalize(&buf);
+                        DArrayChar_finalize(&header_buf);
+                        DArrayChar_finalize(&fn);
+                        return ERR_COMPILE_OUT_OF_MEMORY;
+                    }
+                }
+                fwrite(&buf.size, sizeof(size_t), 1, fout);
+                fwrite(buf.data, buf.size, 1, fout);
                 break;
             case HEADER_GET:
                 DArrayChar_clear(&fn);

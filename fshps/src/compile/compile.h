@@ -20,6 +20,6 @@ typedef enum ErrCompile {
     ERR_COMPILE_INVALID_HEADER
 } ErrCompile;
 
-ErrCompile compile(void);
+ErrCompile fshps_compile(void);
 
 #endif

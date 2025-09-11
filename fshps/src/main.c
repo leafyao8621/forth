@@ -8,7 +8,7 @@
 #include "compile/compile.h"
 #include "serve/serve.h"
 
-const static char *msg =
+static const char *msg =
     "Usage: fshps [OPTIONS] <action> {init, compile, serve} <port>\n"
     "Arguments:\n"
     "<FILE(S)>\n"
@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
         }
     }
     if (!strcmp(argv[optind], "init")) {
-        ErrInit err = init();
+        ErrInit err = fshps_init();
         if (err) {
             switch (err) {
             case ERR_INIT_MKDIR:
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
             }
         }
     } else if (!strcmp(argv[optind], "compile")) {
-        ErrCompile err = compile();
+        ErrCompile err = fshps_compile();
         if (err) {
             switch (err) {
             case ERR_COMPILE_OPEN:
@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
             fputs(msg, stderr);
             return 1;
         }
-        serve(
+        fshps_serve(
             atoi(argv[optind + 1]),
             memory,
             lookup,

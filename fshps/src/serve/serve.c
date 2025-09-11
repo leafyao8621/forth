@@ -1,9 +1,14 @@
 #include <stdio.h>
 #include <signal.h>
 
+#include <dlfcn.h>
+
 #include <fshps/fshps.h>
 
-HTTPServer server;
+#include "../compile/compile.h"
+
+static HTTPServer server;
+static void *lib = 0;
 
 size_t memory;
 size_t lookup;
@@ -17,133 +22,17 @@ size_t float_stack;
 size_t return_stack;
 size_t compiled;
 
-int index_get(HTTPRequest *request, HTTPResponse *response) {
-    if (!request) {
-        return 1;
-    }
-    int ret =
-        HTTPResponse_initialize(
-            response,
-            HTTP_RESPONSE_200,
-            BODY_TYPE_TEXT
-        );
-    if (ret) {
-        return 1;
-    }
-
-    ForthVM vm;
-    ForthParser parser;
-    ForthVMStatus ret_vm = VM_STATUS_OK;
-    ForthParserStatus ret_parser = PARSER_STATUS_OK;
-    ret_parser = parser_initialize(&parser);
-    if (ret_parser) {
-        fputs("Parser Init\n", stderr);
-    }
-    String buf;
-    ret = DArrayChar_initialize(&buf, 1000);
-    if (ret) {
-        fprintf(stderr, "%s\n", "Out of memory");
-        return 1;
-    }
-    ret_vm =
-        vm_initialize(
-            &vm,
-            memory,
-            lookup,
-            literal,
-            ext,
-            mod,
-            mod_so,
-            interpreted,
-            data_stack,
-            float_stack,
-            return_stack,
-            compiled
-        );
-    if (ret_vm) {
-        fputs("VM Init\n", stderr);
-    }
-    vm_reset(&vm);
-    char template[] = "/tmp/fshps_XXXXXXXX";
-    int ofd = mkstemp(template);
-    if (ofd == -1) {
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        return 1;
-    }
-    int stdout_backup = dup(STDOUT_FILENO);
-    if (stdout_backup == -1) {
-        close(ofd);
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        return 1;
-    }
-    if (dup2(ofd, STDOUT_FILENO) == -1) {
-        close(ofd);
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        return 1;
-    }
-    FSHPStatus status =
-        fshp_process_file("script/index.fshp", &vm, &parser, &buf);
-    fflush(stdout);
-    if (dup2(stdout_backup, STDOUT_FILENO) == -1) {
-        close(ofd);
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        return 1;
-    }
-    if (status) {
-        ret = DArrayChar_push_back_batch(&response->body.text, "Invalid!", 9);
-        close(ofd);
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        if (ret) {
-            return 1;
-        }
-        return 0;
-    }
-    char buf_in[1000];
-    ssize_t sz = 0;
-    lseek(ofd, 0, SEEK_SET);
-    for (; (sz = read(ofd, buf_in, 1000));) {
-        ret = DArrayChar_push_back_batch(&response->body.text, buf_in, sz);
-        if (ret) {
-            DArrayChar_finalize(&buf);
-            vm_finalize(&vm);
-            parser_finalize(&parser);
-            close(ofd);
-            return 1;
-        }
-    }
-    close(ofd);
-    char chr = 0;
-    ret = DArrayChar_push_back(&response->body.text, &chr);
-    if (ret) {
-        DArrayChar_finalize(&buf);
-        vm_finalize(&vm);
-        parser_finalize(&parser);
-        return 1;
-    }
-    DArrayChar_finalize(&buf);
-    vm_finalize(&vm);
-    parser_finalize(&parser);
-    return 0;
-}
-
 void sig_handler(int sig) {
     printf("Received signal %d\n", sig);
     int ret = HTTPServer_finalize(&server);
     printf("retcode: %d\nmsg: %s\n", ret, http_server_errcode_lookup[ret]);
+    if (lib) {
+        dlclose(lib);
+    }
     exit(0);
 }
 
-void serve(
+void fshps_serve(
     int port,
     size_t memory_in,
     size_t lookup_in,
@@ -167,17 +56,128 @@ void serve(
     float_stack = float_stack_in;
     return_stack = return_stack_in;
     compiled = compiled_in;
-
     int ret = HTTPServer_initialize(&server, port);
     printf("retcode: %d\nmsg: %s\n", ret, http_server_errcode_lookup[ret]);
-    ret =
-        HTTPServer_set_route(
-            &server,
-            "/ ",
-            HTTP_METHOD_GET,
-            index_get
-        );
-    printf("retcode: %d\nmsg: %s\n", ret, http_server_errcode_lookup[ret]);
+    FILE *fin = fopen("route", "rb");
+    if (!fin) {
+        puts("Cannot open route");
+        HTTPServer_finalize(&server);
+        return;
+    }
+    String key;
+    String url;
+    String fn;
+    if (DArrayChar_initialize(&key, 80)) {
+        puts("Out of memory");
+        HTTPServer_finalize(&server);
+        fclose(fin);
+        return;
+    }
+    if (DArrayChar_initialize(&url, 80)) {
+        puts("Out of memory");
+        HTTPServer_finalize(&server);
+        fclose(fin);
+        DArrayChar_finalize(&key);
+        return;
+    }
+    if (DArrayChar_initialize(&fn, 80)) {
+        puts("Out of memory");
+        HTTPServer_finalize(&server);
+        fclose(fin);
+        DArrayChar_finalize(&key);
+        DArrayChar_finalize(&url);
+        return;
+    }
+    lib = dlopen("./lib/handler.so", RTLD_LAZY);
+    printf("%s %p\n", dlerror(), lib);
+    for (; !feof(fin);) {
+        char header = 0;
+        fread(&header, 1, 1, fin);
+        size_t sz = 0;
+        switch (header) {
+        case HEADER_KEY:
+            fread(&sz, sizeof(size_t), 1, fin);
+            DArrayChar_clear(&key);
+            if (DArrayChar_expand(&key, sz, false)) {
+                puts("Out of memory");
+                HTTPServer_finalize(&server);
+                fclose(fin);
+                DArrayChar_finalize(&key);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&fn);
+                return;
+            }
+            fread(key.data, 1, sz, fin);
+            break;
+        case HEADER_URL:
+            fread(&sz, sizeof(size_t), 1, fin);
+            DArrayChar_clear(&url);
+            if (DArrayChar_expand(&url, sz, false)) {
+                puts("Out of memory");
+                HTTPServer_finalize(&server);
+                fclose(fin);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&fn);
+                return;
+            }
+            fread(url.data, 1, sz, fin);
+            break;
+        case HEADER_GET:
+            DArrayChar_clear(&fn);
+            if (DArrayChar_push_back_batch(&fn, key.data, key.size - 1)) {
+                puts("Out of memory");
+                HTTPServer_finalize(&server);
+                fclose(fin);
+                DArrayChar_finalize(&key);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&fn);
+                return;
+            }
+            if (DArrayChar_push_back_batch(&fn, "_get", 5)) {
+                puts("Out of memory");
+                HTTPServer_finalize(&server);
+                fclose(fin);
+                DArrayChar_finalize(&key);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&fn);
+                return;
+            }
+            HTTPRequestHandler handler;
+            *(void**)&handler = dlsym(lib, fn.data);
+            printf(
+                "Setting route %s to handler %s at %p\n",
+                url.data,
+                fn.data,
+                *(void**)&handler
+            );
+            ret =
+                HTTPServer_set_route(
+                    &server,
+                    url.data,
+                    HTTP_METHOD_GET,
+                    handler
+                );
+            printf(
+                "retcode: %d\nmsg: %s\n",
+                ret,
+                http_server_errcode_lookup[ret]
+            );
+            if (ret) {
+                HTTPServer_finalize(&server);
+                fclose(fin);
+                DArrayChar_finalize(&key);
+                DArrayChar_finalize(&url);
+                DArrayChar_finalize(&fn);
+                return;
+            }
+            break;
+        }
+    }
+    fclose(fin);
+    DArrayChar_finalize(&key);
+    DArrayChar_finalize(&url);
+    DArrayChar_finalize(&fn);
     signal(SIGABRT, sig_handler);
     signal(SIGFPE, sig_handler);
     signal(SIGILL, sig_handler);

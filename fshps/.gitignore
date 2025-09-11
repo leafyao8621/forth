@@ -2,3 +2,4 @@
 fshps
 .vscode
 !include/fshps
+*.so

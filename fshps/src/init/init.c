@@ -34,13 +34,13 @@ const char *makefile =
     "%.o: %.c\n"
     "\t$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@\n\n"
     "$(LIB): $(OBJ)\n"
-    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared\n"
+    "\t$(CC) -fPIC $(OBJ) -o $(LIB) -shared -lcontainers -lhttpserver -lhttputil -ljson -lfshp -lfsi -lm -lpthread -ldl\n"
     ".PHONY: clean\n"
     "clean:\n"
     "\t@rm $(OBJ)\n"
     "\t@rm $(LIB)\n\n";
 
-ErrInit init(void) {
+ErrInit fshps_init(void) {
     if (mkdir("script", 0755)) {
         return ERR_INIT_MKDIR;
     }

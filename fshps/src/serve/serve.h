@@ -13,7 +13,7 @@
 #include <containers/hash.h>
 #include <fshp/fshp.h>
 
-void serve(
+void fshps_serve(
     int port,
     size_t memory,
     size_t lookup,

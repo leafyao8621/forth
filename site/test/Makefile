@@ -8,7 +8,7 @@ LIB = lib/handler.so
 	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@
 
 $(LIB): $(OBJ)
-	$(CC) -fPIC $(OBJ) -o $(LIB) -shared
+	$(CC) -fPIC $(OBJ) -o $(LIB) -shared -lfshps -lcontainers -lhttpserver -lhttputil -ljson -lfshp -lfsi -lm -lpthread -ldl
 .PHONY: clean
 clean:
 	@rm $(OBJ)
