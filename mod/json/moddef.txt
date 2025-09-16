@@ -1,0 +1,12 @@
+r
+json.document.parse
+vm_ext_JSONDocument_parse
+r
+json.document.finalize
+vm_ext_JSONDocument_finalize
+p
+json.document.size
+parser_handler_JSONDocument_size
+r
+json.document.get.root
+vm_ext_json_document_get_root
