@@ -3,7 +3,7 @@
 
 #include <json/document.h>
 
-int vm_ext_JSONDocument_parse(ForthVM *vm) {
+int vm_ext_json_document_parse(ForthVM *vm) {
     if (vm->data_stack_cur - (sizeof(uintptr_t) << 1) < vm->data_stack) {
         vm->state = VM_STATE_HALTED;
         return VM_STATUS_DATA_STACK_UNDERFLOW;

@@ -3,7 +3,7 @@
 
 #include <json/document.h>
 
-int parser_handler_json_document_size(
+int parser_handler_json_node_type_boolean(
     ForthParser *parser, char **iter, ForthVM *vm) {
     if (!iter) {
         return PARSER_STATUS_OK;
@@ -18,7 +18,7 @@ int parser_handler_json_document_size(
             parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_INTERPRETED_OVERFLOW;
         }
-        *(uintptr_t*)vm->interpreted_cur = sizeof(JSONDocument);
+        *(uintptr_t*)vm->interpreted_cur = BOOLEAN;
         vm->interpreted_cur += sizeof(uintptr_t);
     }
     if (parser->state & PARSER_STATE_COMPILE) {
@@ -31,7 +31,7 @@ int parser_handler_json_document_size(
             parser->status = PARSER_STATUS_END;
             return PARSER_STATUS_COMPILED_OVERFLOW;
         }
-        *(uintptr_t*)vm->compiled_cur = sizeof(JSONDocument);
+        *(uintptr_t*)vm->compiled_cur = BOOLEAN;
         vm->compiled_cur += sizeof(uintptr_t);
     }
     return PARSER_STATUS_OK;

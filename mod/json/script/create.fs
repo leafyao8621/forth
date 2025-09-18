@@ -1,1 +1,1 @@
-: json.document.create create json.document.size allot ;
+: json.document.create create JSON.DOCUMENT.SIZE allot ;
