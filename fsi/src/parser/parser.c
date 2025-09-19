@@ -218,6 +218,9 @@ ForthParserStatus parser_parse(
                         case PARSER_HANDLER_SEMI_COLON:
                             ret_int = parser_handler_semi_colon(parser, vm);
                             break;
+                        case PARSER_HANDLER_RECURSE:
+                            ret_int = parser_handler_recurse(parser, vm);
+                            break;
                         case PARSER_HANDLER_IF:
                             ret_int = parser_handler_if(parser, vm);
                             break;

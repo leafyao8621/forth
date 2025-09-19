@@ -10,7 +10,7 @@
 #include "ext/ext.h"
 
 
-#define BUILTIN_SIZE 124
+#define BUILTIN_SIZE 125
 #define BUILTIN_CALLEXT_SIZE 23
 #define MEMORY_SIZE 2
 
@@ -37,6 +37,7 @@ ForthVMStatus vm_initialize(
             "spaces",
             ":",
             ";",
+            "recurse",
             "if",
             "then",
             "else",
