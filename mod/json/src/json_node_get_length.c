@@ -25,7 +25,7 @@ int vm_ext_json_node_get_length(ForthVM *vm) {
     } else {
         *(uintptr_t*)(vm->data_stack_cur - sizeof(uintptr_t)) =
             (*(JSONNodePtr*)(vm->data_stack_cur - sizeof(uintptr_t)))->data
-                .object.size;
+                .object.capacity;
     }
     return PARSER_STATUS_OK;
 }

@@ -62,9 +62,11 @@ create str
     dup json.node.get.type dup . 32 emit print.type cr
     case
         JSON.NODE.TYPE.NUMBER of
+            drop
             dup json.node.get.number f. cr
         endof
         JSON.NODE.TYPE.BOOLEAN of
+            drop
             dup json.node.get.boolean if
                 ." true" cr
             else
@@ -72,18 +74,38 @@ create str
             then
         endof
         JSON.NODE.TYPE.STRING of
+            drop
             dup json.node.get.string f. cr
         endof
         JSON.NODE.TYPE.ARRAY of
+            drop
             ." Length: "
             dup json.node.get.length dup . cr
             0 do
-                ." Index " i . cr
-                dup json.node.get.node.by.index recurse
+                ." Index: " i . cr
+                dup i json.node.get.node.by.index recurse
+            loop
+        endof
+        JSON.NODE.TYPE.OBJECT of
+            drop
+            ." Length: "
+            dup json.node.get.length dup . cr
+            0 do
+                ." Index: " i . cr
+                dup i json.node.get.pair.by.index
+                dup json.pair.get.in.use if
+                    ." (in use)" cr
+                    ." Key: "
+                    dup json.pair.get.key puts cr
+                    ." Value: " cr
+                    dup json.pair.get.node recurse
+                else
+                    ." (not in use)" cr
+                then
+                drop
             loop
         endof
     endcase
-    drop
     drop
 ;
 
