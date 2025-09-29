@@ -5,7 +5,7 @@ OBJ = $(SRC:.c=.o)
 LIB = lib/mod.so
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -g -c $< -o $@ -Iinclude
+	$(CC) $(CFLAGS) -fPIC -O3 -c $< -o $@ -Iinclude
 
 $(LIB): $(OBJ)
 	$(CC) -fPIC $(OBJ) -o $(LIB) -shared -ljson

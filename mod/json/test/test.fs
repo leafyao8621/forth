@@ -75,7 +75,7 @@ create str
         endof
         JSON.NODE.TYPE.STRING of
             drop
-            dup json.node.get.string f. cr
+            dup json.node.get.string puts
         endof
         JSON.NODE.TYPE.ARRAY of
             drop
@@ -91,16 +91,13 @@ create str
             ." Length: "
             dup json.node.get.length dup . cr
             0 do
-                ." Index: " i . cr
                 dup i json.node.get.pair.by.index
                 dup json.pair.get.in.use if
-                    ." (in use)" cr
+                    ." Index: " i . cr
                     ." Key: "
-                    dup json.pair.get.key puts cr
+                    dup json.pair.get.key puts
                     ." Value: " cr
                     dup json.pair.get.node recurse
-                else
-                    ." (not in use)" cr
                 then
                 drop
             loop

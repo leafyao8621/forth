@@ -39,15 +39,6 @@ json.node.get.node.by.index
 vm_ext_json_node_get_node_by_index
 r
 json.node.get.pair.by.index
-vm_ext_json_node_get_node_by_key
-r
-json.node.get.node.by.key
-vm_ext_json_node_get_node_by_key
-r
-json.node.get.node.by.index
-vm_ext_json_node_get_node_by_index
-r
-json.node.get.pair.by.index
 vm_ext_json_node_get_pair_by_index
 r
 json.pair.get.in.use

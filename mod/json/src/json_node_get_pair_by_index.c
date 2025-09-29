@@ -18,7 +18,7 @@ int vm_ext_json_node_get_pair_by_index(ForthVM *vm) {
     if (
         *(uintptr_t*)vm->data_stack_cur >=
         (*(JSONNodePtr*)(vm->data_stack_cur - sizeof(uintptr_t)))->data
-            .object.size) {
+            .object.capacity) {
         *(JSONNodePtr*)(vm->data_stack_cur - sizeof(uintptr_t)) = 0;
         return VM_STATUS_OK;
     }
