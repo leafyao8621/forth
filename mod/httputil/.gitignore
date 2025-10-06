@@ -1,0 +1,4 @@
+*.o
+*.so
+moddef
+load_order
